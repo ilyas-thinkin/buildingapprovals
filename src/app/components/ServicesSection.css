@@ -72,8 +72,10 @@
 .services-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 30px;
-  row-gap: 80px;
+  grid-auto-rows: 1fr;
+  align-items: stretch;
+  gap: 24px;
+  row-gap: 60px;
   margin-bottom: 60px;
 }
 
@@ -159,6 +161,14 @@
   margin: 0 0 24px 0;
 }
 
+.service-description-full {
+  display: block;
+}
+
+.service-description-compact {
+  display: none;
+}
+
 .service-link {
   font-size: 15px;
   font-weight: 600;
@@ -184,6 +194,31 @@
   transform: translateX(4px);
 }
 
+.service-card-inline-cta {
+  display: none;
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--accent-bar-color);
+  border-radius: 10px;
+  background: #ffffff;
+  color: var(--accent-bar-color);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 160ms ease-out, color 160ms ease-out, transform 160ms ease-out, box-shadow 160ms ease-out;
+}
+
+.service-card-inline-cta:hover {
+  background: rgba(0, 110, 254, 0.08);
+  color: #004bb5;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 110, 254, 0.15);
+}
+
 /* Blue Section - Always Visible, Peeking from Bottom */
 .service-card-hover-overlay {
   position: absolute;
@@ -193,12 +228,18 @@
   width: 90%;
   height: 60px;
   background-color: var(--accent-bar-color);
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 10px;
   padding: 12px 20px;
   border-radius: 0 0 12px 12px;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
   z-index: 1;
+  transition: filter 180ms ease-out;
+  box-shadow: 0 8px 20px rgba(0, 110, 254, 0.25);
 }
 
 /* Removed - Not needed anymore */
@@ -223,6 +264,10 @@
 .services-cta {
   text-align: center;
   animation: fadeInUp 600ms ease-out 400ms backwards;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
 }
 
 .btn-services-primary {
@@ -252,6 +297,110 @@
 .btn-services-primary:active {
   transform: translateY(0);
   box-shadow: 0 2px 8px rgba(0, 110, 254, 0.2);
+}
+
+.btn-services-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 34px;
+  height: 52px;
+  background-color: #ffffff;
+  color: #0b347a;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 2px solid #0b347a;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 200ms ease-out;
+}
+
+.btn-services-secondary:hover {
+  background-color: #f4f7fb;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+}
+
+.btn-services-secondary:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.enquiry-float {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  min-width: 120px;
+  height: 48px;
+  border-radius: 999px;
+  background: #0b347a;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 160ms ease-out, box-shadow 160ms ease-out;
+  z-index: 999;
+}
+
+.enquiry-float:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.22);
+}
+
+.enquiry-float:active {
+  transform: translateY(0);
+}
+
+.whatsapp-float {
+  position: fixed;
+  right: 20px;
+  bottom: 88px;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #006efe;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+  z-index: 1000;
+  transition: transform 160ms ease-out, box-shadow 160ms ease-out;
+}
+
+.whatsapp-float:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.3);
+}
+
+.whatsapp-float:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 767px) {
+  .btn-services-secondary {
+    width: 100%;
+  }
+
+  .enquiry-float {
+    right: 16px;
+    bottom: 16px;
+    width: auto;
+    min-width: 120px;
+    max-width: 200px;
+    padding: 12px 18px;
+  }
+
+  .whatsapp-float {
+    right: 16px;
+    bottom: 88px;
+  }
 }
 
 /* ============================================
@@ -321,30 +470,260 @@
 
   .services-grid {
     grid-template-columns: 1fr;
-    gap: 20px;
-    margin-bottom: 40px;
+    gap: 24px;
+    row-gap: 24px;
+    margin-bottom: 48px;
   }
 
+  /* Match desktop card layout */
   .service-card {
-    padding: 24px 20px;
+    display: block;
+    height: auto;
+    min-height: 0;
+    padding-bottom: 0;
+    overflow: visible;
+  }
+
+  .service-card-content {
+    padding: 40px 32px 32px;
+    height: calc(100% - 12px);
+    flex: none;
+  }
+
+  .service-icon-circle {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 24px;
   }
 
   .service-icon {
-    font-size: 40px;
-    margin-bottom: 16px;
+    font-size: 42px;
   }
 
   .service-title {
-    font-size: 18px;
+    font-size: 22px;
+    margin-bottom: 16px;
+    line-height: 1.3;
   }
 
   .service-description {
+    font-size: 15px;
+    margin-bottom: 24px;
+    line-height: 1.7;
+  }
+
+  .service-description-full {
+    display: block;
+    -webkit-line-clamp: unset;
+    -webkit-box-orient: unset;
+    overflow: visible;
+  }
+
+  .service-description-compact {
+    display: none;
+  }
+
+  .service-link {
+    font-size: 15px;
+    margin-top: auto;
+  }
+
+  .service-card-inline-cta {
+    display: inline-flex;
+  }
+
+  .service-card-hover-overlay {
+    display: none;
+  }
+
+  .service-catchy-text {
     font-size: 14px;
+    line-height: 1.3;
   }
 
   .btn-services-primary {
     width: 100%;
     height: 52px;
+  }
+
+  /* Remove hover lift on touch to keep overlays aligned */
+  .service-card:hover .service-card-content {
+    transform: none;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  .service-card:hover .service-icon-circle {
+    transform: none;
+    box-shadow: 0 8px 24px var(--card-icon-shadow);
+  }
+}
+
+/* ============================================
+   ENQUIRY MODAL
+   ============================================ */
+.services-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 52, 122, 0.16);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 999;
+}
+
+.services-modal {
+  width: min(520px, 100%);
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 16px 60px rgba(0, 0, 0, 0.18);
+  padding: 24px 24px 20px;
+  position: relative;
+  max-height: min(500px, calc(100vh - 180px));
+  overflow: visible;
+  margin: 72px 0 36px;
+  animation: fadeInUp 250ms ease-out;
+}
+
+.services-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.services-modal-header h3 {
+  margin: 0;
+  font-size: 20px;
+  color: var(--card-title-color);
+}
+
+.services-modal-close {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: #0b347a;
+  color: #ffffff;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  border-radius: 50%;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.services-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.services-modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: #4a5568;
+}
+
+.services-modal-field input,
+.services-modal-field select {
+  width: 100%;
+  height: 46px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0 12px;
+  font-size: 14px;
+  color: #1f2937;
+  transition: border-color 160ms ease-out, box-shadow 160ms ease-out;
+}
+
+.services-modal-field input:focus,
+.services-modal-field select:focus {
+  outline: none;
+  border-color: #006efe;
+  box-shadow: 0 0 0 3px rgba(0, 110, 254, 0.15);
+}
+
+.services-modal-submit {
+  margin-top: 4px;
+  height: 50px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #006efe, #0b347a);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 10px 22px rgba(0, 110, 254, 0.25);
+  transition: transform 160ms ease-out, box-shadow 160ms ease-out;
+}
+
+.services-modal-submit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 26px rgba(0, 110, 254, 0.3);
+}
+
+.services-modal-submit:active {
+  transform: translateY(0);
+}
+
+.services-modal-body {
+  max-height: calc(100vh - 220px);
+  overflow-y: auto;
+  padding-right: 8px;
+  scrollbar-gutter: stable;
+}
+
+.services-modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.services-modal-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.services-modal-body::-webkit-scrollbar-thumb {
+  background: rgba(11, 52, 122, 0.45);
+  border-radius: 999px;
+}
+
+.services-modal-body::-webkit-scrollbar-thumb:hover {
+  background: rgba(11, 52, 122, 0.65);
+}
+
+.services-modal-body {
+  scrollbar-color: rgba(11, 52, 122, 0.45) transparent;
+  scrollbar-width: thin;
+  border-radius: 12px;
+}
+
+@media (max-width: 767px) {
+  .services-modal {
+    padding: 20px 18px 16px;
+    max-height: min(460px, calc(100vh - 120px));
+    margin: 64px 0 24px;
+  }
+
+  .services-modal-header h3 {
+    font-size: 18px;
+  }
+
+  .services-modal-body {
+    max-height: calc(100vh - 180px);
+  }
+
+  .services-modal-field input,
+  .services-modal-field select {
+    height: 44px;
   }
 }
 
