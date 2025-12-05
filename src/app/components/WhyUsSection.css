@@ -1,0 +1,442 @@
+/* ============================================
+   WHY US SECTION STYLES
+   ============================================ */
+
+/* ============================================
+   COLOR CUSTOMIZATION
+   Change these colors to customize the why us section
+   ============================================ */
+:root {
+  --whyus-bg: #fafbfc;                    /* Section background - light gray */
+  --whyus-badge-bg: #e6f3ff;              /* Badge background - light blue */
+  --whyus-badge-text: #006efe;            /* Badge text - bright blue */
+  --whyus-title-color: #0b347a;           /* Title color - dark blue */
+  --whyus-subtitle-color: #4a5568;        /* Subtitle color - gray */
+  --card-bg: #ffffff;                     /* Card background - white */
+  --card-border: #e3e8ef;                 /* Card border - light gray */
+  --card-number-color: #006efe;           /* Card number - bright blue */
+  --card-title-color: #0b347a;            /* Card title - dark blue */
+  --card-description-color: #4a5568;      /* Card description - gray */
+  --card-highlight-bg: #e6f3ff;           /* Highlight background - light blue */
+  --card-highlight-text: #006efe;         /* Highlight text - bright blue */
+  --card-decoration-color: #006efe;       /* Decoration accent - bright blue */
+  --stat-number-color: #0b347a;           /* Stat number - dark blue */
+  --stat-label-color: #4a5568;            /* Stat label - gray */
+  --stat-divider-color: #e3e8ef;          /* Stat divider - light gray */
+}
+
+/* ============================================
+   WHY US CONTAINER
+   ============================================ */
+.whyus-section {
+  position: relative;
+  width: 100%;
+  padding: 100px 40px;
+  background-color: var(--whyus-bg);
+  overflow: hidden;
+}
+
+.whyus-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ============================================
+   SECTION HEADER
+   ============================================ */
+.whyus-header {
+  text-align: center;
+  margin-bottom: 70px;
+  animation: fadeInUp 600ms ease-out;
+}
+
+.whyus-badge {
+  display: inline-block;
+  padding: 8px 20px;
+  background-color: var(--whyus-badge-bg);
+  color: var(--whyus-badge-text);
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+
+.whyus-title {
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--whyus-title-color);
+  margin: 0 0 20px 0;
+}
+
+.whyus-subtitle {
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--whyus-subtitle-color);
+  margin: 0;
+  max-width: 750px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ============================================
+   WHY US GRID
+   ============================================ */
+.whyus-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+  margin-bottom: 80px;
+}
+
+/* ============================================
+   WHY US CARD - ELEGANT DESIGN
+   ============================================ */
+.whyus-card {
+  position: relative;
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 40px 36px;
+  transition: all 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  gap: 24px;
+  overflow: hidden;
+  animation: fadeInUp 600ms ease-out backwards;
+  animation-delay: calc(var(--card-index, 0) * 100ms);
+}
+
+.whyus-card:nth-child(1) { --card-index: 1; }
+.whyus-card:nth-child(2) { --card-index: 2; }
+.whyus-card:nth-child(3) { --card-index: 3; }
+.whyus-card:nth-child(4) { --card-index: 4; }
+
+.whyus-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 0;
+  background: linear-gradient(180deg, var(--card-decoration-color) 0%, transparent 100%);
+  transition: height 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.whyus-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px rgba(0, 110, 254, 0.12);
+  border-color: var(--card-decoration-color);
+}
+
+.whyus-card:hover::before {
+  height: 100%;
+}
+
+/* Card Number */
+.card-number {
+  font-size: 72px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--card-number-color);
+  opacity: 0.15;
+  flex-shrink: 0;
+  transition: all 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.whyus-card:hover .card-number {
+  opacity: 0.25;
+  transform: scale(1.1);
+}
+
+/* Card Content */
+.card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card-title {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--card-title-color);
+  margin: 0;
+  transition: color 300ms ease-out;
+}
+
+.whyus-card:hover .card-title {
+  color: var(--card-decoration-color);
+}
+
+.card-description {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--card-description-color);
+  margin: 0;
+}
+
+/* Card Highlight */
+.card-highlight {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background-color: var(--card-highlight-bg);
+  border-radius: 8px;
+  align-self: flex-start;
+  transition: all 300ms ease-out;
+}
+
+.whyus-card:hover .card-highlight {
+  background-color: var(--card-decoration-color);
+}
+
+.highlight-icon {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--card-highlight-text);
+  transition: color 300ms ease-out;
+}
+
+.whyus-card:hover .highlight-icon {
+  color: #ffffff;
+}
+
+.highlight-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--card-highlight-text);
+  transition: color 300ms ease-out;
+}
+
+.whyus-card:hover .highlight-text {
+  color: #ffffff;
+}
+
+/* Card Decoration */
+.card-decoration {
+  position: absolute;
+  bottom: -30px;
+  right: -30px;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, var(--card-decoration-color) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 400ms ease-out;
+  pointer-events: none;
+}
+
+.whyus-card:hover .card-decoration {
+  opacity: 0.08;
+}
+
+/* ============================================
+   STATS BAR
+   ============================================ */
+.whyus-stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 40px 50px;
+  animation: fadeInUp 600ms ease-out 500ms backwards;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.stat-item {
+  text-align: center;
+  flex: 1;
+}
+
+.stat-number {
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--stat-number-color);
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, var(--stat-number-color) 0%, var(--card-decoration-color) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--stat-label-color);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 60px;
+  background-color: var(--stat-divider-color);
+  margin: 0 20px;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   RESPONSIVE STYLES
+   ============================================ */
+
+/* Tablet */
+@media (max-width: 1199px) {
+  .whyus-section {
+    padding: 80px 32px;
+  }
+
+  .whyus-title {
+    font-size: 40px;
+  }
+
+  .whyus-subtitle {
+    font-size: 18px;
+  }
+
+  .whyus-grid {
+    gap: 24px;
+    margin-bottom: 60px;
+  }
+
+  .whyus-card {
+    padding: 32px 28px;
+  }
+
+  .card-number {
+    font-size: 60px;
+  }
+
+  .whyus-stats {
+    padding: 32px 40px;
+  }
+
+  .stat-number {
+    font-size: 40px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+  .whyus-section {
+    padding: 60px 20px;
+  }
+
+  .whyus-header {
+    margin-bottom: 50px;
+  }
+
+  .whyus-badge {
+    font-size: 12px;
+    padding: 6px 16px;
+  }
+
+  .whyus-title {
+    font-size: 32px;
+    margin-bottom: 16px;
+  }
+
+  .whyus-subtitle {
+    font-size: 16px;
+  }
+
+  .whyus-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-bottom: 50px;
+  }
+
+  .whyus-card {
+    padding: 28px 24px;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .card-number {
+    font-size: 48px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
+
+  .card-title {
+    font-size: 20px;
+  }
+
+  .card-description {
+    font-size: 15px;
+  }
+
+  .card-highlight {
+    padding: 8px 14px;
+  }
+
+  .highlight-text {
+    font-size: 13px;
+  }
+
+  .whyus-stats {
+    flex-direction: column;
+    gap: 32px;
+    padding: 32px 24px;
+  }
+
+  .stat-item {
+    width: 100%;
+  }
+
+  .stat-number {
+    font-size: 36px;
+  }
+
+  .stat-label {
+    font-size: 12px;
+  }
+
+  .stat-divider {
+    width: 100%;
+    height: 1px;
+    margin: 0;
+  }
+}
+
+/* ============================================
+   REDUCED MOTION SUPPORT
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  .whyus-header,
+  .whyus-card,
+  .whyus-stats {
+    animation: none;
+  }
+
+  .whyus-card:hover {
+    transform: none;
+  }
+
+  .whyus-card:hover .card-number {
+    transform: none;
+  }
+}
