@@ -156,14 +156,27 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onClose, se
               onChange={handleChange}
               required
             >
-              <option value="Civil Defense Approvals">Civil Defense Approvals</option>
-              <option value="DEWA Approval Service">DEWA Approval Service</option>
+              <option value="Civil Defense Approval">Civil Defense Approval</option>
+              <option value="DEWA Approval">DEWA Approval</option>
               <option value="Dubai Municipality Approval">Dubai Municipality Approval</option>
-              <option value="Emaar Approval Authority">Emaar Approval Authority</option>
+              <option value="Emaar Approval">Emaar Approval</option>
               <option value="Nakheel Approval">Nakheel Approval</option>
-              <option value="Food Control Department">Food Control Department</option>
               <option value="JAFZA Approval">JAFZA Approval</option>
               <option value="DHA Approval">DHA Approval</option>
+              <option value="DSO Approval">DSO Approval</option>
+              <option value="Dubai Development Authority">Dubai Development Authority</option>
+              <option value="Food Control Department">Food Control Department</option>
+              <option value="Spa Approval">Spa Approval</option>
+              <option value="Shisha Cafe License">Shisha Cafe License</option>
+              <option value="Smoking Permit">Smoking Permit</option>
+              <option value="Swimming Pool Approval">Swimming Pool Approval</option>
+              <option value="Solar Approval">Solar Approval</option>
+              <option value="Signage Approval">Signage Approval</option>
+              <option value="Tent Approval">Tent Approval</option>
+              <option value="RTA Permit and Approval">RTA Permit and Approval</option>
+              <option value="Tecom and DCCA Approval">Tecom and DCCA Approval</option>
+              <option value="Third Party Consultants">Third Party Consultants</option>
+              <option value="Trakhees Approval">Trakhees Approval</option>
             </select>
           </div>
 
