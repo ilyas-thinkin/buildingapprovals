@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import ContactFormModal from '../components/ContactFormModal';
+import ContactFormModal from '../ContactFormModal';
 import './services.css';
 
 interface Service {
