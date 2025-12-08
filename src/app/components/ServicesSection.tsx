@@ -7,62 +7,95 @@ import ContactFormModal from './ContactFormModal';
 const ServicesSection: React.FC = () => {
   const services = [
     {
-      icon: '🔥',
+      id: 'civil-defense',
+      icon: (
+        <svg viewBox="0 0 24 24" fill="none" className="service-icon-svg">
+          <path d="M12 2L3 7V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M9 12L11 14L15 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      ),
       title: 'Civil Defense Approvals',
       description:
         'Expert assistance in obtaining Dubai Civil Defense permits & NOCs. Fast-track your fire safety approvals with certified consultants.',
-      mobileBlurb: 'Fast NOCs and fire-safety approvals handled by certified experts.',
-      catchyText: 'Fire Safety Compliance Made Easy',
     },
     {
-      icon: '⚡',
+      id: 'dewa',
+      icon: (
+        <svg viewBox="0 0 24 24" fill="none" className="service-icon-svg">
+          <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      ),
       title: 'DEWA Approval Service',
       description: 'Handles Dubai Electricity & Water Authority connection permits and power/water application processing.',
-      mobileBlurb: 'Speedy DEWA power and water connections without paperwork stress.',
-      catchyText: 'Power Up Your Project Faster',
     },
     {
-      icon: '🏛️',
+      id: 'dubai-municipality',
+      icon: (
+        <svg viewBox="0 0 24 24" fill="none" className="service-icon-svg">
+          <path d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M9 22V12H15V22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      ),
       title: 'Dubai Municipality Approval',
       description:
         'Comprehensive Dubai Municipality permit processing. Fast-track building permits & technical approvals for your projects.',
-      mobileBlurb: 'Building permits and technical approvals fast-tracked for your project.',
-      catchyText: 'Your Gateway to Building Success',
     },
     {
-      icon: '🏢',
+      id: 'emaar',
+      icon: (
+        <svg viewBox="0 0 24 24" fill="none" className="service-icon-svg">
+          <path d="M21 10C21 17 12 23 12 23C12 23 3 17 3 10C3 7.61305 3.94821 5.32387 5.63604 3.63604C7.32387 1.94821 9.61305 1 12 1C14.3869 1 16.6761 1.94821 18.364 3.63604C20.0518 5.32387 21 7.61305 21 10Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <circle cx="12" cy="10" r="3" stroke="currentColor" strokeWidth="2"/>
+        </svg>
+      ),
       title: 'Emaar Approval Authority',
       description: 'Community NOC and permit services for Emaar master communities.',
-      mobileBlurb: 'Emaar community NOCs guided from paperwork to approval.',
-      catchyText: 'Master Community Approvals Simplified',
     },
     {
-      icon: '🏝️',
+      id: 'nakheel',
+      icon: (
+        <svg viewBox="0 0 24 24" fill="none" className="service-icon-svg">
+          <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      ),
       title: 'Nakheel Approval',
       description: 'Development permits and NOCs for Nakheel community projects.',
-      mobileBlurb: 'Smooth Nakheel permits for villas, towers, and retail builds.',
-      catchyText: 'Navigate Nakheel Requirements Effortlessly',
     },
     {
-      icon: '🍽️',
+      id: 'food-control',
+      icon: (
+        <svg viewBox="0 0 24 24" fill="none" className="service-icon-svg">
+          <path d="M18 8H19C20.1046 8 21 8.89543 21 10V20C21 21.1046 20.1046 22 19 22H5C3.89543 22 3 21.1046 3 20V10C3 8.89543 3.89543 8 5 8H6" stroke="currentColor" strokeWidth="2"/>
+          <path d="M10 12L12 14L16 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M8 8V6C8 4.93913 8.42143 3.92172 9.17157 3.17157C9.92172 2.42143 10.9391 2 12 2C13.0609 2 14.0783 2.42143 14.8284 3.17157C15.5786 3.92172 16 4.93913 16 6V8" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+        </svg>
+      ),
       title: 'Food Control Department',
       description: 'Restaurant and café food safety permits and compliance services.',
-      mobileBlurb: 'Kitchen and café permits cleared with food safety compliance built in.',
-      catchyText: 'Serve Excellence with Full Compliance',
     },
     {
-      icon: '💼',
+      id: 'jafza',
+      icon: (
+        <svg viewBox="0 0 24 24" fill="none" className="service-icon-svg">
+          <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="2"/>
+          <path d="M3 9H21" stroke="currentColor" strokeWidth="2"/>
+          <path d="M9 21V9" stroke="currentColor" strokeWidth="2"/>
+        </svg>
+      ),
       title: 'JAFZA Approval',
       description: 'Jebel Ali Free Zone building and operational approvals.',
-      mobileBlurb: 'Free zone fit-out and operational approvals done right and fast.',
-      catchyText: 'Free Zone Success Starts Here',
     },
     {
-      icon: '🏥',
+      id: 'dha',
+      icon: (
+        <svg viewBox="0 0 24 24" fill="none" className="service-icon-svg">
+          <path d="M22 12H18L15 21L9 3L6 12H2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      ),
       title: 'DHA Approval',
       description: 'Dubai Health Authority healthcare facility licensing and permits.',
-      mobileBlurb: 'Clinic and healthcare licensing with compliance handled for you.',
-      catchyText: 'Healthcare Licensing Without Headaches',
     },
   ];
 
@@ -106,45 +139,20 @@ const ServicesSection: React.FC = () => {
         <div className="services-grid">
           {services.map((service, index) => (
             <div key={index} className="service-card">
-              <div className="service-card-content">
-                <div className="service-icon-circle">
-                  <span className="service-icon">{service.icon}</span>
-                </div>
-                <h3 className="service-title">{service.title}</h3>
-                <p className="service-description">
-                  <span className="service-description-full">{service.description}</span>
-                  <span className="service-description-compact">{service.mobileBlurb}</span>
-                </p>
-                <a href="/services" className="service-link">
-                  View Details
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M6 12L10 8L6 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </a>
-                <button
-                  type="button"
-                  className="service-card-inline-cta"
-                  onClick={() => openEnquiryModal(service.title)}
-                  aria-label={`Send enquiry about ${service.title}`}
-                >
-                  Send Enquiry
-                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M6 12L10 8L6 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </button>
+              <div className="service-card-icon">
+                {service.icon}
               </div>
-              <button
-                type="button"
-                className="service-card-hover-overlay"
-                onClick={() => openEnquiryModal(service.title)}
-                aria-label={`Send enquiry about ${service.title}`}
-              >
-                <h4 className="service-catchy-text">Send Enquiry</h4>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M6 12L10 8L6 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
-              <div className="service-card-accent"></div>
+              <h3 className="service-card-title">{service.title}</h3>
+              <p className="service-card-description">{service.description}</p>
+              <a href={`/services/${service.id}`} className="service-card-cta">
+                Read More
+                <span className="service-card-cta-icon" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.2" />
+                    <path d="M7 5L10 8L7 11" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+              </a>
             </div>
           ))}
         </div>

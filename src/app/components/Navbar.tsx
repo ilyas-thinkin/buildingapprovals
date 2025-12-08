@@ -2,11 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import ContactFormModal from './ContactFormModal';
 import './Navbar.css';
 
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const pathname = usePathname();
 
   // Handle scroll effect
@@ -68,6 +70,15 @@ const Navbar: React.FC = () => {
     setIsMobileMenuOpen(false);
   };
 
+  const openConsultationModal = () => {
+    setIsModalOpen(true);
+    setIsMobileMenuOpen(false);
+  };
+
+  const closeConsultationModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <>
       <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
@@ -92,15 +103,20 @@ const Navbar: React.FC = () => {
               </li>
               <li className="nav-item">
                 <a href="/about" className={`nav-link ${pathname === '/about' ? 'active' : ''}`}>
-                  About
+                  About Us
+                </a>
+              </li>
+              <li className="nav-item">
+                <a href="/contact" className={`nav-link ${pathname === '/contact' ? 'active' : ''}`}>
+                  Contact Us
                 </a>
               </li>
             </ul>
 
             {/* CTA Button */}
-            <a href="/contact" className="btn-cta">
-              Contact Us
-            </a>
+            <button type="button" className="btn-cta" onClick={openConsultationModal}>
+              Free Consultation
+            </button>
           </div>
 
           {/* Mobile Hamburger Menu */}
@@ -168,15 +184,30 @@ const Navbar: React.FC = () => {
               className={`mobile-nav-link ${pathname === '/about' ? 'active' : ''}`}
               onClick={closeMobileMenu}
             >
-              About
+              About Us
+            </a>
+          </li>
+          <li className="mobile-nav-item">
+            <a
+              href="/contact"
+              className={`mobile-nav-link ${pathname === '/contact' ? 'active' : ''}`}
+              onClick={closeMobileMenu}
+            >
+              Contact Us
             </a>
           </li>
         </ul>
 
-        <a href="/contact" className="btn-cta btn-cta-mobile" onClick={closeMobileMenu}>
-          Contact Us
-        </a>
+        <button type="button" className="btn-cta btn-cta-mobile" onClick={openConsultationModal}>
+          Free Consultation
+        </button>
       </div>
+
+      <ContactFormModal
+        isOpen={isModalOpen}
+        onClose={closeConsultationModal}
+        selectedService=""
+      />
     </>
   );
 };

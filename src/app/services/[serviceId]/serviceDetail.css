@@ -1,0 +1,743 @@
+/* ============================================
+   SERVICE DETAIL PAGE STYLES
+   ============================================ */
+
+:root {
+  --primary-blue: #006efe;
+  --primary-blue-dark: #0056d6;
+  --primary-navy: #0c1f3f;
+  --text-primary: #0b1a2e;
+  --text-secondary: #4a5568;
+  --text-light: #718096;
+  --bg-light: #f7fafc;
+  --bg-white: #ffffff;
+  --border-color: #e2e8f0;
+  --success-green: #10b981;
+  --warning-yellow: #f59e0b;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.16);
+}
+
+/* ============================================
+   PAGE CONTAINER
+   ============================================ */
+.service-detail-page {
+  min-height: 100vh;
+  background: var(--bg-light);
+}
+
+/* ============================================
+   HERO SECTION
+   ============================================ */
+.service-detail-hero {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+  padding: 120px 20px 80px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.service-detail-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.service-detail-hero-content {
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.service-detail-icon-badge {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 32px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+}
+
+.service-detail-icon-svg {
+  width: 60px;
+  height: 60px;
+  color: white;
+}
+
+.service-detail-title {
+  font-size: 56px;
+  font-weight: 700;
+  color: white;
+  margin: 0 0 20px 0;
+  line-height: 1.1;
+}
+
+.service-detail-subtitle {
+  font-size: 22px;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0 0 48px 0;
+  line-height: 1.5;
+}
+
+.service-detail-hero-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.btn-primary-service,
+.btn-secondary-service {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 40px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 50px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  border: none;
+  height: 56px;
+}
+
+.btn-primary-service {
+  background: white;
+  color: var(--primary-blue);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary-service:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+  background: #f7fafc;
+}
+
+.btn-secondary-service {
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+}
+
+.btn-secondary-service:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+/* ============================================
+   SECTION STYLES
+   ============================================ */
+.service-section {
+  padding: 80px 20px;
+}
+
+.service-section:nth-child(even) {
+  background: var(--bg-white);
+}
+
+.service-section-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.service-section-title {
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 48px 0;
+  text-align: center;
+  position: relative;
+}
+
+.service-section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+  border-radius: 2px;
+}
+
+/* ============================================
+   OVERVIEW SECTION
+   ============================================ */
+.service-overview-text {
+  font-size: 20px;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* ============================================
+   IMPORTANCE SECTION
+   ============================================ */
+.service-importance-description {
+  font-size: 18px;
+  color: var(--text-secondary);
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 40px;
+  line-height: 1.7;
+}
+
+.service-importance-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 24px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.service-importance-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 24px;
+  background: var(--bg-white);
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+  font-size: 15px;
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.service-section:nth-child(even) .service-importance-item {
+  background: var(--bg-light);
+}
+
+.service-importance-item:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-blue);
+}
+
+.check-icon {
+  width: 28px;
+  height: 28px;
+  color: var(--success-green);
+  flex-shrink: 0;
+}
+
+/* ============================================
+   PROCESS SECTION
+   ============================================ */
+.process-steps {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.process-step {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 48px;
+  position: relative;
+}
+
+.process-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 35px;
+  top: 80px;
+  width: 2px;
+  height: calc(100% + 32px);
+  background: linear-gradient(180deg, var(--primary-blue) 0%, rgba(0, 110, 254, 0.2) 100%);
+}
+
+.process-step-number {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 700;
+  flex-shrink: 0;
+  box-shadow: 0 12px 32px rgba(0, 110, 254, 0.3);
+  position: relative;
+  z-index: 1;
+}
+
+.process-step-content {
+  flex: 1;
+  padding-top: 8px;
+}
+
+.process-step-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 12px 0;
+}
+
+.process-step-description {
+  font-size: 16px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ============================================
+   REQUIREMENTS SECTION
+   ============================================ */
+.requirements-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.requirement-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  background: var(--bg-white);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+  font-size: 15px;
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.service-section:nth-child(even) .requirement-item {
+  background: var(--bg-light);
+}
+
+.requirement-item:hover {
+  border-color: var(--primary-blue);
+  transform: translateX(8px);
+  box-shadow: var(--shadow-sm);
+}
+
+.doc-icon {
+  width: 24px;
+  height: 24px;
+  color: var(--primary-blue);
+  flex-shrink: 0;
+}
+
+/* ============================================
+   BENEFITS SECTION
+   ============================================ */
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.benefit-card {
+  background: var(--bg-white);
+  padding: 32px;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.service-section:nth-child(even) .benefit-card {
+  background: var(--bg-light);
+}
+
+.benefit-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-blue);
+}
+
+.benefit-icon {
+  width: 48px;
+  height: 48px;
+  color: var(--primary-blue);
+  margin: 0 auto 20px;
+}
+
+.benefit-text {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ============================================
+   CHALLENGES SECTION
+   ============================================ */
+.challenges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.challenge-card {
+  background: var(--bg-white);
+  padding: 28px;
+  border-radius: 12px;
+  border-left: 4px solid var(--warning-yellow);
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  transition: all 0.3s ease;
+}
+
+.service-section:nth-child(even) .challenge-card {
+  background: var(--bg-light);
+}
+
+.challenge-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-sm);
+}
+
+.challenge-icon {
+  width: 28px;
+  height: 28px;
+  color: var(--warning-yellow);
+  flex-shrink: 0;
+}
+
+.challenge-text {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ============================================
+   TIMELINE SECTION
+   ============================================ */
+.timeline-card {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+  padding: 40px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  box-shadow: var(--shadow-lg);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.timeline-icon {
+  width: 64px;
+  height: 64px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.timeline-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: white;
+  margin: 0 0 12px 0;
+}
+
+.timeline-text {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ============================================
+   FAQs SECTION
+   ============================================ */
+.faqs-list {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  margin-bottom: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-white);
+}
+
+.service-section:nth-child(even) .faq-item {
+  background: var(--bg-light);
+}
+
+.faq-question {
+  width: 100%;
+  padding: 24px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.3s ease;
+}
+
+.faq-question:hover {
+  color: var(--primary-blue);
+}
+
+.faq-icon {
+  width: 24px;
+  height: 24px;
+  color: var(--text-secondary);
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.faq-question.active .faq-icon {
+  transform: rotate(180deg);
+  color: var(--primary-blue);
+}
+
+.faq-answer {
+  padding: 0 24px 24px 24px;
+  font-size: 16px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  animation: fadeInDown 0.3s ease;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   CTA SECTION
+   ============================================ */
+.service-cta-section {
+  background: linear-gradient(135deg, var(--primary-navy) 0%, var(--primary-blue-dark) 100%);
+  padding: 100px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.service-cta-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 70% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.service-cta-container {
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.service-cta-title {
+  font-size: 48px;
+  font-weight: 700;
+  color: white;
+  margin: 0 0 24px 0;
+}
+
+.service-cta-text {
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0 0 48px 0;
+  line-height: 1.6;
+}
+
+.service-cta-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .service-detail-title {
+    font-size: 44px;
+  }
+
+  .service-detail-subtitle {
+    font-size: 18px;
+  }
+
+  .service-section-title {
+    font-size: 36px;
+  }
+
+  .service-importance-list {
+    grid-template-columns: 1fr;
+  }
+
+  .process-step {
+    gap: 24px;
+  }
+
+  .process-step-number {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+  }
+
+  .requirements-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .service-detail-hero {
+    padding: 100px 20px 60px;
+  }
+
+  .service-detail-icon-badge {
+    width: 100px;
+    height: 100px;
+  }
+
+  .service-detail-icon-svg {
+    width: 50px;
+    height: 50px;
+  }
+
+  .service-detail-title {
+    font-size: 32px;
+  }
+
+  .service-detail-subtitle {
+    font-size: 16px;
+    margin-bottom: 32px;
+  }
+
+  .service-detail-hero-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn-primary-service,
+  .btn-secondary-service {
+    width: 100%;
+    height: 52px;
+  }
+
+  .service-section {
+    padding: 60px 20px;
+  }
+
+  .service-section-title {
+    font-size: 28px;
+    margin-bottom: 32px;
+  }
+
+  .service-overview-text {
+    font-size: 16px;
+  }
+
+  .process-step {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .process-step::after {
+    display: none;
+  }
+
+  .process-step-number {
+    width: 56px;
+    height: 56px;
+    font-size: 20px;
+    margin: 0 auto;
+  }
+
+  .process-step-content {
+    text-align: center;
+    padding-top: 0;
+  }
+
+  .process-step-title {
+    font-size: 20px;
+  }
+
+  .process-step-description {
+    font-size: 15px;
+  }
+
+  .timeline-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 32px 24px;
+  }
+
+  .service-cta-title {
+    font-size: 32px;
+  }
+
+  .service-cta-text {
+    font-size: 16px;
+  }
+
+  .service-cta-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .service-detail-title {
+    font-size: 28px;
+  }
+
+  .service-section-title {
+    font-size: 24px;
+  }
+
+  .benefits-grid,
+  .challenges-grid {
+    grid-template-columns: 1fr;
+  }
+}

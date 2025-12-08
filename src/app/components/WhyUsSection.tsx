@@ -1,7 +1,58 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useEffect, useRef } from 'react';
 import './WhyUsSection.css';
 
 const WhyUsSection: React.FC = () => {
+  const [counters, setCounters] = useState({
+    projects: 0,
+    authorities: 0,
+    satisfaction: 0,
+  });
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const statsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !hasAnimated) {
+          setHasAnimated(true);
+          animateCounters();
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    if (statsRef.current) {
+      observer.observe(statsRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [hasAnimated]);
+
+  const animateCounters = () => {
+    const duration = 2000; // 2 seconds
+    const frameDuration = 1000 / 60; // 60 FPS
+    const totalFrames = Math.round(duration / frameDuration);
+
+    let frame = 0;
+    const counter = setInterval(() => {
+      frame++;
+      const progress = frame / totalFrames;
+      const easeOutQuad = 1 - Math.pow(1 - progress, 3);
+
+      setCounters({
+        projects: Math.round(easeOutQuad * 500),
+        authorities: Math.round(easeOutQuad * 10),
+        satisfaction: Math.round(easeOutQuad * 100),
+      });
+
+      if (frame === totalFrames) {
+        clearInterval(counter);
+      }
+    }, frameDuration);
+  };
+
   const reasons = [
     {
       number: '01',
@@ -61,19 +112,19 @@ const WhyUsSection: React.FC = () => {
         </div>
 
         {/* Stats Bar */}
-        <div className="whyus-stats">
+        <div className="whyus-stats" ref={statsRef}>
           <div className="stat-item">
-            <div className="stat-number">500+</div>
+            <div className="stat-number">{counters.projects}+</div>
             <div className="stat-label">Projects Approved</div>
           </div>
           <div className="stat-divider"></div>
           <div className="stat-item">
-            <div className="stat-number">10+</div>
+            <div className="stat-number">{counters.authorities}+</div>
             <div className="stat-label">Authority Partners</div>
           </div>
           <div className="stat-divider"></div>
           <div className="stat-item">
-            <div className="stat-number">100%</div>
+            <div className="stat-number">{counters.satisfaction}%</div>
             <div className="stat-label">Client Satisfaction</div>
           </div>
           <div className="stat-divider"></div>

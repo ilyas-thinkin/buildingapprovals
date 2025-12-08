@@ -17,9 +17,7 @@ const ServicesPage: React.FC = () => {
   const [selectedService, setSelectedService] = useState('');
   const [isRailHovered, setIsRailHovered] = useState(false);
   const [autoScrollDirection, setAutoScrollDirection] = useState<1 | -1>(1);
-  const [isTouching, setIsTouching] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const railSectionRef = useRef<HTMLElement>(null);
 
   const services = useMemo<Service[]>(() => ([
     {
@@ -281,17 +279,6 @@ const ServicesPage: React.FC = () => {
     }
 
     setActiveService(serviceId);
-
-    // Scroll to show both rail and panel in viewport
-    setTimeout(() => {
-      if (railSectionRef.current) {
-        const yOffset = -20; // Small offset from top
-        const element = railSectionRef.current;
-        const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-
-        window.scrollTo({ top: y, behavior: 'smooth' });
-      }
-    }, 100);
   };
 
   const handleEnquiry = (serviceName: string) => {
@@ -307,18 +294,10 @@ const ServicesPage: React.FC = () => {
     scrollContainerRef.current?.scrollBy({ left: 300, behavior: 'smooth' });
   };
 
-  const handleTouchStart = () => {
-    setIsTouching(true);
-  };
-
-  const handleTouchEnd = () => {
-    setIsTouching(false);
-  };
-
   const activeServiceData = services.find(s => s.id === activeService);
 
   useEffect(() => {
-    if (activeService || isRailHovered || isTouching) return;
+    if (activeService || isRailHovered) return;
 
     const scrollEl = scrollContainerRef.current;
     if (!scrollEl) return;
@@ -339,7 +318,7 @@ const ServicesPage: React.FC = () => {
     }, 24);
 
     return () => window.clearInterval(interval);
-  }, [activeService, autoScrollDirection, isRailHovered, isTouching]);
+  }, [activeService, autoScrollDirection, isRailHovered]);
 
   return (
     <div className="services-page">
@@ -354,7 +333,7 @@ const ServicesPage: React.FC = () => {
       </section>
 
       {/* Interactive Services Rail */}
-      <section className="services-rail-section" ref={railSectionRef}>
+      <section className="services-rail-section">
         <div className="services-rail-header">
           <h2 className="services-rail-title">Quick View: Explore Approvals</h2>
           <p className="services-rail-subtitle">Tap an icon to preview details instantly.</p>
@@ -377,8 +356,6 @@ const ServicesPage: React.FC = () => {
             ref={scrollContainerRef}
             onMouseEnter={() => setIsRailHovered(true)}
             onMouseLeave={() => setIsRailHovered(false)}
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
           >
             <div className="services-rail">
               {services.map((service) => (
@@ -432,20 +409,27 @@ const ServicesPage: React.FC = () => {
                 {activeServiceData.icon}
               </div>
               <div className="panel-heading">
-                <div className="panel-title-section">
-                  <h3 className="panel-title">{activeServiceData.title}</h3>
-                  <p className="panel-description">{activeServiceData.description}</p>
-                </div>
+                <h3 className="panel-title">{activeServiceData.title}</h3>
                 <button
-                  className="panel-cta"
-                  onClick={() => handleEnquiry(activeServiceData.title)}
+                  className="panel-close-inline"
+                  onClick={handleClosePanel}
+                  aria-label="Close panel"
                 >
-                  Send Enquiry
                   <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                    <path d="M4 14L14 4M14 4H6M14 4V12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M13.5 4.5L4.5 13.5M4.5 4.5L13.5 13.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                   </svg>
                 </button>
               </div>
+              <p className="panel-description">{activeServiceData.description}</p>
+              <button
+                className="panel-cta"
+                onClick={() => handleEnquiry(activeServiceData.title)}
+              >
+                Send Enquiry
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <path d="M4 14L14 4M14 4H6M14 4V12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
             </div>
           </div>
         )}
@@ -469,12 +453,12 @@ const ServicesPage: React.FC = () => {
                 </div>
                 <h3 className="service-card-title">{service.title}</h3>
                 <p className="service-card-description">{service.description}</p>
-                <a
-                  href={`/services/${service.id}`}
+                <button
                   className="service-card-cta"
+                  onClick={() => handleEnquiry(service.title)}
                 >
-                  Learn More
-                </a>
+                  Get Started
+                </button>
               </div>
             ))}
           </div>
