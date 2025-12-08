@@ -88,10 +88,18 @@ const ServicesSection: React.FC = () => {
       <div className="services-container">
         {/* Section Header */}
         <div className="services-header">
-          <h2 className="services-title">Our Services</h2>
-          <p className="services-subtitle">
-            Comprehensive authority approval solutions for every project need in Dubai
-          </p>
+          <div className="services-header-content">
+            <h2 className="services-title">Our Services</h2>
+            <p className="services-subtitle">
+              Comprehensive authority approval solutions for every project need in Dubai
+            </p>
+          </div>
+          <a href="/services" className="btn-view-all-services">
+            View All Services
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <path d="M4 14L14 4M14 4H6M14 4V12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </a>
         </div>
 
         {/* Services Grid */}
