@@ -1,9 +1,35 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './contact.css';
 
 const Contact: React.FC = () => {
+  const serviceOptions = [
+    'General Enquiry',
+    'Civil Defense Approval',
+    'DEWA Approval',
+    'Dubai Municipality Approval',
+    'Emaar Approval',
+    'Nakheel Approval',
+    'JAFZA Approval',
+    'DHA Approval',
+    'DSO Approval',
+    'Dubai Development Authority',
+    'Food Control Department',
+    'Spa Approval',
+    'Shisha Cafe License',
+    'Smoking Permit',
+    'Swimming Pool Approval',
+    'Solar Approval',
+    'Signage Approval',
+    'Tent Approval',
+    'RTA Permit and Approval',
+    'Tecom and DCCA Approval',
+    'Third Party Consultants',
+    'Trakhees Approval',
+    'Other',
+  ];
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -12,6 +38,9 @@ const Contact: React.FC = () => {
     service: 'General Enquiry',
     message: '',
   });
+  const [isServiceOpen, setIsServiceOpen] = useState(false);
+  const formRef = useRef<HTMLFormElement | null>(null);
+  const serviceWrapperRef = useRef<HTMLDivElement | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -23,6 +52,49 @@ const Contact: React.FC = () => {
     const whatsappNumber = '97143886600';
     const text = `*New Enquiry*%0A%0A*Name:* ${formData.name}%0A*Email:* ${formData.email}%0A*Phone:* ${formData.countryCode} ${formData.phone}%0A*Service:* ${formData.service}%0A*Message:* ${formData.message}`;
     window.open(`https://wa.me/${whatsappNumber}?text=${text}`, '_blank');
+  };
+
+  const ensureServiceDropdownInView = () => {
+    const wrapper = serviceWrapperRef.current;
+    if (!wrapper) return;
+    const rect = wrapper.getBoundingClientRect();
+    const dropdownHeight = 220;
+    const margin = 16;
+    const neededBottom = rect.bottom + dropdownHeight + margin;
+    if (neededBottom > window.innerHeight) {
+      const scrollAmount = neededBottom - window.innerHeight;
+      window.scrollBy({ top: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (serviceWrapperRef.current && !serviceWrapperRef.current.contains(event.target as Node)) {
+        setIsServiceOpen(false);
+      }
+    };
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsServiceOpen(false);
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleEsc);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEsc);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isServiceOpen) {
+      requestAnimationFrame(ensureServiceDropdownInView);
+    }
+  }, [isServiceOpen]);
+
+  const toggleServiceDropdown = () => setIsServiceOpen((prev) => !prev);
+
+  const handleServiceSelect = (value: string) => {
+    setFormData((prev) => ({ ...prev, service: value }));
+    setIsServiceOpen(false);
   };
 
   return (
@@ -38,7 +110,11 @@ const Contact: React.FC = () => {
           <h2>Contact details</h2>
           <div className="contact-list">
             <div className="contact-list-item">
-              <div className="contact-icon" aria-hidden="true">📍</div>
+              <div className="contact-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z" fill="white"/>
+                </svg>
+              </div>
               <div>
                 <p className="contact-list-label">Address</p>
                 <p className="contact-text">
@@ -48,7 +124,11 @@ const Contact: React.FC = () => {
               </div>
             </div>
             <div className="contact-list-item">
-              <div className="contact-icon" aria-hidden="true">📞</div>
+              <div className="contact-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20.01 15.38C18.78 15.38 17.59 15.18 16.48 14.82C16.13 14.7 15.74 14.79 15.47 15.06L13.9 17.03C11.07 15.68 8.42 13.13 7.01 10.2L8.96 8.54C9.23 8.26 9.31 7.87 9.2 7.52C8.83 6.41 8.64 5.22 8.64 3.99C8.64 3.45 8.19 3 7.65 3H4.19C3.65 3 3 3.24 3 3.99C3 13.28 10.73 21 20.01 21C20.72 21 21 20.37 21 19.82V16.37C21 15.83 20.55 15.38 20.01 15.38Z" fill="white"/>
+                </svg>
+              </div>
               <div>
                 <p className="contact-list-label">Phone / WhatsApp</p>
                 <a href="tel:+971589575610">+971 589575610</a>
@@ -56,7 +136,11 @@ const Contact: React.FC = () => {
               </div>
             </div>
             <div className="contact-list-item">
-              <div className="contact-icon" aria-hidden="true">✉️</div>
+              <div className="contact-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" fill="white"/>
+                </svg>
+              </div>
               <div>
                 <p className="contact-list-label">Email</p>
                 <a href="mailto:info@buildingapprovals.ae">info@buildingapprovals.ae</a>
@@ -76,7 +160,7 @@ const Contact: React.FC = () => {
 
         <div className="contact-card contact-form-card">
           <h2>Send an enquiry</h2>
-          <form className="contact-form" onSubmit={handleSubmit}>
+          <form className="contact-form" onSubmit={handleSubmit} ref={formRef}>
             <div className="form-row">
               <label>
                 Full Name*
@@ -137,16 +221,36 @@ const Contact: React.FC = () => {
 
             <label className="form-full">
               Service*
-              <select name="service" value={formData.service} onChange={handleChange} required>
-                <option>General Enquiry</option>
-                <option>Civil Defense Approval</option>
-                <option>DEWA Approval</option>
-                <option>Dubai Municipality Approval</option>
-                <option>Community / Developer NOC</option>
-                <option>Food Control / Health</option>
-                <option>Signage / Fit-out</option>
-                <option>Other</option>
-              </select>
+              <div className="service-select-wrapper" ref={serviceWrapperRef}>
+                <button
+                  type="button"
+                  className={`form-input service-trigger ${isServiceOpen ? 'is-open' : ''}`}
+                  onClick={toggleServiceDropdown}
+                  aria-haspopup="listbox"
+                  aria-expanded={isServiceOpen}
+                >
+                  <span>{formData.service || 'Select a service'}</span>
+                  <svg className="service-trigger-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+                {isServiceOpen && (
+                  <div className="service-options" role="listbox">
+                    {serviceOptions.map((option) => (
+                      <button
+                        type="button"
+                        key={option}
+                        className={`service-option ${formData.service === option ? 'active' : ''}`}
+                        onClick={() => handleServiceSelect(option)}
+                        role="option"
+                        aria-selected={formData.service === option}
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </label>
 
             <label className="form-full">
@@ -156,7 +260,7 @@ const Contact: React.FC = () => {
                 value={formData.message}
                 onChange={handleChange}
                 placeholder="Share timeline, location, authority, and any drawings available"
-                rows={4}
+                rows={3}
               />
             </label>
 

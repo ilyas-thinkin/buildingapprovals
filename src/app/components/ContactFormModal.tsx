@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './ContactFormModal.css';
 
 interface ContactFormModalProps {
@@ -10,6 +10,32 @@ interface ContactFormModalProps {
 }
 
 const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onClose, selectedService }) => {
+  const serviceOptions = [
+    'General Enquiry',
+    'Civil Defense Approval',
+    'DEWA Approval',
+    'Dubai Municipality Approval',
+    'Emaar Approval',
+    'Nakheel Approval',
+    'JAFZA Approval',
+    'DHA Approval',
+    'DSO Approval',
+    'Dubai Development Authority',
+    'Food Control Department',
+    'Spa Approval',
+    'Shisha Cafe License',
+    'Smoking Permit',
+    'Swimming Pool Approval',
+    'Solar Approval',
+    'Signage Approval',
+    'Tent Approval',
+    'RTA Permit and Approval',
+    'Tecom and DCCA Approval',
+    'Third Party Consultants',
+    'Trakhees Approval',
+    'Other',
+  ];
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -17,6 +43,9 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onClose, se
     phone: '',
     service: selectedService,
   });
+  const [isServiceOpen, setIsServiceOpen] = useState(false);
+  const serviceDropdownRef = useRef<HTMLDivElement | null>(null);
+  const formRef = useRef<HTMLFormElement | null>(null);
 
   useEffect(() => {
     setFormData(prev => ({ ...prev, service: selectedService }));
@@ -32,6 +61,47 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onClose, se
       document.body.style.overflow = 'unset';
     };
   }, [isOpen]);
+
+  const ensureServiceDropdownInView = () => {
+    if (!formRef.current || !serviceDropdownRef.current) return;
+    const formRect = formRef.current.getBoundingClientRect();
+    const dropdownRect = serviceDropdownRef.current.getBoundingClientRect();
+    const spaceBelow = formRect.bottom - dropdownRect.bottom;
+    const requiredSpace = 210; // room for options list and breathing space
+
+    if (spaceBelow < requiredSpace) {
+      const scrollDelta = requiredSpace - spaceBelow;
+      formRef.current.scrollTo({
+        top: formRef.current.scrollTop + scrollDelta,
+        behavior: 'smooth',
+      });
+    }
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (serviceDropdownRef.current && !serviceDropdownRef.current.contains(event.target as Node)) {
+        setIsServiceOpen(false);
+      }
+    };
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsServiceOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleEsc);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEsc);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isServiceOpen) {
+      requestAnimationFrame(ensureServiceDropdownInView);
+    }
+  }, [isServiceOpen]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -67,6 +137,13 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onClose, se
     }
   };
 
+  const toggleServiceDropdown = () => setIsServiceOpen(prev => !prev);
+
+  const handleServiceSelect = (value: string) => {
+    setFormData(prev => ({ ...prev, service: value }));
+    setIsServiceOpen(false);
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -84,7 +161,7 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onClose, se
             <p className="modal-subtitle">Get in touch with us for your approval needs</p>
           </div>
 
-          <form className="contact-form" onSubmit={handleSubmit}>
+          <form className="contact-form" onSubmit={handleSubmit} ref={formRef}>
           <div className="form-group">
             <label htmlFor="name" className="form-label">Full Name *</label>
             <input
@@ -148,36 +225,36 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onClose, se
 
           <div className="form-group">
             <label htmlFor="service" className="form-label">Service *</label>
-            <select
-              id="service"
-              name="service"
-              className="form-input"
-              value={formData.service}
-              onChange={handleChange}
-              required
-            >
-              <option value="Civil Defense Approval">Civil Defense Approval</option>
-              <option value="DEWA Approval">DEWA Approval</option>
-              <option value="Dubai Municipality Approval">Dubai Municipality Approval</option>
-              <option value="Emaar Approval">Emaar Approval</option>
-              <option value="Nakheel Approval">Nakheel Approval</option>
-              <option value="JAFZA Approval">JAFZA Approval</option>
-              <option value="DHA Approval">DHA Approval</option>
-              <option value="DSO Approval">DSO Approval</option>
-              <option value="Dubai Development Authority">Dubai Development Authority</option>
-              <option value="Food Control Department">Food Control Department</option>
-              <option value="Spa Approval">Spa Approval</option>
-              <option value="Shisha Cafe License">Shisha Cafe License</option>
-              <option value="Smoking Permit">Smoking Permit</option>
-              <option value="Swimming Pool Approval">Swimming Pool Approval</option>
-              <option value="Solar Approval">Solar Approval</option>
-              <option value="Signage Approval">Signage Approval</option>
-              <option value="Tent Approval">Tent Approval</option>
-              <option value="RTA Permit and Approval">RTA Permit and Approval</option>
-              <option value="Tecom and DCCA Approval">Tecom and DCCA Approval</option>
-              <option value="Third Party Consultants">Third Party Consultants</option>
-              <option value="Trakhees Approval">Trakhees Approval</option>
-            </select>
+            <div className="service-select-wrapper" ref={serviceDropdownRef}>
+              <button
+                type="button"
+                className={`form-input service-trigger ${isServiceOpen ? 'is-open' : ''}`}
+                onClick={toggleServiceDropdown}
+                aria-haspopup="listbox"
+                aria-expanded={isServiceOpen}
+              >
+                <span>{formData.service || 'Select a service'}</span>
+                <svg className="service-trigger-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+              {isServiceOpen && (
+                <div className="service-options" role="listbox">
+                  {serviceOptions.map(option => (
+                    <button
+                      type="button"
+                      key={option}
+                      className={`service-option ${formData.service === option ? 'active' : ''}`}
+                      onClick={() => handleServiceSelect(option)}
+                      role="option"
+                      aria-selected={formData.service === option}
+                    >
+                      {option}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           <button type="submit" className="btn-submit">

@@ -132,10 +132,10 @@
   animation: fadeInUp 600ms ease-out backwards;
   animation-delay: calc(var(--card-index, 0) * 50ms);
   transition:
-    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-    background 0.5s ease,
-    border-color 0.45s ease;
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.7s ease,
+    border-color 0.65s ease;
   border: 1px solid var(--card-border);
   background: #ffffff;
 }
@@ -166,11 +166,11 @@
   align-items: center;
   justify-content: center;
   transition:
-    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-    background 0.45s ease,
-    color 0.45s ease,
-    border-color 0.45s ease;
+    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.65s ease,
+    color 0.65s ease,
+    border-color 0.65s ease;
   box-shadow: 0 12px 30px rgba(0, 110, 254, 0.24);
   border: 1px solid rgba(255, 255, 255, 0.35);
 }
@@ -225,11 +225,11 @@
   font-weight: 700;
   cursor: pointer;
   transition:
-    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.45s ease,
-    background 0.45s ease,
-    color 0.45s ease,
-    border-color 0.45s ease;
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.6s ease,
+    background 0.6s ease,
+    color 0.6s ease,
+    border-color 0.6s ease;
   align-self: flex-start;
   box-shadow: 0 10px 24px rgba(0, 110, 254, 0.22);
   display: inline-flex;
@@ -262,10 +262,10 @@
   border: 1px solid rgba(255, 255, 255, 0.75);
   color: currentColor;
   transition:
-    background 0.35s ease,
-    border-color 0.35s ease,
-    color 0.35s ease,
-    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    background 0.5s ease,
+    border-color 0.5s ease,
+    color 0.5s ease,
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   flex-shrink: 0;
 }
 
@@ -358,79 +358,9 @@
   box-shadow: none;
 }
 
-.enquiry-float {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  min-width: 120px;
-  height: 48px;
-  border-radius: 999px;
-  background: #0b347a;
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 160ms ease-out, box-shadow 160ms ease-out;
-  z-index: 999;
-}
-
-.enquiry-float:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.22);
-}
-
-.enquiry-float:active {
-  transform: translateY(0);
-}
-
-.whatsapp-float {
-  position: fixed;
-  right: 20px;
-  bottom: 88px;
-  width: 54px;
-  height: 54px;
-  border-radius: 50%;
-  background: #ffffff;
-  border: 2px solid #006efe;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
-  z-index: 1000;
-  transition: transform 160ms ease-out, box-shadow 160ms ease-out;
-}
-
-.whatsapp-float:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.3);
-}
-
-.whatsapp-float:active {
-  transform: translateY(0);
-}
-
 @media (max-width: 767px) {
   .btn-services-secondary {
     width: 100%;
-  }
-
-  .enquiry-float {
-    right: 16px;
-    bottom: 16px;
-    width: auto;
-    min-width: 120px;
-    max-width: 200px;
-    padding: 12px 18px;
-  }
-
-  .whatsapp-float {
-    right: 16px;
-    bottom: 88px;
   }
 }
 

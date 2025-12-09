@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import './ServicesSection.css';
-import ContactFormModal from './ContactFormModal';
+// import ContactFormModal from './ContactFormModal';
 
 const ServicesSection: React.FC = () => {
   const services = [
@@ -99,22 +99,22 @@ const ServicesSection: React.FC = () => {
     },
   ];
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedService, setSelectedService] = useState('');
+  // const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [selectedService, setSelectedService] = useState('');
 
-  const openEnquiryModal = (serviceTitle: string) => {
-    setSelectedService(serviceTitle);
-    setIsModalOpen(true);
-  };
+  // const openEnquiryModal = (serviceTitle: string) => {
+  //   setSelectedService(serviceTitle);
+  //   setIsModalOpen(true);
+  // };
 
-  const openGenericEnquiry = () => {
-    setSelectedService('');
-    setIsModalOpen(true);
-  };
+  // const openGenericEnquiry = () => {
+  //   setSelectedService('');
+  //   setIsModalOpen(true);
+  // };
 
-  const closeEnquiryModal = () => {
-    setIsModalOpen(false);
-  };
+  // const closeEnquiryModal = () => {
+  //   setIsModalOpen(false);
+  // };
 
   return (
     <section className="services-section" id="services">
@@ -162,22 +162,19 @@ const ServicesSection: React.FC = () => {
           <a href="/services" className="btn-services-primary">
             View All Services
           </a>
-          <button type="button" className="btn-services-secondary" onClick={openGenericEnquiry}>
-            Enquire
-          </button>
         </div>
       </div>
 
-      <button
+      {/* <button
         type="button"
         className="enquiry-float"
         onClick={openGenericEnquiry}
         aria-label="Open enquiry form"
       >
         Enquire
-      </button>
+      </button> */}
 
-      <a
+      {/* <a
         className="whatsapp-float"
         href="https://wa.me/97143886600?text=Hello%20I%20have%20an%20enquiry"
         target="_blank"
@@ -194,13 +191,13 @@ const ServicesSection: React.FC = () => {
             fill="#ffffff"
           />
         </svg>
-      </a>
+      </a> */}
 
-      <ContactFormModal
+      {/* <ContactFormModal
         isOpen={isModalOpen}
         onClose={closeEnquiryModal}
         selectedService={selectedService}
-      />
+      /> */}
     </section>
   );
 };
