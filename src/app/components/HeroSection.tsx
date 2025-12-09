@@ -30,7 +30,7 @@ const HeroSection: React.FC = () => {
           {/* CTA Buttons */}
           <div className="hero-cta-group">
             <button type="button" className="btn-primary" onClick={openModal}>
-              Get Approval Support
+              Free Quote
             </button>
             <a href="/services" className="btn-secondary">
               Our Services
