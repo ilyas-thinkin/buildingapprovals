@@ -1,9 +1,18 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import Image from 'next/image';
+import ContactFormModal from './ContactFormModal';
 import './HeroSection.css';
 
 const HeroSection: React.FC = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
   return (
+    <>
     <section className="hero-section">
       <div className="hero-container">
         {/* Left Column - Content */}
@@ -20,11 +29,11 @@ const HeroSection: React.FC = () => {
 
           {/* CTA Buttons */}
           <div className="hero-cta-group">
-            <a href="/contact" className="btn-primary">
+            <button type="button" className="btn-primary" onClick={openModal}>
               Get Approval Support
-            </a>
-            <a href="#process" className="btn-secondary">
-              View Our Process
+            </button>
+            <a href="/services" className="btn-secondary">
+              Our Services
             </a>
           </div>
 
@@ -77,6 +86,12 @@ const HeroSection: React.FC = () => {
         </div>
       </div>
     </section>
+    <ContactFormModal
+      isOpen={isModalOpen}
+      onClose={closeModal}
+      selectedService=""
+    />
+    </>
   );
 };
 
