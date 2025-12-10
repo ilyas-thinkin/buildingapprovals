@@ -52,9 +52,9 @@
    HEADLINE
    ============================================ */
 .hero-headline {
-  font-size: 56px;
+  font-size: 42px;
   font-weight: 600;
-  line-height: 1.1;
+  line-height: 1.2;
   letter-spacing: -0.02em;
   color: var(--hero-heading-color);
   margin: 0 0 24px 0;
@@ -65,7 +65,7 @@
    SUBHEADLINE
    ============================================ */
 .hero-subheadline {
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 400;
   line-height: 1.6;
   color: var(--hero-subheading-color);
@@ -185,7 +185,7 @@
 .hero-image {
   width: 100%;
   height: auto;
-  max-width: 600px;
+  max-width: 1000px;
   object-fit: contain;
   border-radius: 12px;
 }
@@ -265,11 +265,11 @@
   }
 
   .hero-headline {
-    font-size: 48px;
+    font-size: 36px;
   }
 
   .hero-subheadline {
-    font-size: 18px;
+    font-size: 16px;
   }
 }
 
@@ -291,12 +291,12 @@
   }
 
   .hero-headline {
-    font-size: 36px;
+    font-size: 28px;
     margin-bottom: 20px;
   }
 
   .hero-subheadline {
-    font-size: 16px;
+    font-size: 14px;
     margin-bottom: 32px;
   }
 
@@ -328,7 +328,7 @@
   }
 
   .hero-image {
-    max-width: 400px;
+    max-width: 600px;
   }
 
   .scroll-indicator {
@@ -339,11 +339,11 @@
 /* Small Mobile */
 @media (max-width: 480px) {
   .hero-headline {
-    font-size: 32px;
+    font-size: 26px;
   }
 
   .hero-subheadline {
-    font-size: 15px;
+    font-size: 13px;
   }
 }
 

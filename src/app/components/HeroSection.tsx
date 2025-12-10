@@ -19,12 +19,12 @@ const HeroSection: React.FC = () => {
         <div className="hero-content">
           {/* Main Headline */}
           <h1 className="hero-headline">
-            Authority approvals. Done right. On time.
+            Dubai&apos;s Leading Approval Service Experts
           </h1>
 
           {/* Subheadline */}
           <p className="hero-subheadline">
-            Dubai's specialist consultancy for contractors, consultants, and developers who need regulatory certainty—not surprises.
+            We handle all major authority requirements, including Dubai Municipality approval, Civil Defence approval, DEWA approval, Nakheel approval, DHA approval, and other relevant approvals. We ensure your project progresses smoothly, compliantly, and without delays.
           </p>
 
           {/* CTA Buttons */}
