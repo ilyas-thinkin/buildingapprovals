@@ -291,7 +291,7 @@
   }
 
   .hero-headline {
-    font-size: 28px;
+    font-size: 26px;
     margin-bottom: 20px;
   }
 
@@ -339,7 +339,7 @@
 /* Small Mobile */
 @media (max-width: 480px) {
   .hero-headline {
-    font-size: 26px;
+    font-size: 24px;
   }
 
   .hero-subheadline {
