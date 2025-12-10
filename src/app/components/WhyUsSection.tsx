@@ -11,6 +11,11 @@ const WhyUsSection: React.FC = () => {
   });
   const [hasAnimated, setHasAnimated] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -53,6 +58,51 @@ const WhyUsSection: React.FC = () => {
     }, frameDuration);
   };
 
+  // Check if mobile on mount and resize
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 767);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Touch handlers for swipe
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+
+    const distance = touchStartX.current - touchEndX.current;
+    const minSwipeDistance = 50;
+
+    if (Math.abs(distance) > minSwipeDistance) {
+      if (distance > 0) {
+        // Swipe left - next slide
+        setCurrentSlide((prev) => Math.min(prev + 1, reasons.length - 1));
+      } else {
+        // Swipe right - previous slide
+        setCurrentSlide((prev) => Math.max(prev - 1, 0));
+      }
+    }
+
+    touchStartX.current = 0;
+    touchEndX.current = 0;
+  };
+
+  const goToSlide = (index: number) => {
+    setCurrentSlide(index);
+  };
+
   const reasons = [
     {
       number: '01',
@@ -93,22 +143,47 @@ const WhyUsSection: React.FC = () => {
           </p>
         </div>
 
-        {/* Reasons Grid */}
-        <div className="whyus-grid">
-          {reasons.map((reason, index) => (
-            <div key={index} className="whyus-card">
-              <div className="card-number">{reason.number}</div>
-              <div className="card-content">
-                <h3 className="card-title">{reason.title}</h3>
-                <p className="card-description">{reason.description}</p>
-                <div className="card-highlight">
-                  <span className="highlight-icon">✓</span>
-                  <span className="highlight-text">{reason.highlight}</span>
+        {/* Reasons Grid / Carousel */}
+        <div className="whyus-carousel-wrapper">
+          <div
+            className={`whyus-grid ${isMobile ? 'mobile-carousel' : ''}`}
+            ref={carouselRef}
+            onTouchStart={isMobile ? handleTouchStart : undefined}
+            onTouchMove={isMobile ? handleTouchMove : undefined}
+            onTouchEnd={isMobile ? handleTouchEnd : undefined}
+            style={isMobile ? {
+              transform: `translateX(-${currentSlide * 100}%)`,
+            } : undefined}
+          >
+            {reasons.map((reason, index) => (
+              <div key={index} className="whyus-card">
+                <div className="card-number">{reason.number}</div>
+                <div className="card-content">
+                  <h3 className="card-title">{reason.title}</h3>
+                  <p className="card-description">{reason.description}</p>
+                  <div className="card-highlight">
+                    <span className="highlight-icon">✓</span>
+                    <span className="highlight-text">{reason.highlight}</span>
+                  </div>
                 </div>
+                <div className="card-decoration"></div>
               </div>
-              <div className="card-decoration"></div>
+            ))}
+          </div>
+
+          {/* Carousel Dots - Mobile Only */}
+          {isMobile && (
+            <div className="carousel-dots">
+              {reasons.map((_, index) => (
+                <button
+                  key={index}
+                  className={`carousel-dot ${index === currentSlide ? 'active' : ''}`}
+                  onClick={() => goToSlide(index)}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
             </div>
-          ))}
+          )}
         </div>
 
         {/* Stats Bar */}

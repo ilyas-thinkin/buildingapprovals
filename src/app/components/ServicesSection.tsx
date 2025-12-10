@@ -1,10 +1,16 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './ServicesSection.css';
 // import ContactFormModal from './ContactFormModal';
 
 const ServicesSection: React.FC = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
+
   const services = [
     {
       id: 'civil-defense',
@@ -116,6 +122,51 @@ const ServicesSection: React.FC = () => {
   //   setIsModalOpen(false);
   // };
 
+  // Check if mobile on mount and resize
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 767);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Touch handlers for swipe
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+
+    const distance = touchStartX.current - touchEndX.current;
+    const minSwipeDistance = 50;
+
+    if (Math.abs(distance) > minSwipeDistance) {
+      if (distance > 0) {
+        // Swipe left - next slide
+        setCurrentSlide((prev) => Math.min(prev + 1, services.length - 1));
+      } else {
+        // Swipe right - previous slide
+        setCurrentSlide((prev) => Math.max(prev - 1, 0));
+      }
+    }
+
+    touchStartX.current = 0;
+    touchEndX.current = 0;
+  };
+
+  const goToSlide = (index: number) => {
+    setCurrentSlide(index);
+  };
+
   return (
     <section className="services-section" id="services">
       <div className="services-container">
@@ -135,26 +186,51 @@ const ServicesSection: React.FC = () => {
           </a>
         </div>
 
-        {/* Services Grid */}
-        <div className="services-grid">
-          {services.map((service, index) => (
-            <div key={index} className="service-card">
-              <div className="service-card-icon">
-                {service.icon}
+        {/* Services Grid / Carousel */}
+        <div className="services-carousel-wrapper">
+          <div
+            className={`services-grid ${isMobile ? 'mobile-carousel' : ''}`}
+            ref={carouselRef}
+            onTouchStart={isMobile ? handleTouchStart : undefined}
+            onTouchMove={isMobile ? handleTouchMove : undefined}
+            onTouchEnd={isMobile ? handleTouchEnd : undefined}
+            style={isMobile ? {
+              transform: `translateX(-${currentSlide * 100}%)`,
+            } : undefined}
+          >
+            {services.map((service, index) => (
+              <div key={index} className="service-card">
+                <div className="service-card-icon">
+                  {service.icon}
+                </div>
+                <h3 className="service-card-title">{service.title}</h3>
+                <p className="service-card-description">{service.description}</p>
+                <a href={`/services/${service.id}`} className="service-card-cta">
+                  Read More
+                  <span className="service-card-cta-icon" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" fill="none">
+                      <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.2" />
+                      <path d="M7 5L10 8L7 11" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                </a>
               </div>
-              <h3 className="service-card-title">{service.title}</h3>
-              <p className="service-card-description">{service.description}</p>
-              <a href={`/services/${service.id}`} className="service-card-cta">
-                Read More
-                <span className="service-card-cta-icon" aria-hidden="true">
-                  <svg viewBox="0 0 16 16" fill="none">
-                    <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.2" />
-                    <path d="M7 5L10 8L7 11" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </span>
-              </a>
+            ))}
+          </div>
+
+          {/* Carousel Dots - Mobile Only */}
+          {isMobile && (
+            <div className="carousel-dots">
+              {services.map((_, index) => (
+                <button
+                  key={index}
+                  className={`carousel-dot ${index === currentSlide ? 'active' : ''}`}
+                  onClick={() => goToSlide(index)}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
             </div>
-          ))}
+          )}
         </div>
 
         {/* CTA */}

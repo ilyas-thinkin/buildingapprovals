@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   title: "Building Approvals",
   description: "Building Approvals",
   icons: {
-    icon: "/images/favicon.ico",
+    icon: "/images/favicon (2).ico",
   },
 };
 

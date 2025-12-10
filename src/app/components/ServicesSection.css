@@ -416,7 +416,13 @@
 }
 
 /* Mobile */
-@media (max-width: 767px) {
+@media (max-width: 767px) 
+
+{
+
+  .service-card {
+
+  }
   .services-section {
     padding: 60px 20px;
   }
@@ -447,10 +453,60 @@
     padding: 14px 24px;
   }
 
-  .services-grid {
-    grid-template-columns: 1fr;
-    gap: 24px;
+  /* Carousel Wrapper */
+  .services-carousel-wrapper {
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: visible;
     margin-bottom: 48px;
+    width: calc(100% + 40px);
+    margin-left: -20px;
+    padding: 20px 20px;
+  }
+
+  .services-grid.mobile-carousel {
+    display: flex;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    gap: 0;
+    margin-bottom: 0;
+    padding: 0;
+  }
+
+  .services-grid.mobile-carousel .service-card {
+    flex: 0 0 100%;
+    min-width: 100%;
+    scroll-snap-align: center;
+  }
+
+  /* Carousel Dots */
+  .carousel-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 32px;
+    padding: 0;
+  }
+
+  .carousel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #d1d5db;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .carousel-dot.active {
+    width: 24px;
+    border-radius: 4px;
+    background-color: #006efe;
+  }
+
+  .carousel-dot:hover:not(.active) {
+    background-color: #9ca3af;
   }
 
   .service-card {

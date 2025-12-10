@@ -362,10 +362,60 @@
     font-size: 16px;
   }
 
-  .whyus-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
+  /* Carousel Wrapper */
+  .whyus-carousel-wrapper {
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: visible;
     margin-bottom: 50px;
+    width: calc(100% + 40px);
+    margin-left: -20px;
+    padding: 20px 20px;
+  }
+
+  .whyus-grid.mobile-carousel {
+    display: flex;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    gap: 0;
+    margin-bottom: 0;
+    padding: 0;
+  }
+
+  .whyus-grid.mobile-carousel .whyus-card {
+    flex: 0 0 100%;
+    min-width: 100%;
+    scroll-snap-align: center;
+  }
+
+  /* Carousel Dots */
+  .carousel-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 32px;
+    padding: 0;
+  }
+
+  .carousel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #d1d5db;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .carousel-dot.active {
+    width: 24px;
+    border-radius: 4px;
+    background-color: #006efe;
+  }
+
+  .carousel-dot:hover:not(.active) {
+    background-color: #9ca3af;
   }
 
   .whyus-card {

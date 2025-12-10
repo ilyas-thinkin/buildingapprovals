@@ -56,7 +56,7 @@ const HeroSection: React.FC = () => {
         {/* Right Column - Hero Image */}
         <div className="hero-image-wrapper">
           <Image
-            src="/images/heroimg1.png"
+            src="/images/Heroimg.png"
             alt="Dubai Building Approvals"
             width={600}
             height={600}
