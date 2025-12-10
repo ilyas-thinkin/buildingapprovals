@@ -356,7 +356,7 @@ const ServicesPage: React.FC = () => {
       {/* Interactive Services Rail */}
       <section className="services-rail-section" ref={railSectionRef}>
         <div className="services-rail-header">
-          <h2 className="services-rail-title">Quick View: Explore Approvals</h2>
+          <h2 className="services-rail-title">Explore Our Services</h2>
           <p className="services-rail-subtitle">Tap an icon to preview details instantly.</p>
         </div>
         <div className="services-rail-container">
