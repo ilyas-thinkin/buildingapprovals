@@ -17,6 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 const siteUrl = new URL("https://buildingapprovals.ae");
+const GA_MEASUREMENT_ID = "G-GK7ZKMLRR2";
 
 export const metadata: Metadata = {
   metadataBase: siteUrl,
@@ -91,6 +92,23 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Script
+          id="ga-external"
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script
+          id="ga-inline"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${GA_MEASUREMENT_ID}');
+            `,
+          }}
+        />
         <Script
           id="ld-org"
           type="application/ld+json"
