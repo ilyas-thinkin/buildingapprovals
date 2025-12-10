@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Script from 'next/script';
 import { notFound } from 'next/navigation';
 import ContactFormModal from '../../components/ContactFormModal';
 import './serviceDetail.css';
@@ -2551,12 +2552,45 @@ export default function ServiceDetailPage({ params }: { params: Promise<{ servic
     notFound();
   }
 
+  const serviceUrl = `https://buildingapprovals.ae/services/${serviceId}`;
+  const serviceSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: serviceData.title,
+    description: serviceData.overview,
+    serviceType: serviceData.title,
+    areaServed: {
+      '@type': 'AdministrativeArea',
+      name: 'Dubai, UAE',
+    },
+    provider: {
+      '@type': 'LocalBusiness',
+      name: 'Building Approvals',
+      url: 'https://buildingapprovals.ae',
+      telephone: '+971589575610',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: 'Office No: 302-2, Al Babtain building, 2nd St - Port Saeed',
+        addressLocality: 'Dubai',
+        addressCountry: 'AE',
+      },
+    },
+    url: serviceUrl,
+  };
+
   const toggleFaq = (index: number) => {
     setActiveFaq(activeFaq === index ? null : index);
   };
 
   return (
     <div className="service-detail-page">
+      <Script
+        id={`ld-service-${serviceId}`}
+        type="application/ld+json"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+      />
+
       {/* Hero Section */}
       <section className="service-detail-hero">
         <div className="service-detail-hero-content">
