@@ -368,22 +368,25 @@
     overflow-x: hidden;
     overflow-y: visible;
     margin-bottom: 50px;
-    width: calc(100% + 40px);
-    margin-left: -20px;
-    padding: 20px 20px;
+    width: 100%;
+    margin-left: 0;
+    padding: 16px 0;
   }
 
   .whyus-grid.mobile-carousel {
     display: flex;
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    gap: 0;
+    gap: 16px;
     margin-bottom: 0;
     padding: 0;
+    justify-content: flex-start;
+    width: 100%;
   }
 
   .whyus-grid.mobile-carousel .whyus-card {
-    flex: 0 0 100%;
-    min-width: 100%;
+    flex: 0 0 calc(100% - 48px);
+    min-width: calc(100% - 48px);
+    max-width: calc(100% - 48px);
     scroll-snap-align: center;
   }
 

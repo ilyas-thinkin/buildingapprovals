@@ -7,6 +7,9 @@ import './ServicesSection.css';
 const ServicesSection: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const MOBILE_CARD_GAP = 16;
+  const [slideOffset, setSlideOffset] = useState(0);
+  const [startOffset, setStartOffset] = useState(0);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -134,6 +137,38 @@ const ServicesSection: React.FC = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Capture mobile slide width plus gap so transforms center each card
+  useEffect(() => {
+    const updateSlideOffset = () => {
+      if (!carouselRef.current || !isMobile) {
+        setSlideOffset(0);
+        setStartOffset(0);
+        return;
+      }
+
+      const cards = carouselRef.current.querySelectorAll('.service-card') as NodeListOf<HTMLElement>;
+      if (!cards.length) return;
+
+      const firstCard = cards[0];
+      const firstCenter = firstCard.offsetLeft + firstCard.offsetWidth / 2;
+      const containerCenter = carouselRef.current.offsetWidth / 2;
+
+      setStartOffset(containerCenter - firstCenter);
+
+      if (cards.length > 1) {
+        const secondCard = cards[1];
+        const secondCenter = secondCard.offsetLeft + secondCard.offsetWidth / 2;
+        setSlideOffset(secondCenter - firstCenter);
+      } else {
+        setSlideOffset(firstCard.offsetWidth + MOBILE_CARD_GAP);
+      }
+    };
+
+    updateSlideOffset();
+    window.addEventListener('resize', updateSlideOffset);
+    return () => window.removeEventListener('resize', updateSlideOffset);
+  }, [isMobile]);
+
   // Touch handlers for swipe
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
@@ -167,6 +202,12 @@ const ServicesSection: React.FC = () => {
     setCurrentSlide(index);
   };
 
+  const mobileTransform = isMobile
+    ? {
+        transform: `translateX(${startOffset - currentSlide * slideOffset}px)`,
+      }
+    : undefined;
+
   return (
     <section className="services-section" id="services">
       <div className="services-container">
@@ -194,9 +235,7 @@ const ServicesSection: React.FC = () => {
             onTouchStart={isMobile ? handleTouchStart : undefined}
             onTouchMove={isMobile ? handleTouchMove : undefined}
             onTouchEnd={isMobile ? handleTouchEnd : undefined}
-            style={isMobile ? {
-              transform: `translateX(-${currentSlide * 100}%)`,
-            } : undefined}
+            style={mobileTransform}
           >
             {services.map((service, index) => (
               <div key={index} className="service-card">

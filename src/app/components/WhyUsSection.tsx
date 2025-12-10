@@ -13,6 +13,9 @@ const WhyUsSection: React.FC = () => {
   const statsRef = useRef<HTMLDivElement>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [slideOffset, setSlideOffset] = useState(0);
+  const [startOffset, setStartOffset] = useState(0);
+  const MOBILE_CARD_GAP = 16;
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -70,6 +73,38 @@ const WhyUsSection: React.FC = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Capture mobile slide width plus gap so transforms keep cards centered
+  useEffect(() => {
+    const updateSlideOffset = () => {
+      if (!carouselRef.current || !isMobile) {
+        setSlideOffset(0);
+        setStartOffset(0);
+        return;
+      }
+
+      const cards = carouselRef.current.querySelectorAll('.whyus-card') as NodeListOf<HTMLElement>;
+      if (!cards.length) return;
+
+      const firstCard = cards[0];
+      const firstCenter = firstCard.offsetLeft + firstCard.offsetWidth / 2;
+      const containerCenter = carouselRef.current.offsetWidth / 2;
+
+      setStartOffset(containerCenter - firstCenter);
+
+      if (cards.length > 1) {
+        const secondCard = cards[1];
+        const secondCenter = secondCard.offsetLeft + secondCard.offsetWidth / 2;
+        setSlideOffset(secondCenter - firstCenter);
+      } else {
+        setSlideOffset(firstCard.offsetWidth + MOBILE_CARD_GAP);
+      }
+    };
+
+    updateSlideOffset();
+    window.addEventListener('resize', updateSlideOffset);
+    return () => window.removeEventListener('resize', updateSlideOffset);
+  }, [isMobile, currentSlide]);
+
   // Touch handlers for swipe
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
@@ -102,6 +137,12 @@ const WhyUsSection: React.FC = () => {
   const goToSlide = (index: number) => {
     setCurrentSlide(index);
   };
+
+  const mobileTransform = isMobile
+    ? {
+        transform: `translateX(${startOffset - currentSlide * slideOffset}px)`,
+      }
+    : undefined;
 
   const reasons = [
     {
@@ -151,9 +192,7 @@ const WhyUsSection: React.FC = () => {
             onTouchStart={isMobile ? handleTouchStart : undefined}
             onTouchMove={isMobile ? handleTouchMove : undefined}
             onTouchEnd={isMobile ? handleTouchEnd : undefined}
-            style={isMobile ? {
-              transform: `translateX(-${currentSlide * 100}%)`,
-            } : undefined}
+            style={mobileTransform}
           >
             {reasons.map((reason, index) => (
               <div key={index} className="whyus-card">

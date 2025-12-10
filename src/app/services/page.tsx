@@ -436,15 +436,26 @@ const ServicesPage: React.FC = () => {
                   <h3 className="panel-title">{activeServiceData.title}</h3>
                   <p className="panel-description">{activeServiceData.description}</p>
                 </div>
-                <button
-                  className="panel-cta"
-                  onClick={() => handleEnquiry(activeServiceData.title)}
-                >
-                  Send Enquiry
-                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                    <path d="M4 14L14 4M14 4H6M14 4V12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </button>
+                <div className="panel-cta-group">
+                  <button
+                    className="panel-cta"
+                    onClick={() => handleEnquiry(activeServiceData.title)}
+                  >
+                    Send Enquiry
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                      <path d="M4 14L14 4M14 4H6M14 4V12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                  <a
+                    href={`/services/${activeServiceData.id}`}
+                    className="panel-cta panel-cta-secondary"
+                  >
+                    View Service
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                      <path d="M4 14L14 4M14 4H6M14 4V12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
