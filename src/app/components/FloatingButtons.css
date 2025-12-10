@@ -28,7 +28,7 @@
   transform: translateY(0);
 }
 
-.whatsapp-float {
+.call-float {
   position: fixed;
   right: 20px;
   bottom: 20px;
@@ -44,18 +44,19 @@
   z-index: 999;
   transition: transform 160ms ease-out, box-shadow 160ms ease-out;
   cursor: pointer;
+  text-decoration: none;
 }
 
-.whatsapp-float:hover {
+.call-float:hover {
   transform: translateY(-2px);
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.3);
 }
 
-.whatsapp-float:active {
+.call-float:active {
   transform: translateY(0);
 }
 
-.whatsapp-float svg {
+.call-float svg {
   display: block;
 }
 
@@ -69,7 +70,7 @@
     padding: 12px 18px;
   }
 
-  .whatsapp-float {
+  .call-float {
     right: 16px;
     bottom: 16px;
   }

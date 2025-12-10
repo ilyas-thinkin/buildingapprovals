@@ -49,7 +49,7 @@ const Contact: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const whatsappNumber = '97143886600';
+    const whatsappNumber = '971589575610';
     const text = `*New Enquiry*%0A%0A*Name:* ${formData.name}%0A*Email:* ${formData.email}%0A*Phone:* ${formData.countryCode} ${formData.phone}%0A*Service:* ${formData.service}%0A*Message:* ${formData.message}`;
     window.open(`https://wa.me/${whatsappNumber}?text=${text}`, '_blank');
   };

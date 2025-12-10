@@ -115,7 +115,7 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onClose, se
     const message = `*New Service Enquiry*%0A%0A*Name:* ${formData.name}%0A*Email:* ${formData.email}%0A*Phone:* ${formData.countryCode}${formData.phone}%0A*Service:* ${formData.service}`;
 
     // WhatsApp number
-    const whatsappNumber = '97143886600';
+    const whatsappNumber = '971589575610';
 
     // Open WhatsApp
     window.open(`https://wa.me/${whatsappNumber}?text=${message}`, '_blank');

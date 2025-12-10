@@ -291,7 +291,7 @@ const ServicesSection: React.FC = () => {
 
       {/* <a
         className="whatsapp-float"
-        href="https://wa.me/97143886600?text=Hello%20I%20have%20an%20enquiry"
+        href="https://wa.me/971589575610?text=Hello%20I%20have%20an%20enquiry"
         target="_blank"
         rel="noreferrer"
         aria-label="Chat on WhatsApp"
