@@ -421,6 +421,7 @@
 {
 
   .service-card {
+    
 
   }
   .services-section {
@@ -448,9 +449,43 @@
   }
 
   .btn-view-all-services {
-    width: 100%;
-    justify-content: center;
-    padding: 14px 24px;
+    display: none;
+  }
+
+  /* Disable hover effects on mobile */
+  .service-card:hover {
+    transform: none;
+    box-shadow: 0 14px 36px rgba(8, 38, 92, 0.08);
+    border-color: var(--card-border);
+    background: #ffffff;
+  }
+
+  .service-card:hover .service-card-icon {
+    background: linear-gradient(135deg, #006efe 0%, #0056d6 100%);
+    color: #ffffff;
+    transform: none;
+    box-shadow: 0 12px 30px rgba(0, 110, 254, 0.24);
+  }
+
+  .service-card:hover .service-card-title {
+    color: #0c1f3f;
+  }
+
+  .service-card:hover .service-card-description {
+    color: #1f3d73;
+  }
+
+  .service-card:hover .service-card-cta {
+    background: linear-gradient(135deg, #006efe 0%, #0056d6 100%);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 10px 24px rgba(0, 110, 254, 0.22);
+  }
+
+  .service-card:hover .service-card-cta-icon {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.75);
+    color: currentColor;
   }
 
   /* Carousel Wrapper */
