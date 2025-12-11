@@ -78,9 +78,16 @@ export const metadata: Metadata = {
     google: "1RihkLPG-TpLD2tnqwYW9MHjgWWaajO_br8pGGWeDpY",
   },
   icons: {
-    icon: "/images/favicon (2).ico",
-    shortcut: "/images/favicon (2).ico",
-    apple: "/images/favicon (2).ico",
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon.ico", sizes: "16x16", type: "image/x-icon" },
+      { url: "/favicon.ico", sizes: "32x32", type: "image/x-icon" },
+      { url: "/favicon.ico", sizes: "48x48", type: "image/x-icon" },
+    ],
+    shortcut: [{ url: "/favicon.ico" }],
+    apple: [
+      { url: "/favicon.ico" },
+    ],
   },
 };
 
