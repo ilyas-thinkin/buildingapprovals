@@ -17,16 +17,20 @@ const geistMono = Geist_Mono({
 });
 
 const siteUrl = new URL("https://buildingapprovals.ae");
+// Google Analytics property used for gtag configuration.
 const GA_MEASUREMENT_ID = "G-GK7ZKMLRR2";
 
+// Site-wide SEO metadata, social previews, canonical URL, and verification tokens.
 export const metadata: Metadata = {
   metadataBase: siteUrl,
+  // Core titles and description reused across pages.
   title: {
     default: "Building Approvals | Authority approvals done right",
     template: "%s | Building Approvals",
   },
   description:
     "Building Approvals is Dubai's specialist consultancy for fast, compliant authority approvals and NOCs across Civil Defense, DEWA, Dubai Municipality, RTA, Trakhees, and more.",
+  // Primary keyword set for search engines.
   keywords: [
     "Dubai authority approvals",
     "Civil Defense approval Dubai",
@@ -44,6 +48,7 @@ export const metadata: Metadata = {
     "Dubai signage permit",
     "Dubai construction approvals",
   ],
+  // Open Graph tags for social previews.
   openGraph: {
     type: "website",
     url: siteUrl,
@@ -60,6 +65,7 @@ export const metadata: Metadata = {
       },
     ],
   },
+  // Twitter card metadata for link sharing.
   twitter: {
     card: "summary_large_image",
     title: "Building Approvals | Authority approvals done right",
@@ -67,16 +73,20 @@ export const metadata: Metadata = {
     "Fast, compliant approvals and NOCs across Dubai authorities with zero resubmissions.",
   images: ["/images/Building Approvals OG Logo.png"],
 },
+  // Canonical URL applied to all routes.
   alternates: {
     canonical: siteUrl.href,
   },
+  // Crawl directives for search engines.
   robots: {
     index: true,
     follow: true,
   },
+  // Google Search Console verification token.
   verification: {
     google: "1RihkLPG-TpLD2tnqwYW9MHjgWWaajO_br8pGGWeDpY",
   },
+  // Favicon variants for different devices.
   icons: {
     icon: [
       { url: "/favicon.ico" },
@@ -101,6 +111,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        {/* Google Tag Manager bootstrap */}
         <Script
           id="gtm-script"
           strategy="afterInteractive"
@@ -114,6 +125,7 @@ export default function RootLayout({
             `,
           }}
         />
+        {/* GTM noscript fallback for non-JS browsers */}
         <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-NF9BQXX9"
@@ -122,11 +134,13 @@ export default function RootLayout({
             style={{ display: "none", visibility: "hidden" }}
           />
         </noscript>
+        {/* Google Analytics tag loader */}
         <Script
           id="ga-external"
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
           strategy="afterInteractive"
         />
+        {/* GA configuration for page view tracking */}
         <Script
           id="ga-inline"
           strategy="afterInteractive"
@@ -139,6 +153,7 @@ export default function RootLayout({
             `,
           }}
         />
+        {/* Organization schema markup for rich results */}
         <Script
           id="ld-org"
           type="application/ld+json"
