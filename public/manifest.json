@@ -1,0 +1,28 @@
+{
+  "name": "Building Approvals Dubai",
+  "short_name": "Building Approvals",
+  "description": "Dubai's specialist consultancy for fast, compliant authority approvals and NOCs",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#006efe",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/images/BA OG Logo_imresizer (1).png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/BA OG Logo_imresizer (1).png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

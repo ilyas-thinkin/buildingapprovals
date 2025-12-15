@@ -58,10 +58,10 @@ export const metadata: Metadata = {
       "Building Approvals Dubai is a leading consultancy for fast and reliable construction and fit-out approvals. We handle all major authority requirements, including Dubai Municipality, Civil Defence Dubai, Nakheel noc, JAFZA, DHA, DDA, DSO, and other authority approvals. Call Now",
     images: [
       {
-        url: "/images/Building Approvals OG Logo.png",
+        url: "/images/BA OG Logo_imresizer (1).png",
         width: 1200,
-        height: 630,
-        alt: "Building Approvals",
+        height: 1200,
+        alt: "Building Approvals Dubai",
       },
     ],
   },
@@ -71,7 +71,7 @@ export const metadata: Metadata = {
     title: "Building Approvals Dubai | Leading Building Approval Services in Dubai",
     description:
       "Building Approvals Dubai is a leading consultancy for fast and reliable construction and fit-out approvals. We handle all major authority requirements, including Dubai Municipality, Civil Defence Dubai, Nakheel noc, JAFZA, DHA, DDA, DSO, and other authority approvals. Call Now",
-    images: ["/images/Building Approvals OG Logo.png"],
+    images: ["/images/BA OG Logo_imresizer (1).png"],
   },
   // Canonical URL applied to all routes.
   alternates: {
@@ -86,6 +86,8 @@ export const metadata: Metadata = {
   verification: {
     google: "1RihkLPG-TpLD2tnqwYW9MHjgWWaajO_br8pGGWeDpY",
   },
+  // Web app manifest for PWA support and icon configuration.
+  manifest: "/manifest.json",
   // Favicon variants for different devices.
   icons: {
     icon: [
