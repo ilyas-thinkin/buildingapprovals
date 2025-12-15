@@ -25,11 +25,11 @@ export const metadata: Metadata = {
   metadataBase: siteUrl,
   // Core titles and description reused across pages.
   title: {
-    default: "Building Approvals | Authority approvals done right",
-    template: "%s | Building Approvals",
+    default: "Building Approvals Dubai | Leading Building Approval Services in Dubai",
+    template: "%s | Building Approvals Dubai",
   },
   description:
-    "Building Approvals is Dubai's specialist consultancy for fast, compliant authority approvals and NOCs across Civil Defense, DEWA, Dubai Municipality, RTA, Trakhees, and more.",
+    "Building Approvals Dubai is a leading consultancy for fast and reliable construction and fit-out approvals. We handle all major authority requirements, including Dubai Municipality, Civil Defence Dubai, Nakheel noc, JAFZA, DHA, DDA, DSO, and other authority approvals. Call Now",
   // Primary keyword set for search engines.
   keywords: [
     "Dubai authority approvals",
@@ -52,10 +52,10 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: siteUrl,
-    siteName: "Building Approvals",
-    title: "Building Approvals | Authority approvals done right",
+    siteName: "Building Approvals Dubai",
+    title: "Building Approvals Dubai | Leading Building Approval Services in Dubai",
     description:
-      "End-to-end authority approvals across Dubai with zero resubmissions and faster timelines.",
+      "Building Approvals Dubai is a leading consultancy for fast and reliable construction and fit-out approvals. We handle all major authority requirements, including Dubai Municipality, Civil Defence Dubai, Nakheel noc, JAFZA, DHA, DDA, DSO, and other authority approvals. Call Now",
     images: [
       {
         url: "/images/Building Approvals OG Logo.png",
@@ -68,11 +68,11 @@ export const metadata: Metadata = {
   // Twitter card metadata for link sharing.
   twitter: {
     card: "summary_large_image",
-    title: "Building Approvals | Authority approvals done right",
-  description:
-    "Fast, compliant approvals and NOCs across Dubai authorities with zero resubmissions.",
-  images: ["/images/Building Approvals OG Logo.png"],
-},
+    title: "Building Approvals Dubai | Leading Building Approval Services in Dubai",
+    description:
+      "Building Approvals Dubai is a leading consultancy for fast and reliable construction and fit-out approvals. We handle all major authority requirements, including Dubai Municipality, Civil Defence Dubai, Nakheel noc, JAFZA, DHA, DDA, DSO, and other authority approvals. Call Now",
+    images: ["/images/Building Approvals OG Logo.png"],
+  },
   // Canonical URL applied to all routes.
   alternates: {
     canonical: siteUrl.href,
@@ -93,10 +93,18 @@ export const metadata: Metadata = {
       { url: "/favicon.ico", sizes: "16x16", type: "image/x-icon" },
       { url: "/favicon.ico", sizes: "32x32", type: "image/x-icon" },
       { url: "/favicon.ico", sizes: "48x48", type: "image/x-icon" },
+      { url: "/images/BA OG Logo_imresizer (1).png", sizes: "512x512", type: "image/png" },
     ],
     shortcut: [{ url: "/favicon.ico" }],
     apple: [
       { url: "/favicon.ico" },
+      { url: "/images/BA OG Logo_imresizer (1).png", sizes: "180x180", type: "image/png" },
+    ],
+    other: [
+      {
+        rel: "icon",
+        url: "/images/BA OG Logo_imresizer (1).png",
+      },
     ],
   },
 };
@@ -162,9 +170,10 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
-              name: "Building Approvals",
+              name: "Building Approvals Dubai",
               url: siteUrl.href,
-              logo: `${siteUrl.origin}/logo/logo.webp`,
+              logo: `${siteUrl.origin}/images/BA OG Logo_imresizer (1).png`,
+              image: `${siteUrl.origin}/images/BA OG Logo_imresizer (1).png`,
               contactPoint: {
                 "@type": "ContactPoint",
                 telephone: "+971589575610",
