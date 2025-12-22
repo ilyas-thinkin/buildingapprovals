@@ -12,7 +12,7 @@ const Footer: React.FC = () => {
           {/* Company Info */}
           <div className="footer-column footer-brand">
             <a href="/" className="footer-logo">
-              <img src="/images/Building Approvals OG Logo.png" alt="Building Approvals" />
+              <img src="/images/Building Approvals OG Logo.png" alt="Building Approvals Dubai logo" />
             </a>
             <p className="footer-description">
               Your trusted partner for seamless building approvals across all Dubai authorities.

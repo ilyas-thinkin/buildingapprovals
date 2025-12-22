@@ -57,7 +57,7 @@ const HeroSection: React.FC = () => {
         <div className="hero-image-wrapper">
           <Image
             src="/images/HeroImage.png"
-            alt="Dubai Building Approvals"
+            alt="Dubai building approvals and authority services by Building Approvals Dubai"
             width={600}
             height={600}
             priority

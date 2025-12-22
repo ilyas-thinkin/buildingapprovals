@@ -8,47 +8,47 @@ const AuthoritiesSection: React.FC = () => {
     {
       name: 'Civil Defense',
       logo: '/images/authorities/civil-defense.png',
-      alt: 'Dubai Civil Defense Logo'
+      alt: 'Civil Defense approval by Building Approvals Dubai'
     },
     {
       name: 'Dubai Municipality',
       logo: '/images/authorities/dubai-municipality.png',
-      alt: 'Dubai Municipality Logo'
+      alt: 'Dubai Municipality approval by Building Approvals Dubai'
     },
     {
       name: 'Emaar',
       logo: '/images/authorities/emaar.png',
-      alt: 'Emaar Logo'
+      alt: 'Emaar approval by Building Approvals Dubai'
     },
     {
       name: 'Nakheel',
       logo: '/images/authorities/nakheel.png',
-      alt: 'Nakheel Logo'
+      alt: 'Nakheel approval by Building Approvals Dubai'
     },
     {
       name: 'JAFZA',
       logo: '/images/authorities/jafza.png',
-      alt: 'JAFZA Logo'
+      alt: 'JAFZA approval by Building Approvals Dubai'
     },
     {
       name: 'DHA',
       logo: '/images/authorities/dha.png',
-      alt: 'Dubai Healthcare Authority Logo'
+      alt: 'Dubai Healthcare Authority approval by Building Approvals Dubai'
     },
     {
       name: 'DSO',
       logo: '/images/authorities/dso.png',
-      alt: 'Dubai Silicon Oasis Logo'
+      alt: 'Dubai Silicon Oasis approval by Building Approvals Dubai'
     },
     {
       name: 'DDA',
       logo: '/images/authorities/dda.png',
-      alt: 'Dubai Development Authority Logo'
+      alt: 'Dubai Development Authority approval by Building Approvals Dubai'
     },
     {
       name: 'Trakhees',
       logo: '/images/authorities/trakhees.png',
-      alt: 'Trakhees Logo'
+      alt: 'Trakhees approval by Building Approvals Dubai'
     }
   ];
 

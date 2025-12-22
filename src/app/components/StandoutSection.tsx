@@ -54,7 +54,7 @@ const StandoutSection: React.FC = () => {
             <div className="standout-image-container">
               <Image
                 src="/images/standout-office.png"
-                alt="Professional Architecture Studio"
+                alt="Professional building approvals consultancy office in Dubai by Building Approvals Dubai"
                 width={500}
                 height={700}
                 className="standout-image"

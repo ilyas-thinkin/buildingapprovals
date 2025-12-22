@@ -85,7 +85,7 @@ const Navbar: React.FC = () => {
         <div className="navbar-container">
           {/* Logo */}
           <a href="/" className="navbar-logo">
-            <img src="/images/Building Approvals OG Logo.png" alt="Building Approvals Logo" />
+            <img src="/images/Building Approvals OG Logo.png" alt="Building Approvals Dubai logo" />
           </a>
 
           {/* Desktop Navigation */}

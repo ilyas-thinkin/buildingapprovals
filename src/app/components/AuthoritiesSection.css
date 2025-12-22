@@ -43,7 +43,7 @@
 .authorities-scroll-track {
   display: flex;
   gap: 60px;
-  animation: scroll 30s linear infinite;
+  animation: scroll 40s linear infinite;
   width: max-content;
 }
 
@@ -103,7 +103,7 @@
 
   .authorities-scroll-track {
     gap: 50px;
-    animation: scroll 25s linear infinite;
+    animation: scroll 35s linear infinite;
   }
 
   .authority-logo {
@@ -132,7 +132,7 @@
 
   .authorities-scroll-track {
     gap: 40px;
-    animation: scroll 20s linear infinite;
+    animation: scroll 30s linear infinite;
   }
 
   .authority-logo {
@@ -157,7 +157,7 @@
 
   .authorities-scroll-track {
     gap: 30px;
-    animation: scroll 18s linear infinite;
+    animation: scroll 25s linear infinite;
   }
 
   .authority-logo {
