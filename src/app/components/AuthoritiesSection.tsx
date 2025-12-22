@@ -56,10 +56,9 @@ const AuthoritiesSection: React.FC = () => {
     <section className="authorities-section">
       <div className="authorities-container">
         <div className="authorities-header">
-          <div className="authorities-label">Trusted by Leading Authorities</div>
           <h2 className="authorities-title">Our Authorities</h2>
           <p className="authorities-subtitle">
-            We work with all Dubai authorities to deliver seamless approval services
+            One-stop engineering approval solutions for all authorities across Dubai
           </p>
         </div>
 
