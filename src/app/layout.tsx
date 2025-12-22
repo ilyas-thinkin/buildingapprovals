@@ -187,6 +187,7 @@ export default function RootLayout({
                 "@type": "PostalAddress",
                 streetAddress: "Office No: 302-2, Al Babtain building, 2nd St - Port Saeed",
                 addressLocality: "Dubai",
+                postalCode: "00000",
                 addressCountry: "AE",
               },
             }),

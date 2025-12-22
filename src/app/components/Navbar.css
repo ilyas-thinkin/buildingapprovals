@@ -325,7 +325,7 @@ body.menu-open {
 .navbar-toggle:focus,
 .mobile-nav-link:focus,
 .mobile-menu-close:focus {
-  outline: 2px solid var(--color-copper);
+  outline: none;
   outline-offset: 2px;
 }
 
