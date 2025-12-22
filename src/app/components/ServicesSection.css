@@ -29,7 +29,7 @@
 .services-section {
   position: relative;
   width: 100%;
-  padding: 100px 40px;
+  padding: 50px 40px;
   background-color: var(--services-bg);
 }
 

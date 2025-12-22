@@ -62,19 +62,35 @@ const AuthoritiesSection: React.FC = () => {
           </p>
         </div>
 
-        <div className="authorities-grid">
-          {authorities.map((authority, index) => (
-            <div
-              key={authority.name}
-              className="authority-item"
-            >
-              <img
-                src={authority.logo}
-                alt={authority.alt}
-                className="authority-logo"
-              />
-            </div>
-          ))}
+        <div className="authorities-scroll-wrapper">
+          <div className="authorities-scroll-track">
+            {/* First set of logos */}
+            {authorities.map((authority, index) => (
+              <div
+                key={`first-${index}`}
+                className="authority-item"
+              >
+                <img
+                  src={authority.logo}
+                  alt={authority.alt}
+                  className="authority-logo"
+                />
+              </div>
+            ))}
+            {/* Duplicate set for seamless loop */}
+            {authorities.map((authority, index) => (
+              <div
+                key={`second-${index}`}
+                className="authority-item"
+              >
+                <img
+                  src={authority.logo}
+                  alt={authority.alt}
+                  className="authority-logo"
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

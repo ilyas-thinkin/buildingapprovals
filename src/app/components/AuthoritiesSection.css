@@ -1,7 +1,8 @@
 .authorities-section {
-  padding: 50px 40px;
+  padding: 5px 40px 50px;
   background: #ffffff;
   position: relative;
+  overflow: hidden;
 }
 
 .authorities-container {
@@ -12,16 +13,6 @@
 .authorities-header {
   text-align: center;
   margin-bottom: 50px;
-}
-
-.authorities-label {
-  display: inline-block;
-  font-size: 13px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: #006efe;
-  margin-bottom: 16px;
 }
 
 .authorities-title {
@@ -41,19 +32,39 @@
   line-height: 1.6;
 }
 
-.authorities-grid {
+/* Auto-scroll wrapper */
+.authorities-scroll-wrapper {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  padding: 20px 0;
+}
+
+.authorities-scroll-track {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 50px 70px;
-  padding: 40px 20px;
+  gap: 60px;
+  animation: scroll 30s linear infinite;
+  width: max-content;
+}
+
+.authorities-scroll-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 .authority-item {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
   transition: all 0.3s ease;
 }
 
@@ -79,7 +90,7 @@
 /* Tablet */
 @media (max-width: 992px) {
   .authorities-section {
-    padding: 40px 32px;
+    padding: 25px 32px 40px;
   }
 
   .authorities-title {
@@ -90,9 +101,9 @@
     font-size: 16px;
   }
 
-  .authorities-grid {
-    gap: 40px 50px;
-    padding: 30px 15px;
+  .authorities-scroll-track {
+    gap: 50px;
+    animation: scroll 25s linear infinite;
   }
 
   .authority-logo {
@@ -104,7 +115,7 @@
 /* Mobile */
 @media (max-width: 768px) {
   .authorities-section {
-    padding: 35px 24px;
+    padding: 20px 24px 35px;
   }
 
   .authorities-header {
@@ -119,9 +130,9 @@
     font-size: 15px;
   }
 
-  .authorities-grid {
-    gap: 35px 40px;
-    padding: 20px 10px;
+  .authorities-scroll-track {
+    gap: 40px;
+    animation: scroll 20s linear infinite;
   }
 
   .authority-logo {
@@ -133,12 +144,7 @@
 /* Small Mobile */
 @media (max-width: 480px) {
   .authorities-section {
-    padding: 30px 20px;
-  }
-
-  .authorities-label {
-    font-size: 11px;
-    letter-spacing: 1px;
+    padding: 15px 20px 30px;
   }
 
   .authorities-title {
@@ -149,13 +155,24 @@
     font-size: 14px;
   }
 
-  .authorities-grid {
+  .authorities-scroll-track {
     gap: 30px;
-    padding: 15px 5px;
+    animation: scroll 18s linear infinite;
   }
 
   .authority-logo {
     max-width: 120px;
     max-height: 60px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .authorities-scroll-track {
+    animation: none;
+  }
+
+  .authority-item:hover {
+    transform: none;
   }
 }
