@@ -28,16 +28,42 @@ const serviceIds = [
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
-  const routes: MetadataRoute.Sitemap = [
-    "",
-    "/about",
-    "/contact",
-    "/services",
-    ...serviceIds.map((id) => `/services/${id}`),
-  ].map((path) => ({
-    url: `${siteUrl}${path}`,
+
+  // Main pages with higher priority
+  const mainPages: MetadataRoute.Sitemap = [
+    {
+      url: `${siteUrl}`,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 1.0,
+    },
+    {
+      url: `${siteUrl}/services`,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${siteUrl}/about`,
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${siteUrl}/contact`,
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+  ];
+
+  // Service pages
+  const servicePages: MetadataRoute.Sitemap = serviceIds.map((id) => ({
+    url: `${siteUrl}/services/${id}`,
     lastModified,
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
   }));
 
-  return routes;
+  return [...mainPages, ...servicePages];
 }
