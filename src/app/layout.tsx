@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteUrl = new URL("https://buildingapprovals.ae");
+const siteUrl = new URL("https://www.buildingapprovals.ae");
 // Google Analytics property used for gtag configuration.
 const GA_MEASUREMENT_ID = "G-GK7ZKMLRR2";
 

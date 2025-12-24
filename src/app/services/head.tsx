@@ -7,7 +7,7 @@ export default function Head() {
         content="Browse Building Approvals’ full list of Dubai authority approval services: Civil Defense, DEWA, Dubai Municipality, RTA, Trakhees, Emaar, Nakheel, DHA, and more."
       />
       <meta name="robots" content="index,follow" />
-      <link rel="canonical" href="https://buildingapprovals.ae/services" />
+      <link rel="canonical" href="https://www.buildingapprovals.ae/services" />
     </>
   );
 }

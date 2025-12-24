@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const siteUrl = "https://buildingapprovals.ae";
+const siteUrl = "https://www.buildingapprovals.ae";
 
 const serviceIds = [
   "civil-defense",

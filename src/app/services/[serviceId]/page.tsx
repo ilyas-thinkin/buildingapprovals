@@ -2552,7 +2552,7 @@ export default function ServiceDetailPage({ params }: { params: Promise<{ servic
     notFound();
   }
 
-  const serviceUrl = `https://buildingapprovals.ae/services/${serviceId}`;
+  const serviceUrl = `https://www.buildingapprovals.ae/services/${serviceId}`;
   const serviceSchema = {
     '@context': 'https://schema.org',
     '@type': 'Service',
@@ -2566,7 +2566,7 @@ export default function ServiceDetailPage({ params }: { params: Promise<{ servic
     provider: {
       '@type': 'LocalBusiness',
       name: 'Building Approvals',
-      url: 'https://buildingapprovals.ae',
+      url: 'https://www.buildingapprovals.ae',
       telephone: '+971589575610',
       address: {
         '@type': 'PostalAddress',
