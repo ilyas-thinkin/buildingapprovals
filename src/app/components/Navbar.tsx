@@ -107,6 +107,11 @@ const Navbar: React.FC = () => {
                 </a>
               </li>
               <li className="nav-item">
+                <a href="/blog" className={`nav-link ${pathname?.startsWith('/blog') ? 'active' : ''}`}>
+                  Blog
+                </a>
+              </li>
+              <li className="nav-item">
                 <a href="/contact" className={`nav-link ${pathname === '/contact' ? 'active' : ''}`}>
                   Contact Us
                 </a>
@@ -185,6 +190,15 @@ const Navbar: React.FC = () => {
               onClick={closeMobileMenu}
             >
               About Us
+            </a>
+          </li>
+          <li className="mobile-nav-item">
+            <a
+              href="/blog"
+              className={`mobile-nav-link ${pathname?.startsWith('/blog') ? 'active' : ''}`}
+              onClick={closeMobileMenu}
+            >
+              Blog
             </a>
           </li>
           <li className="mobile-nav-item">
