@@ -1,6 +1,6 @@
 .blog-post-page {
   min-height: 100vh;
-  padding-top: 80px;
+  padding-top: 30px;
   background: #f8fafc;
 }
 
@@ -399,7 +399,7 @@
 
 @media (max-width: 768px) {
   .blog-post-page {
-    padding-top: 70px;
+    padding-top: 30px;
   }
 
   .blog-post-header {
