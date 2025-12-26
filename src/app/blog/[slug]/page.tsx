@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { blogPosts } from '../blogData';
 import './blog-post.css';
 import DubaiMunicipalityApprovalContent from './content/dubai-municipality-approval-process-2026';
+import DubaiMunicipalityUpdatedRulesContent from './content/dubai-municipality-approvals-2026-updated-rules';
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -47,6 +48,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const renderContent = () => {
     if (post.slug === 'dubai-municipality-approval-process-2026') {
       return <DubaiMunicipalityApprovalContent />;
+    }
+
+    if (post.slug === 'dubai-municipality-approvals-2026-updated-rules') {
+      return <DubaiMunicipalityUpdatedRulesContent />;
     }
 
     return null;

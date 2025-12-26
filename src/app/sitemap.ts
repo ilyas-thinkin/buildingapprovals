@@ -28,6 +28,7 @@ const serviceIds = [
 
 const blogSlugs = [
   "dubai-municipality-approval-process-2026",
+  "dubai-municipality-approvals-2026-updated-rules",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
