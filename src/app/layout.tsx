@@ -19,6 +19,8 @@ const geistMono = Geist_Mono({
 const siteUrl = new URL("https://www.buildingapprovals.ae");
 // Google Analytics property used for gtag configuration.
 const GA_MEASUREMENT_ID = "G-GK7ZKMLRR2";
+// Google Ads conversion tracking ID.
+const GOOGLE_ADS_ID = "AW-17844606318";
 
 // Site-wide SEO metadata, social previews, canonical URL, and verification tokens.
 export const metadata: Metadata = {
@@ -160,6 +162,24 @@ export default function RootLayout({
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
               gtag('config', '${GA_MEASUREMENT_ID}');
+            `,
+          }}
+        />
+        {/* Google Ads conversion tracking */}
+        <Script
+          id="google-ads-external"
+          src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script
+          id="google-ads-inline"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${GOOGLE_ADS_ID}');
             `,
           }}
         />
