@@ -120,7 +120,7 @@ const Navbar: React.FC = () => {
 
             {/* CTA Button */}
             <button type="button" className="btn-cta" onClick={openConsultationModal}>
-              Free Consultation
+              Get in touch
             </button>
           </div>
 
