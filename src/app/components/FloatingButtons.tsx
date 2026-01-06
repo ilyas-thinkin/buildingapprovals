@@ -5,13 +5,21 @@ import './FloatingButtons.css';
 
 const FloatingButtons: React.FC = () => {
   const [showText, setShowText] = useState(false);
+  const [startHopping, setStartHopping] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const showTimer = setTimeout(() => {
       setShowText(true);
-    }, 1500);
+    }, 1200);
 
-    return () => clearTimeout(timer);
+    const hopTimer = setTimeout(() => {
+      setStartHopping(true);
+    }, 2200); // 1200ms entrance + 1000ms delay = 2200ms
+
+    return () => {
+      clearTimeout(showTimer);
+      clearTimeout(hopTimer);
+    };
   }, []);
 
   return (
@@ -27,7 +35,7 @@ const FloatingButtons: React.FC = () => {
 
       <a
         href="tel:+971589575610"
-        className={`call-float ${showText ? 'show-text' : ''}`}
+        className={`call-float ${showText ? 'show-text' : ''} ${startHopping ? 'hopping' : ''}`}
         aria-label="Call us"
       >
         <svg className="call-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
