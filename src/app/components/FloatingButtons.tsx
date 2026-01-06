@@ -10,11 +10,11 @@ const FloatingButtons: React.FC = () => {
   useEffect(() => {
     const showTimer = setTimeout(() => {
       setShowText(true);
-    }, 1200);
+    }, 1600);
 
     const hopTimer = setTimeout(() => {
       setStartHopping(true);
-    }, 2200); // 1200ms entrance + 1000ms delay = 2200ms
+    }, 2600); // 1600ms entrance + 1000ms delay = 2600ms
 
     return () => {
       clearTimeout(showTimer);
