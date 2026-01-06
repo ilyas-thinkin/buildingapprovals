@@ -213,7 +213,7 @@ const Navbar: React.FC = () => {
         </ul>
 
         <button type="button" className="btn-cta btn-cta-mobile" onClick={openConsultationModal}>
-          Free Consultation
+          Get in touch
         </button>
       </div>
 
