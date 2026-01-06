@@ -85,6 +85,7 @@
   pointer-events: none;
 }
 
+.call-float.show-text .call-text,
 .call-float:hover .call-text {
   opacity: 1;
   visibility: visible;

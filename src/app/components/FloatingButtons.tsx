@@ -1,9 +1,19 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './FloatingButtons.css';
 
 const FloatingButtons: React.FC = () => {
+  const [showText, setShowText] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowText(true);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <>
       {/* <button
@@ -17,7 +27,7 @@ const FloatingButtons: React.FC = () => {
 
       <a
         href="tel:+971589575610"
-        className="call-float"
+        className={`call-float ${showText ? 'show-text' : ''}`}
         aria-label="Call us"
       >
         <svg className="call-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
