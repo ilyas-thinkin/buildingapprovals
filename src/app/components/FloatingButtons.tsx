@@ -9,7 +9,7 @@ const FloatingButtons: React.FC = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowText(true);
-    }, 800);
+    }, 1500);
 
     return () => clearTimeout(timer);
   }, []);

@@ -93,6 +93,19 @@
   box-shadow: 0 6px 20px rgba(0, 110, 254, 0.25);
 }
 
+.call-float.show-text .call-text {
+  animation: gentleHop 2s ease-in-out infinite;
+}
+
+@keyframes gentleHop {
+  0%, 100% {
+    transform: translateY(-50%) translateX(0) scale(1);
+  }
+  50% {
+    transform: translateY(-55%) translateX(0) scale(1);
+  }
+}
+
 @media (max-width: 767px) {
   .enquiry-float {
     right: 16px;
