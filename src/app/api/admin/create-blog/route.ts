@@ -111,16 +111,16 @@ export async function POST(request: NextRequest) {
       await mkdir(blogImagesDir, { recursive: true });
     }
 
-    // Save card image
+    // Save card image with standardized naming
     const cardImageExt = cardImage.name.split('.').pop();
-    const cardImageName = `${slug}-card.${cardImageExt}`;
+    const cardImageName = `building-approvals-${slug}-card.${cardImageExt}`;
     const cardImagePath = path.join(blogImagesDir, cardImageName);
     const cardImageBuffer = Buffer.from(await cardImage.arrayBuffer());
     await writeFile(cardImagePath, cardImageBuffer);
 
-    // Save cover image
+    // Save cover image with standardized naming
     const coverImageExt = coverImage.name.split('.').pop();
-    const coverImageName = `${slug}-cover.${coverImageExt}`;
+    const coverImageName = `building-approvals-${slug}.${coverImageExt}`;
     const coverImagePath = path.join(blogImagesDir, coverImageName);
     const coverImageBuffer = Buffer.from(await coverImage.arrayBuffer());
     await writeFile(coverImagePath, coverImageBuffer);
@@ -176,8 +176,11 @@ export async function POST(request: NextRequest) {
           keywords: title.split(' ').filter(word => word.length > 3),
         };
 
-    // Create blog post component file
-    const blogComponentContent = generateBlogComponent(title, blogContent);
+    // Create blog post component file with image information
+    const blogComponentContent = generateBlogComponent(title, blogContent, {
+      coverImagePath: `/images/blog/${coverImageName}`,
+      altText: `Building Approvals Dubai - ${title}`,
+    });
     const componentDir = path.join(process.cwd(), 'src', 'app', 'blog', '[slug]', 'content');
     if (!existsSync(componentDir)) {
       await mkdir(componentDir, { recursive: true });
@@ -215,7 +218,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-function generateBlogComponent(title: string, content: string): string {
+function generateBlogComponent(title: string, content: string, imageOptions?: { coverImagePath: string; altText: string }): string {
   // Enhanced PDF content parsing to preserve structure
   const lines = content.split('\n').map(line => line.trim()).filter(line => line.length > 0);
   const elements: string[] = [];
@@ -412,12 +415,31 @@ ${takeawayItems}
   // Flush any remaining list
   flushList();
 
-  const formattedContent = elements.join('\n\n');
+  // Insert cover image after the first paragraph (intro)
+  let contentWithImage = elements.join('\n\n');
+
+  if (imageOptions) {
+    // Find the first closing </p> tag to insert image after intro
+    const firstParagraphEnd = contentWithImage.indexOf('</p>');
+    if (firstParagraphEnd !== -1) {
+      const imageElement = `
+
+      <div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
+        <img
+          src="${imageOptions.coverImagePath}"
+          alt="${imageOptions.altText}"
+          style={{ width: '100%', height: 'auto', display: 'block' }}
+        />
+      </div>`;
+
+      contentWithImage = contentWithImage.slice(0, firstParagraphEnd + 4) + imageElement + contentWithImage.slice(firstParagraphEnd + 4);
+    }
+  }
 
   return `export default function BlogContent() {
   return (
     <div className="blog-content-wrapper">
-${formattedContent}
+${contentWithImage}
 
       <div className="cta-box">
         <h3>Need Help with Building Approvals?</h3>
@@ -439,6 +461,8 @@ async function updateBlogData(blogData: any) {
   // Escape single quotes in the data
   const escapeQuotes = (str: string) => str.replace(/'/g, "\\'");
 
+  const keywordsArray = blogData.seo.keywords.map((k: string) => `'${escapeQuotes(k)}'`).join(', ');
+
   const newBlogEntry = `  {
     id: '${Date.now()}',
     title: '${escapeQuotes(blogData.title)}',
@@ -449,6 +473,10 @@ async function updateBlogData(blogData: any) {
     excerpt: '${escapeQuotes(blogData.excerpt)}',
     image: '${blogData.image}',
     coverImage: '${blogData.coverImage}',
+    metaTitle: '${escapeQuotes(blogData.seo.metaTitle)}',
+    metaDescription: '${escapeQuotes(blogData.seo.metaDescription)}',
+    keywords: [${keywordsArray}],
+    ogImage: '${blogData.coverImage}',
   },`;
 
   // Find the closing bracket of the array

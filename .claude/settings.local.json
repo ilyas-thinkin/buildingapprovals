@@ -7,7 +7,29 @@
       "Bash(npm install:*)",
       "Bash(npm run dev:*)",
       "Bash(taskkill /F /PID 19572)",
-      "Bash(TURBOPACK=0 npm run dev:*)"
+      "Bash(TURBOPACK=0 npm run dev:*)",
+      "Bash(npm run build:*)",
+      "Bash(grep:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill //F //PID 17308)",
+      "Bash(git diff:*)",
+      "Bash(dir:*)",
+      "Bash(ren:*)",
+      "Bash(ren \"Dubai-Municipality-update.jpg\" \"building-approvals-dubai-municipality-update-card.jpg\")",
+      "Bash(move \"DDubai-Municipality-Academy-card.jpg\" \"building-approvals-dubai-municipality-card.jpg\")",
+      "Bash(move \"Coiver-image-Dubai-Municipality.jpg\" \"building-approvals-dubai-municipality-cover.jpg\")",
+      "Bash(move:*)",
+      "Bash(move \"Dubai-Municipality-update-cover.webp\" \"building-approvals-dubai-municipality-update-cover.webp\")",
+      "Bash(git pull:*)",
+      "Bash(git reset:*)",
+      "Bash(git restore:*)",
+      "Bash(git push:*)",
+      "Bash(if [ ! -f \"d:\\\\Websites\\\\Buildingapprovals\\\\building-approvals\\\\src\\\\app\\\\blog\\\\[slug]\\\\content\\\\dubai-civil-defence-approval-dcd-complete-guide-for-2026.tsx\" ])",
+      "Bash(then echo \"File does not exist\")",
+      "Bash(\"d:\\\\Websites\\\\Buildingapprovals\\\\building-approvals\\\\src\\\\app\\\\blog\\\\[slug]\\\\content\\\\dubai-civil-defence-approval-dcd-complete-guide-for-2026.tsx\")",
+      "Bash(fi)",
+      "Bash(ls:*)"
     ]
   }
 }

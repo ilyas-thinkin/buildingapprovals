@@ -12,8 +12,8 @@ export default function DubaiMunicipalityUpdatedRulesContent() {
 
       <div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
         <img
-          src="/images/blog/2026 DM Updates and Innovations.jpg"
-          alt="2026 Dubai Municipality Updates and Digital Innovations"
+          src="/images/blog/building-approvals-dubai-municipality-approvals-2026-updated-rules.jpg"
+          alt="Building Approvals Dubai - Dubai Municipality Approvals 2026 Updated Rules & Digital Innovations"
           style={{ width: '100%', height: 'auto', display: 'block' }}
         />
       </div>

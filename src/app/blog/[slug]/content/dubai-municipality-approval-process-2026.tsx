@@ -12,8 +12,8 @@ export default function DubaiMunicipalityApprovalContent() {
 
       <div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
         <img
-          src="/images/blog/Dm complete guide to get building approvals.jpg"
-          alt="Complete Guide to Dubai Municipality Building Approvals"
+          src="/images/blog/building-approvals-dubai-municipality-approval-process-2026.jpg"
+          alt="Building Approvals Dubai - Dubai Municipality Approval Process 2026 Complete Guide"
           style={{ width: '100%', height: 'auto', display: 'block' }}
         />
       </div>

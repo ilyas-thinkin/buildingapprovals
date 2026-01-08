@@ -23,10 +23,26 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   }
 
   return {
-    title: `${post.title} | Building Approvals Dubai`,
-    description: post.excerpt,
+    title: post.metaTitle || `${post.title} | Building Approvals Dubai`,
+    description: post.metaDescription || post.excerpt,
+    keywords: post.keywords?.join(', '),
     alternates: {
       canonical: `https://www.buildingapprovals.ae/blog/${post.slug}`,
+    },
+    openGraph: {
+      title: post.metaTitle || post.title,
+      description: post.metaDescription || post.excerpt,
+      images: [post.ogImage || post.coverImage || post.image],
+      url: `https://www.buildingapprovals.ae/blog/${post.slug}`,
+      type: 'article',
+      publishedTime: post.date,
+      authors: [post.author],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.metaTitle || post.title,
+      description: post.metaDescription || post.excerpt,
+      images: [post.ogImage || post.coverImage || post.image],
     },
   };
 }
