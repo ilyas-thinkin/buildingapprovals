@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import { existsSync } from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
 
 async function extractPdfText(contentBuffer: Buffer): Promise<string> {
@@ -77,144 +76,6 @@ async function extractDocxText(contentBuffer: Buffer): Promise<string> {
   return text.trim();
 }
 
-export async function POST(request: NextRequest) {
-  try {
-    const formData = await request.formData();
-
-    // Extract form fields
-    const title = formData.get('title') as string;
-    const slug = formData.get('slug') as string;
-    const category = formData.get('category') as string;
-    const author = formData.get('author') as string;
-    const excerpt = formData.get('excerpt') as string;
-    const manualSEO = formData.get('manualSEO') === 'true';
-    const metaTitle = formData.get('metaTitle') as string;
-    const metaDescription = formData.get('metaDescription') as string;
-    const focusKeyword = formData.get('focusKeyword') as string;
-    const keywords = formData.get('keywords') as string;
-
-    // Extract files
-    const cardImage = formData.get('cardImage') as File;
-    const coverImage = formData.get('coverImage') as File;
-    const contentFile = formData.get('contentFile') as File;
-
-    if (!title || !slug || !cardImage || !coverImage || !contentFile) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
-    }
-
-    // Create directories if they don't exist
-    const blogImagesDir = path.join(process.cwd(), 'public', 'images', 'blog');
-    if (!existsSync(blogImagesDir)) {
-      await mkdir(blogImagesDir, { recursive: true });
-    }
-
-    // Save card image
-    const cardImageExt = cardImage.name.split('.').pop();
-    const cardImageName = `${slug}-card.${cardImageExt}`;
-    const cardImagePath = path.join(blogImagesDir, cardImageName);
-    const cardImageBuffer = Buffer.from(await cardImage.arrayBuffer());
-    await writeFile(cardImagePath, cardImageBuffer);
-
-    // Save cover image
-    const coverImageExt = coverImage.name.split('.').pop();
-    const coverImageName = `${slug}-cover.${coverImageExt}`;
-    const coverImagePath = path.join(blogImagesDir, coverImageName);
-    const coverImageBuffer = Buffer.from(await coverImage.arrayBuffer());
-    await writeFile(coverImagePath, coverImageBuffer);
-
-    // Parse content file (PDF/DOCX)
-    let blogContent = '';
-    const contentBuffer = Buffer.from(await contentFile.arrayBuffer());
-
-    const contentFileName = contentFile.name.toLowerCase();
-
-    if (contentFileName.endsWith('.pdf')) {
-      try {
-        blogContent = await extractPdfText(contentBuffer);
-        console.log('PDF parsed successfully, text length:', blogContent.length);
-      } catch (pdfError: any) {
-        console.error('PDF parsing error:', pdfError);
-        console.error('Error stack:', pdfError.stack);
-        return NextResponse.json(
-          { error: `PDF parsing failed: ${pdfError.message}. Please ensure pdf-parse is installed.` },
-          { status: 500 }
-        );
-      }
-    } else if (contentFileName.endsWith('.docx')) {
-      try {
-        blogContent = await extractDocxText(contentBuffer);
-      } catch (docxError: any) {
-        console.error('DOCX parsing error:', docxError);
-        console.error('Error stack:', docxError.stack);
-        return NextResponse.json(
-          { error: `DOCX parsing failed: ${docxError.message}. Please ensure mammoth is installed.` },
-          { status: 500 }
-        );
-      }
-    } else if (contentFileName.endsWith('.doc')) {
-      return NextResponse.json(
-        { error: 'DOC files are not supported. Please upload a DOCX file.' },
-        { status: 400 }
-      );
-    }
-
-    // Generate SEO metadata
-    const seoData = manualSEO
-      ? {
-          metaTitle: metaTitle || title,
-          metaDescription: metaDescription || excerpt,
-          focusKeyword,
-          keywords: keywords.split(',').map(k => k.trim()).filter(Boolean),
-        }
-      : {
-          metaTitle: `${title} | Building Approvals Dubai`,
-          metaDescription: excerpt,
-          focusKeyword: title.split(' ').slice(0, 3).join(' '),
-          keywords: title.split(' ').filter(word => word.length > 3),
-        };
-
-    // Create blog post component file
-    const blogComponentContent = generateBlogComponent(title, blogContent);
-    const componentDir = path.join(process.cwd(), 'src', 'app', 'blog', '[slug]', 'content');
-    if (!existsSync(componentDir)) {
-      await mkdir(componentDir, { recursive: true });
-    }
-    const componentPath = path.join(componentDir, `${slug}.tsx`);
-    await writeFile(componentPath, blogComponentContent);
-
-    // Update blogData.ts
-    await updateBlogData({
-      title,
-      slug,
-      category,
-      author,
-      excerpt,
-      date: new Date().toISOString().split('T')[0],
-      image: `/images/blog/${cardImageName}`,
-      coverImage: `/images/blog/${coverImageName}`,
-      seo: seoData,
-    });
-
-    // Update [slug]/page.tsx to include new blog
-    await updateBlogPageImports(slug);
-
-    return NextResponse.json({
-      success: true,
-      message: 'Blog post created successfully',
-      slug,
-    });
-  } catch (error: any) {
-    console.error('Error creating blog:', error);
-    return NextResponse.json(
-      { error: error.message || 'Failed to create blog post' },
-      { status: 500 }
-    );
-  }
-}
-
 function generateBlogComponent(title: string, content: string): string {
   // Enhanced PDF content parsing to preserve structure
   const lines = content.split('\n').map(line => line.trim()).filter(line => line.length > 0);
@@ -268,10 +129,6 @@ function generateBlogComponent(title: string, content: string): string {
     return false;
   };
 
-  const isKeyTakeaways = (line: string): boolean => {
-    return line.match(/^Key Takeaways?$/i) !== null;
-  };
-
   const isBulletPoint = (line: string): string | null => {
     // Detect various bullet point formats
     const bulletPatterns = [
@@ -295,6 +152,10 @@ function generateBlogComponent(title: string, content: string): string {
   const isBoldLabel = (line: string): boolean => {
     // Detect bold labels like "Key Requirements:", "Notes:", "Applicable for:"
     return line.match(/^[A-Z][a-zA-Z\s]+:$/) !== null;
+  };
+
+  const isKeyTakeaways = (line: string): boolean => {
+    return line.match(/^Key Takeaways?$/i) !== null;
   };
 
   let inKeyTakeaways = false;
@@ -430,78 +291,175 @@ ${formattedContent}
 `;
 }
 
-async function updateBlogData(blogData: any) {
-  const { readFile, writeFile } = await import('fs/promises');
-  const blogDataPath = path.join(process.cwd(), 'src', 'app', 'blog', 'blogData.ts');
+export async function POST(request: NextRequest) {
+  try {
+    const formData = await request.formData();
+    const originalSlug = formData.get('originalSlug') as string;
 
-  let content = await readFile(blogDataPath, 'utf-8');
-
-  // Escape single quotes in the data
-  const escapeQuotes = (str: string) => str.replace(/'/g, "\\'");
-
-  const newBlogEntry = `  {
-    id: '${Date.now()}',
-    title: '${escapeQuotes(blogData.title)}',
-    slug: '${blogData.slug}',
-    category: '${escapeQuotes(blogData.category)}',
-    author: '${escapeQuotes(blogData.author)}',
-    date: '${blogData.date}',
-    excerpt: '${escapeQuotes(blogData.excerpt)}',
-    image: '${blogData.image}',
-    coverImage: '${blogData.coverImage}',
-  },`;
-
-  // Find the closing bracket of the array
-  const arrayMatch = content.match(/export const blogPosts: BlogPost\[\] = \[([\s\S]*?)\];/);
-
-  if (!arrayMatch) {
-    throw new Error('Could not find blogPosts array');
-  }
-
-  // Insert the new blog entry at the beginning of the array
-  const replacement = `export const blogPosts: BlogPost[] = [\n${newBlogEntry}\n${arrayMatch[1]}];`;
-
-  const updatedContent = content.replace(/export const blogPosts: BlogPost\[\] = \[([\s\S]*?)\];/, replacement);
-
-  await writeFile(blogDataPath, updatedContent);
-}
-
-async function updateBlogPageImports(slug: string) {
-  const { readFile, writeFile } = await import('fs/promises');
-  const pagePath = path.join(process.cwd(), 'src', 'app', 'blog', '[slug]', 'page.tsx');
-
-  let content = await readFile(pagePath, 'utf-8');
-
-  // Add import
-  const componentName = slug
-    .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join('');
-
-  const importStatement = `import ${componentName}Content from './content/${slug}';`;
-
-  // Check if import already exists
-  if (!content.includes(importStatement)) {
-    // Add import after existing imports
-    const lastImportIndex = content.lastIndexOf('import ');
-    const nextLineIndex = content.indexOf('\n', lastImportIndex) + 1;
-    content = content.slice(0, nextLineIndex) + importStatement + '\n' + content.slice(nextLineIndex);
-  }
-
-  // Add to renderContent function
-  const renderContentStart = content.indexOf('const renderContent = () => {');
-  const renderContentEnd = content.indexOf('return null;', renderContentStart);
-
-  const newCase = `    if (post.slug === '${slug}') {
-      return <${componentName}Content />;
+    if (!originalSlug) {
+      return NextResponse.json({ error: 'Original slug is required' }, { status: 400 });
     }
 
-    `;
+    // Extract form data
+    const title = formData.get('title') as string;
+    const slug = formData.get('slug') as string;
+    const category = formData.get('category') as string;
+    const author = formData.get('author') as string;
+    const excerpt = formData.get('excerpt') as string;
+    const contentType = formData.get('contentType') as string;
+    const manualContent = formData.get('manualContent') as string;
+    const contentFile = formData.get('contentFile') as File | null;
 
-  // Check if the case already exists
-  if (!content.includes(`if (post.slug === '${slug}')`)) {
-    content = content.slice(0, renderContentEnd) + newCase + content.slice(renderContentEnd);
+    const cardImage = formData.get('cardImage') as File | null;
+    const coverImage = formData.get('coverImage') as File | null;
+    const existingCardImage = formData.get('existingCardImage') as string;
+    const existingCoverImage = formData.get('existingCoverImage') as string;
+
+    // Read current blogData.ts
+    const blogDataPath = path.join(process.cwd(), 'src/app/blog/blogData.ts');
+    let blogDataContent = await fs.readFile(blogDataPath, 'utf-8');
+
+    // Find and update the blog entry
+    const blogArrayMatch = blogDataContent.match(/export const blogPosts: BlogPost\[\] = \[([\s\S]*?)\];/);
+    if (!blogArrayMatch) {
+      return NextResponse.json({ error: 'Could not parse blog data' }, { status: 500 });
+    }
+
+    // Parse individual blog objects - handle both with and without trailing commas
+    const blogsText = blogArrayMatch[1].trim();
+
+    // Split by object boundaries using a more flexible regex that handles multi-line objects
+    const blogMatches = blogsText.match(/\{[\s\S]*?slug:\s*'[^']*'[\s\S]*?\}/g);
+    if (!blogMatches || blogMatches.length === 0) {
+      return NextResponse.json({ error: 'Could not parse blog objects' }, { status: 500 });
+    }
+
+    // Find the blog to update
+    const blogIndex = blogMatches.findIndex(blogStr => blogStr.includes(`slug: '${originalSlug}'`));
+    if (blogIndex === -1) {
+      return NextResponse.json({ error: `Blog not found with slug: ${originalSlug}` }, { status: 404 });
+    }
+
+    const blogObjects = blogMatches;
+
+    // Extract current blog data
+    const currentBlog = blogObjects[blogIndex];
+    const idMatch = currentBlog.match(/id: '(\d+)'/);
+    const dateMatch = currentBlog.match(/date: '([^']+)'/);
+    const id = idMatch ? idMatch[1] : '1';
+    const date = dateMatch ? dateMatch[1] : new Date().toISOString().split('T')[0];
+
+    // Handle images
+    let cardImagePath = existingCardImage;
+    let coverImagePath = existingCoverImage;
+
+    if (cardImage) {
+      const cardImageBuffer = Buffer.from(await cardImage.arrayBuffer());
+      const cardImageName = `${slug}-card.jpg`;
+      const cardImageFilePath = path.join(process.cwd(), 'public/images/blog', cardImageName);
+      await fs.writeFile(cardImageFilePath, cardImageBuffer);
+      cardImagePath = `/images/blog/${cardImageName}`;
+    }
+
+    if (coverImage) {
+      const coverImageBuffer = Buffer.from(await coverImage.arrayBuffer());
+      const coverImageName = `${slug}-cover.jpg`;
+      const coverImageFilePath = path.join(process.cwd(), 'public/images/blog', coverImageName);
+      await fs.writeFile(coverImageFilePath, coverImageBuffer);
+      coverImagePath = `/images/blog/${coverImageName}`;
+    }
+
+    // Build updated blog entry
+    const updatedBlog = `{
+    id: '${id}',
+    title: '${title.replace(/'/g, "\\'")}',
+    excerpt: '${excerpt.replace(/'/g, "\\'")}',
+    date: '${date}',
+    author: '${author}',
+    category: '${category}',
+    image: '${cardImagePath}',
+    coverImage: '${coverImagePath}',
+    slug: '${slug}',
+  }`;
+
+    // Replace the blog entry
+    blogObjects[blogIndex] = updatedBlog;
+    const newBlogsArray = blogObjects.join(',\n  ');
+    blogDataContent = blogDataContent.replace(
+      /export const blogPosts: BlogPost\[\] = \[([\s\S]*?)\];/,
+      `export const blogPosts: BlogPost[] = [\n  ${newBlogsArray}\n];`
+    );
+
+    // Write updated blogData.ts
+    await fs.writeFile(blogDataPath, blogDataContent, 'utf-8');
+
+    // Update content file if manual content changed or a new file was uploaded
+    if (contentType === 'file' && contentFile) {
+      const contentBuffer = Buffer.from(await contentFile.arrayBuffer());
+      const contentFileName = contentFile.name.toLowerCase();
+      let blogContent = '';
+
+      try {
+        if (contentFileName.endsWith('.pdf')) {
+          blogContent = await extractPdfText(contentBuffer);
+        } else if (contentFileName.endsWith('.docx')) {
+          blogContent = await extractDocxText(contentBuffer);
+        } else if (contentFileName.endsWith('.doc')) {
+          return NextResponse.json(
+            { error: 'DOC files are not supported. Please upload a DOCX file.' },
+            { status: 400 }
+          );
+        } else {
+          return NextResponse.json(
+            { error: 'Unsupported content file type' },
+            { status: 400 }
+          );
+        }
+      } catch (parseError: any) {
+        console.error('Content parsing error:', parseError);
+        console.error('Error stack:', parseError.stack);
+        return NextResponse.json(
+          { error: `Content parsing failed: ${parseError.message}` },
+          { status: 500 }
+        );
+      }
+
+      const contentDir = path.join(process.cwd(), 'src/app/blog/[slug]/content');
+      const contentFilePath = path.join(contentDir, `${slug}.tsx`);
+      const componentContent = generateBlogComponent(title, blogContent);
+      await fs.writeFile(contentFilePath, componentContent, 'utf-8');
+    } else if (contentType === 'manual' && manualContent) {
+      const contentDir = path.join(process.cwd(), 'src/app/blog/[slug]/content');
+      const contentFilePath = path.join(contentDir, `${slug}.tsx`);
+
+      // Use the enhanced content parser
+      const componentContent = generateBlogComponent(title, manualContent);
+      await fs.writeFile(contentFilePath, componentContent, 'utf-8');
+    }
+
+    // If slug changed, rename directory
+    if (originalSlug !== slug) {
+      const oldDir = path.join(process.cwd(), 'src/app/blog', originalSlug);
+      const newDir = path.join(process.cwd(), 'src/app/blog', slug);
+
+      try {
+        await fs.rename(oldDir, newDir);
+      } catch (error) {
+        console.error('Error renaming directory:', error);
+      }
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: 'Blog updated successfully',
+      slug: slug,
+    });
+
+  } catch (error) {
+    console.error('Error updating blog:', error);
+    return NextResponse.json(
+      { error: 'Failed to update blog', details: error instanceof Error ? error.message : 'Unknown error' },
+      { status: 500 }
+    );
   }
-
-  await writeFile(pagePath, content);
 }

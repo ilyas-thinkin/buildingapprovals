@@ -3,10 +3,14 @@
 import React, { useState } from 'react';
 import LoginForm from './components/LoginForm';
 import BlogEditor from './components/BlogEditor';
+import BlogManager from './components/BlogManager';
+import { BlogPost } from '@/app/blog/blogData';
 import './admin.css';
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [activeTab, setActiveTab] = useState<'create' | 'manage'>('create');
+  const [editingBlog, setEditingBlog] = useState<BlogPost | null>(null);
 
   const handleLogin = (username: string, password: string) => {
     // Simple authentication - in production, use better security
@@ -21,6 +25,15 @@ export default function AdminPage() {
   const handleLogout = () => {
     setIsAuthenticated(false);
     sessionStorage.removeItem('admin_auth');
+  };
+
+  const handleEdit = (blog: BlogPost) => {
+    setEditingBlog(blog);
+    setActiveTab('create');
+  };
+
+  const handleCancelEdit = () => {
+    setEditingBlog(null);
   };
 
   // Check session on mount
@@ -40,7 +53,30 @@ export default function AdminPage() {
         <h1>Blog Admin Panel</h1>
         <button onClick={handleLogout} className="logout-btn">Logout</button>
       </header>
-      <BlogEditor />
+
+      <div className="admin-tabs">
+        <button
+          className={`tab-btn ${activeTab === 'create' ? 'active' : ''}`}
+          onClick={() => setActiveTab('create')}
+        >
+          {editingBlog ? 'Edit Blog' : 'Create New Blog'}
+        </button>
+        <button
+          className={`tab-btn ${activeTab === 'manage' ? 'active' : ''}`}
+          onClick={() => {
+            setActiveTab('manage');
+            setEditingBlog(null);
+          }}
+        >
+          Manage Blogs
+        </button>
+      </div>
+
+      {activeTab === 'create' ? (
+        <BlogEditor editingBlog={editingBlog} onCancelEdit={handleCancelEdit} />
+      ) : (
+        <BlogManager onEdit={handleEdit} />
+      )}
     </div>
   );
 }

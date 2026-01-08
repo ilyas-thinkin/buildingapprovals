@@ -33,4 +33,16 @@ export const blogPosts: BlogPost[] = [
     coverImage: '/images/blog/building-approvals-dubai-municipality-update-cover.webp',
     slug: 'dubai-municipality-approvals-2026-updated-rules',
   },
+  {
+    id: '3',
+    title: 'Dubai Civil Defence Approval (DCD) – Complete Guide for 2026',
+    excerpt: 'Fire and life safety are non-negotiable in Dubai\'s construction ecosystem. This comprehensive guide explains what DCD is, how to obtain approval step by step, and the specific requirements for different project categories.',
+    date: '2026-01-08',
+    author: 'Building Approvals Dubai',
+    category: 'Dubai Civil Defence',
+    image: '/images/blog/dubai-civil-defence-approval-dcd-complete-guide-for-2026-card.jpeg',
+    coverImage: '/images/blog/dubai-civil-defence-approval-dcd-complete-guide-for-2026-cover.jpg',
+    slug: 'dubai-civil-defence-approval-dcd-complete-guide-for-2026',
+  }
+
 ];
