@@ -53,12 +53,12 @@ export const blogPosts: BlogPost[] = [
     author: 'Building Approvals Dubai',
     category: 'Dubai Civil Defence',
     image: '/images/blog/building-approvals-dubai-civil-defence-approval-dcd-complete-guide-for-2026.jpg',
-    coverImage: '/images/blog/building-approvals-dubai-civil-defence-approval-dcd-complete-guide-for-2026.jpg',
+    coverImage: '/images/blog/building-approvals-dubai-civil-defence-approval-dcd-complete-guide-for-2026-cover.jpg',
     slug: 'dubai-civil-defence-approval-dcd-complete-guide-for-2026',
     metaTitle: 'Dubai Civil Defence Approval (DCD) Complete Guide 2026 | Fire Safety Requirements',
     metaDescription: 'Complete guide to Dubai Civil Defence approval process for 2026. Step-by-step instructions, requirements by building category, fire safety compliance, and DCD certification process.',
     keywords: ['Dubai Civil Defence approval', 'DCD approval Dubai', 'fire safety Dubai', 'building approvals Dubai', 'UAE Fire and Life Safety Code', 'DCD certification', 'fire protection systems Dubai'],
-    ogImage: '/images/blog/building-approvals-dubai-civil-defence-approval-dcd-complete-guide-for-2026.jpg',
+    ogImage: '/images/blog/building-approvals-dubai-civil-defence-approval-dcd-complete-guide-for-2026-cover.jpg',
   }
 
 ];
