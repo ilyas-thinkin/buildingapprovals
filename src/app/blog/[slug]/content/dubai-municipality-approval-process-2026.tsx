@@ -10,14 +10,6 @@ export default function DubaiMunicipalityApprovalContent() {
         This step-by-step guide covers each stage of the process, required documents, estimated timelines, and practical tips for a smooth approval journey.
       </p>
 
-      <div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
-        <img
-          src="/images/blog/building-approvals-dubai-municipality-approval-process-2026.jpg"
-          alt="Building Approvals Dubai - Dubai Municipality Approval Process 2026 Complete Guide"
-          style={{ width: '100%', height: 'auto', display: 'block' }}
-        />
-      </div>
-
       <h2>Step 1: Prepare Your Application Documents</h2>
       <p>
         Before submitting your project, ensure all documentation meets Dubai Municipality requirements:
@@ -60,6 +52,14 @@ export default function DubaiMunicipalityApprovalContent() {
       <p>
         Coordinated assessment ensures your project meets all regulatory requirements.
       </p>
+
+      <div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
+        <img
+          src="/images/blog/building-approvals-dubai-municipality-approval-process-2026.jpg"
+          alt="Building Approvals Dubai - Dubai Municipality Approval Process 2026 Complete Guide"
+          style={{ width: '100%', height: 'auto', display: 'block' }}
+        />
+      </div>
 
       <h2>Step 4: Address Modifications and Clarifications</h2>
       <p>

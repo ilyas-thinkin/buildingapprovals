@@ -5,14 +5,6 @@ export default function BlogContent() {
 
       <p>This guide explains <strong>what DCD is, how to obtain approval step by step, the different approval categories, and their specific requirements</strong>, in a clear and practical way.</p>
 
-      <div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
-        <img
-          src="/images/blog/building-approvals-dubai-civil-defence-approval-dcd-complete-guide-for-2026.jpg"
-          alt="Building Approvals Dubai - Dubai Civil Defence Approval (DCD) Complete Guide for 2026"
-          style={{ width: '100%', height: 'auto', display: 'block' }}
-        />
-      </div>
-
       <h2>Overview of Dubai Civil Defence (DCD)</h2>
 
       <p><strong>Dubai Civil Defence (DCD)</strong> is the government authority responsible for protecting lives and properties from fire hazards, emergencies, and disasters across Dubai.</p>
@@ -100,6 +92,14 @@ export default function BlogContent() {
         <li>You receive <strong>DCD Design Approval</strong></li>
         <li>Construction or fit-out work can officially begin</li>
       </ul>
+
+      <div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
+        <img
+          src="/images/blog/building-approvals-dubai-civil-defence-approval-dcd-complete-guide-for-2026.jpg"
+          alt="Building Approvals Dubai - Dubai Civil Defence Approval (DCD) Complete Guide for 2026"
+          style={{ width: '100%', height: 'auto', display: 'block' }}
+        />
+      </div>
 
       <h3>Step 6: Installation of Approved Fire Systems</h3>
 

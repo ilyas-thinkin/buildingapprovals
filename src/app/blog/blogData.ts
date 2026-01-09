@@ -52,7 +52,7 @@ export const blogPosts: BlogPost[] = [
     date: '2026-01-08',
     author: 'Building Approvals Dubai',
     category: 'Dubai Civil Defence',
-    image: '/images/blog/building-approvals-dubai-civil-defence-approval-dcd-complete-guide-for-2026-card.jpg',
+    image: '/images/blog/building-approvals-dubai-civil-defence-approval-dcd-complete-guide-for-2026.jpg',
     coverImage: '/images/blog/building-approvals-dubai-civil-defence-approval-dcd-complete-guide-for-2026.jpg',
     slug: 'dubai-civil-defence-approval-dcd-complete-guide-for-2026',
     metaTitle: 'Dubai Civil Defence Approval (DCD) Complete Guide 2026 | Fire Safety Requirements',

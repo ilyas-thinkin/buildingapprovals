@@ -10,14 +10,6 @@ export default function DubaiMunicipalityUpdatedRulesContent() {
         This comprehensive guide explores the latest updates to <strong>Dubai Municipality approval 2026</strong> systems, including new regulations, digital innovations, and what these changes mean for developers, consultants, and property owners.
       </p>
 
-      <div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
-        <img
-          src="/images/blog/building-approvals-dubai-municipality-approvals-2026-updated-rules.jpg"
-          alt="Building Approvals Dubai - Dubai Municipality Approvals 2026 Updated Rules & Digital Innovations"
-          style={{ width: '100%', height: 'auto', display: 'block' }}
-        />
-      </div>
-
       <h2>1. Enhanced Digital Permit Systems</h2>
       <p>
         Dubai Municipality has significantly upgraded its digital permit platforms to simplify and accelerate building approvals in Dubai. All applications are now processed through centralized online systems that offer:
@@ -64,6 +56,14 @@ export default function DubaiMunicipalityUpdatedRulesContent() {
       <p>
         This technology ensures that <strong>building approvals in Dubai</strong> align perfectly with the city's vision for sustainable, intelligent urban development.
       </p>
+
+      <div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
+        <img
+          src="/images/blog/building-approvals-dubai-municipality-approvals-2026-updated-rules.jpg"
+          alt="Building Approvals Dubai - Dubai Municipality Approvals 2026 Updated Rules & Digital Innovations"
+          style={{ width: '100%', height: 'auto', display: 'block' }}
+        />
+      </div>
 
       <h2>4. Real-Time Tracking & Approval Transparency</h2>
       <p>

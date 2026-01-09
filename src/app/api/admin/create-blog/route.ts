@@ -415,14 +415,50 @@ ${takeawayItems}
   // Flush any remaining list
   flushList();
 
-  // Insert cover image after the first paragraph (intro)
+  // Insert cover image in the middle of the content (after ~40% of headings)
   let contentWithImage = elements.join('\n\n');
 
   if (imageOptions) {
-    // Find the first closing </p> tag to insert image after intro
-    const firstParagraphEnd = contentWithImage.indexOf('</p>');
-    if (firstParagraphEnd !== -1) {
-      const imageElement = `
+    // Count h2 headings to find middle position
+    const h2Matches = contentWithImage.match(/<h2>/g);
+    const h2Count = h2Matches ? h2Matches.length : 0;
+
+    if (h2Count > 0) {
+      // Insert after ~40% of headings (or 3rd heading, whichever comes first)
+      const targetHeadingIndex = Math.min(Math.ceil(h2Count * 0.4), 3);
+
+      // Find the nth h2 closing tag
+      let currentIndex = 0;
+      let foundCount = 0;
+      let insertPosition = -1;
+
+      while (foundCount < targetHeadingIndex && currentIndex < contentWithImage.length) {
+        const nextH2Close = contentWithImage.indexOf('</h2>', currentIndex);
+        if (nextH2Close === -1) break;
+
+        foundCount++;
+        if (foundCount === targetHeadingIndex) {
+          // Find the next closing tag after this h2 (could be </p>, </ul>, etc.)
+          const nextPClose = contentWithImage.indexOf('</p>', nextH2Close);
+          const nextUlClose = contentWithImage.indexOf('</ul>', nextH2Close);
+          const nextOlClose = contentWithImage.indexOf('</ol>', nextH2Close);
+
+          // Find the earliest closing tag
+          const positions = [nextPClose, nextUlClose, nextOlClose].filter(pos => pos !== -1);
+          if (positions.length > 0) {
+            insertPosition = Math.min(...positions);
+            // Add the length of the closing tag
+            if (insertPosition === nextPClose) insertPosition += 4;
+            else if (insertPosition === nextUlClose) insertPosition += 5;
+            else if (insertPosition === nextOlClose) insertPosition += 5;
+          }
+          break;
+        }
+        currentIndex = nextH2Close + 5;
+      }
+
+      if (insertPosition !== -1) {
+        const imageElement = `
 
       <div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
         <img
@@ -432,7 +468,8 @@ ${takeawayItems}
         />
       </div>`;
 
-      contentWithImage = contentWithImage.slice(0, firstParagraphEnd + 4) + imageElement + contentWithImage.slice(firstParagraphEnd + 4);
+        contentWithImage = contentWithImage.slice(0, insertPosition) + imageElement + contentWithImage.slice(insertPosition);
+      }
     }
   }
 
