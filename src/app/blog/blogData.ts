@@ -16,6 +16,21 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    id: '4',
+    title: 'Fit-Out Approval in Dubai: A Simple, Practical Guide for 2026',
+    excerpt: 'Setting up a new office, restaurant, shop, or clinic in Dubai is exciting—but before you start the interior work, there\'s one crucial step you cannot skip: Fit-Out Approval. This guide breaks down the process in a clear, practical way.',
+    date: '2026-01-09',
+    author: 'Building Approvals Dubai',
+    category: 'Fit-Out Approvals',
+    image: '/images/blog/building-approvals-dubai-fit-out-approval-card.jpg',
+    coverImage: '/images/blog/building-approvals-dubai-fit-out-cover.jpg',
+    slug: 'fit-out-approval-dubai-simple-practical-guide-2026',
+    metaTitle: 'Fit-Out Approval in Dubai 2026 | Complete Practical Guide for Interior Works',
+    metaDescription: 'Complete guide to fit-out approval in Dubai for 2026. Learn the step-by-step process, required documents, authorities involved, and tips to get approvals faster for offices, restaurants, and retail spaces.',
+    keywords: ['fit-out approval Dubai', 'Dubai fit-out permit', 'interior approval Dubai', 'building approvals Dubai', 'Dubai Municipality fit-out', 'DCD fit-out approval', 'fit-out consultant Dubai'],
+    ogImage: '/images/blog/building-approvals-dubai-fit-out-cover.jpg',
+  },
+  {
     id: '1',
     title: 'Dubai Municipality Approval Process 2026 – Complete Guide to get Building Approvals in Dubai',
     excerpt: 'Dubai\'s construction sector continues to grow rapidly in 2026, with strict regulations designed to ensure safety, sustainability, and compliance with international standards.',

@@ -29,7 +29,8 @@
       "Bash(then echo \"File does not exist\")",
       "Bash(\"d:\\\\Websites\\\\Buildingapprovals\\\\building-approvals\\\\src\\\\app\\\\blog\\\\[slug]\\\\content\\\\dubai-civil-defence-approval-dcd-complete-guide-for-2026.tsx\")",
       "Bash(fi)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(node -e:*)"
     ]
   }
 }

@@ -5,6 +5,7 @@ import './blog-post.css';
 import DubaiMunicipalityApprovalContent from './content/dubai-municipality-approval-process-2026';
 import DubaiMunicipalityUpdatedRulesContent from './content/dubai-municipality-approvals-2026-updated-rules';
 import DubaiCivilDefenceApprovalDcdCompleteGuideFor2026Content from './content/dubai-civil-defence-approval-dcd-complete-guide-for-2026';
+import FitOutApprovalDubaiSimplePracticalGuide2026Content from './content/fit-out-approval-dubai-simple-practical-guide-2026';
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -73,6 +74,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
     if (post.slug === 'dubai-civil-defence-approval-dcd-complete-guide-for-2026') {
       return <DubaiCivilDefenceApprovalDcdCompleteGuideFor2026Content />;
+    }
+
+    if (post.slug === 'fit-out-approval-dubai-simple-practical-guide-2026') {
+      return <FitOutApprovalDubaiSimplePracticalGuide2026Content />;
     }
 
     return null;
