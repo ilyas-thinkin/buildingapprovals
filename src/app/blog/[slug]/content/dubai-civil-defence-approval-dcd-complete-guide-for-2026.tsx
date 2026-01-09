@@ -95,7 +95,7 @@ export default function BlogContent() {
 
       <div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
         <img
-          src="/images/blog/building-approvals-dubai-civil-defence-approval-dcd-complete-guide-for-2026-cover.jpg"
+          src="/images/blog/building-approvals-dubai-civil-defence-approval-card.jpg"
           alt="Building Approvals Dubai - Dubai Civil Defence Approval (DCD) Complete Guide for 2026"
           style={{ width: '100%', height: 'auto', display: 'block' }}
         />
