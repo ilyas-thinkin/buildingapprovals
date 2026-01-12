@@ -6,6 +6,7 @@ import DubaiMunicipalityApprovalContent from './content/dubai-municipality-appro
 import DubaiMunicipalityUpdatedRulesContent from './content/dubai-municipality-approvals-2026-updated-rules';
 import DubaiCivilDefenceApprovalDcdCompleteGuideFor2026Content from './content/dubai-civil-defence-approval-dcd-complete-guide-for-2026';
 import FitOutApprovalDubaiSimplePracticalGuide2026Content from './content/fit-out-approval-dubai-simple-practical-guide-2026';
+import DewaApprovalsDubaiStepByStepProcessChecklistContent from './content/dewa-approvals-dubai-step-by-step-process-checklist';
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -78,6 +79,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
     if (post.slug === 'fit-out-approval-dubai-simple-practical-guide-2026') {
       return <FitOutApprovalDubaiSimplePracticalGuide2026Content />;
+    }
+
+    if (post.slug === 'dewa-approvals-dubai-step-by-step-process-checklist') {
+      return <DewaApprovalsDubaiStepByStepProcessChecklistContent />;
     }
 
     return null;

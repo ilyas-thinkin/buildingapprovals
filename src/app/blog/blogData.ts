@@ -16,6 +16,21 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    id: '5',
+    title: 'How to Get DEWA Approvals in Dubai: Step-by-Step Process & Checklist',
+    excerpt: 'Obtaining building approvals in Dubai involves multiple authorities, and DEWA approval is one of the most critical stages. This guide explains the step-by-step DEWA approval process and complete document checklist.',
+    date: '2026-01-12',
+    author: 'Building Approvals Dubai',
+    category: 'DEWA Approvals',
+    image: '/images/blog/building-approvals-dubai-dewa-approval-card.jpg',
+    coverImage: '/images/blog/building-approvals-dubai-dewa-approval-cover.jpg',
+    slug: 'dewa-approvals-dubai-step-by-step-process-checklist',
+    metaTitle: 'DEWA Approvals Dubai 2026 | Complete Step-by-Step Process & Document Checklist',
+    metaDescription: 'Complete guide to DEWA approvals in Dubai for 2026. Learn the step-by-step approval process, required documents for electrical and water approvals, and tips to avoid delays in building approvals.',
+    keywords: ['DEWA approval Dubai', 'Dubai electricity approval', 'DEWA building approval', 'building approvals Dubai', 'DEWA consultant Dubai', 'electrical approval Dubai', 'water approval Dubai'],
+    ogImage: '/images/blog/building-approvals-dubai-dewa-approval-cover.jpg',
+  },
+  {
     id: '4',
     title: 'Fit-Out Approval in Dubai: A Simple, Practical Guide for 2026',
     excerpt: 'Setting up a new office, restaurant, shop, or clinic in Dubai is exciting—but before you start the interior work, there\'s one crucial step you cannot skip: Fit-Out Approval. This guide breaks down the process in a clear, practical way.',
