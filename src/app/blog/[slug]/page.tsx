@@ -231,8 +231,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
           {/* Related Articles Section */}
           <div className="related-articles-section">
-            <h2 className="related-articles-title">Related Articles</h2>
-            <p className="related-articles-subtitle">Continue exploring our comprehensive guides on building approvals in Dubai</p>
+            <h2 className="related-articles-title">You Might Also Like</h2>
+            <p className="related-articles-subtitle">Check out these helpful guides on building approvals in Dubai</p>
             <div className="related-articles-grid">
               {blogPosts
                 .filter(p => p.slug !== post.slug)
