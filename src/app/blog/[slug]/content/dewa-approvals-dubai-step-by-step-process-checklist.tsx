@@ -40,14 +40,6 @@ export default function BlogContent() {
 
       <p>Each stage must be cleared before moving to the next phase of building approvals.</p>
 
-      <div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
-        <img
-          src="/images/blog/building-approvals-dubai-dewa-approval-content.jpg"
-          alt="Building Approvals Dubai - DEWA Approvals Dubai Step-by-Step Process & Checklist"
-          style={{ width: '100%', height: 'auto', display: 'block' }}
-        />
-      </div>
-
       <h2>Step-by-Step DEWA Approval Process for Building Approvals</h2>
 
       <h3>1. Appoint a DEWA-Approved Consultant</h3>
@@ -69,6 +61,14 @@ export default function BlogContent() {
       <h3>3. Online Submission for Building Approvals</h3>
 
       <p>DEWA approvals are submitted through DEWA's online portal, ensuring transparency and faster processing for building approvals.</p>
+
+      <div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
+        <img
+          src="/images/blog/building-approvals-dubai-dewa-approval-content.jpg"
+          alt="Building Approvals Dubai - DEWA Approvals Dubai Step-by-Step Process & Checklist"
+          style={{ width: '100%', height: 'auto', display: 'block' }}
+        />
+      </div>
 
       <h3>4. Technical Review by DEWA</h3>
 
