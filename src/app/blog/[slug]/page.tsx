@@ -229,6 +229,40 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             {renderContent()}
           </div>
 
+          {/* Related Articles Section */}
+          <div className="related-articles-section">
+            <h2 className="related-articles-title">Related Articles</h2>
+            <p className="related-articles-subtitle">Continue exploring our comprehensive guides on building approvals in Dubai</p>
+            <div className="related-articles-grid">
+              {blogPosts
+                .filter(p => p.slug !== post.slug)
+                .slice(0, 3)
+                .map((relatedPost) => (
+                  <a
+                    key={relatedPost.id}
+                    href={`/blog/${relatedPost.slug}`}
+                    className="related-article-card"
+                  >
+                    <div
+                      className="related-article-image"
+                      style={{
+                        backgroundImage: `url(${relatedPost.image})`
+                      }}
+                    >
+                      <span className="related-article-category">{relatedPost.category}</span>
+                    </div>
+                    <div className="related-article-content">
+                      <h3 className="related-article-title">{relatedPost.title}</h3>
+                      <p className="related-article-excerpt">{relatedPost.excerpt}</p>
+                      <span className="related-article-date">
+                        {new Date(relatedPost.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                      </span>
+                    </div>
+                  </a>
+                ))}
+            </div>
+          </div>
+
           <footer className="blog-post-footer">
             <a href="/blog" className="back-to-blog">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
