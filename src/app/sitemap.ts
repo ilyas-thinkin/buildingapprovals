@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { blogPosts } from './blog/blogData';
 
 const siteUrl = "https://www.buildingapprovals.ae";
 
@@ -24,11 +25,6 @@ const serviceIds = [
   "tecom",
   "tpc",
   "trakhees",
-];
-
-const blogSlugs = [
-  "dubai-municipality-approval-process-2026",
-  "dubai-municipality-approvals-2026-updated-rules",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -76,12 +72,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  // Blog pages
-  const blogPages: MetadataRoute.Sitemap = blogSlugs.map((slug) => ({
-    url: `${siteUrl}/blog/${slug}`,
-    lastModified,
+  // Blog pages - dynamically generated from blogData
+  const blogPages: MetadataRoute.Sitemap = blogPosts.map((post) => ({
+    url: `${siteUrl}/blog/${post.slug}`,
+    lastModified: new Date(post.date),
     changeFrequency: "monthly" as const,
-    priority: 0.7,
+    priority: 0.8,
   }));
 
   return [...mainPages, ...servicePages, ...blogPages];
