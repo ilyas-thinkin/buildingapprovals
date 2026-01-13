@@ -194,8 +194,20 @@ export default function RootLayout({
               "@type": "Organization",
               name: "Building Approvals Dubai",
               url: siteUrl.href,
-              logo: `${siteUrl.origin}/images/BA OG Logo_imresizer (1).png?v=2`,
-              image: `${siteUrl.origin}/images/BA OG Logo_imresizer (1).png?v=2`,
+              logo: {
+                "@type": "ImageObject",
+                url: `${siteUrl.origin}/images/BA OG Logo_imresizer (1).png?v=2`,
+                width: "1200",
+                height: "1200",
+                caption: "Building Approvals Dubai Logo"
+              },
+              image: {
+                "@type": "ImageObject",
+                url: `${siteUrl.origin}/images/BA OG Logo_imresizer (1).png?v=2`,
+                width: "1200",
+                height: "1200",
+                caption: "Building Approvals Dubai"
+              },
               contactPoint: {
                 "@type": "ContactPoint",
                 telephone: "+971589575610",
@@ -210,6 +222,9 @@ export default function RootLayout({
                 postalCode: "00000",
                 addressCountry: "AE",
               },
+              sameAs: [
+                "https://www.buildingapprovals.ae"
+              ],
             }),
           }}
         />
