@@ -16,20 +16,21 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
-    id: '5',
+    id: '1768287588802',
     title: 'How to Get DEWA Approvals in Dubai: Step-by-Step Process & Checklist',
-    excerpt: 'Obtaining building approvals in Dubai involves multiple authorities, and DEWA approval is one of the most critical stages. This guide explains the step-by-step DEWA approval process and complete document checklist.',
-    date: '2026-01-12',
-    author: 'Building Approvals Dubai',
+    slug: 'how-to-get-dewa-approvals-in-dubai-step-by-step-process-checklist',
     category: 'DEWA Approvals',
-    image: '/images/blog/building-approvals-dubai-dewa-approval-card.jpg',
+    author: 'Building Approvals Dubai',
+    date: '2026-01-13',
+    excerpt: 'This guide explains how DEWA fits into Dubai’s building approvals system, the step-by-step DEWA approval process, and a complete list of documents required to avoid delays.',
+    image: '/images/blog/building-approvals-dubai-dewa-approval-list.jpg',
     coverImage: '/images/blog/building-approvals-dubai-dewa-approval-cover.jpg',
-    slug: 'dewa-approvals-dubai-step-by-step-process-checklist',
-    metaTitle: 'DEWA Approvals Dubai 2026 | Complete Step-by-Step Process & Document Checklist',
-    metaDescription: 'Complete guide to DEWA approvals in Dubai for 2026. Learn the step-by-step approval process, required documents for electrical and water approvals, and tips to avoid delays in building approvals.',
-    keywords: ['DEWA approval Dubai', 'Dubai electricity approval', 'DEWA building approval', 'building approvals Dubai', 'DEWA consultant Dubai', 'electrical approval Dubai', 'water approval Dubai'],
+    metaTitle: 'How to Get DEWA Approvals in Dubai: Step-by-Step Process & Checklist | Building Approvals Dubai',
+    metaDescription: 'This guide explains how DEWA fits into Dubai’s building approvals system, the step-by-step DEWA approval process, and a complete list of documents required to avoid delays.',
+    keywords: ['DEWA', 'Approvals', 'Dubai:', 'Step-by-Step', 'Process', 'Checklist'],
     ogImage: '/images/blog/building-approvals-dubai-dewa-approval-cover.jpg',
   },
+
   {
     id: '4',
     title: 'Fit-Out Approval in Dubai: A Simple, Practical Guide for 2026',
@@ -90,5 +91,12 @@ export const blogPosts: BlogPost[] = [
     keywords: ['Dubai Civil Defence approval', 'DCD approval Dubai', 'fire safety Dubai', 'building approvals Dubai', 'UAE Fire and Life Safety Code', 'DCD certification', 'fire protection systems Dubai'],
     ogImage: '/images/blog/building-approvals-dubai-civil-defence-approval-card.jpg',
   }
+
+
+
+
+
+
+
 
 ];

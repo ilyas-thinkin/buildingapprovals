@@ -33,7 +33,12 @@ async function extractPdfText(contentBuffer: Buffer): Promise<string> {
   return pdfData?.text ?? '';
 }
 
-async function extractDocxText(contentBuffer: Buffer): Promise<string> {
+interface ExtractedDocxContent {
+  text: string;
+  images: Array<{ data: string; contentType: string; index: number }>;
+}
+
+async function extractDocxText(contentBuffer: Buffer): Promise<ExtractedDocxContent> {
   const mammothModule: any = await import('mammoth');
   const mammoth = mammothModule?.default ?? mammothModule;
 
@@ -41,40 +46,65 @@ async function extractDocxText(contentBuffer: Buffer): Promise<string> {
     throw new Error('Could not load DOCX parser function');
   }
 
-  // Convert DOCX to HTML to preserve formatting and structure
+  const extractedImages: Array<{ data: string; contentType: string; index: number }> = [];
+  let imageCounter = 0;
+
+  // Convert DOCX to HTML with image extraction
   const result = await mammoth.convertToHtml(
     { buffer: contentBuffer },
     {
       convertImage: mammoth.images.imgElement((image: any) => {
+        const currentIndex = imageCounter++;
         return image.read('base64').then((imageBuffer: string) => {
+          // Store image data for later use
+          extractedImages.push({
+            data: imageBuffer,
+            contentType: image.contentType || 'image/png',
+            index: currentIndex
+          });
+
+          // Use placeholder in HTML that we'll track
           return {
-            src: `data:${image.contentType};base64,${imageBuffer}`
+            src: `IMAGE_PLACEHOLDER_${currentIndex}`
           };
         });
       })
     }
   );
 
-  // Convert HTML back to plain text while preserving structure
+  // Convert HTML to structured text while preserving image placeholders
   let text = result.value;
 
   // Convert HTML elements to text markers
-  text = text.replace(/<h1[^>]*>(.*?)<\/h1>/g, '\n$1\n');
-  text = text.replace(/<h2[^>]*>(.*?)<\/h2>/g, '\n$1\n');
-  text = text.replace(/<h3[^>]*>(.*?)<\/h3>/g, '\n$1:\n');
+  text = text.replace(/<h1[^>]*>(.*?)<\/h1>/g, '\n## $1\n');
+  text = text.replace(/<h2[^>]*>(.*?)<\/h2>/g, '\n## $1\n');
+  text = text.replace(/<h3[^>]*>(.*?)<\/h3>/g, '\n### $1\n');
   text = text.replace(/<strong[^>]*>(.*?)<\/strong>/g, '**$1**');
   text = text.replace(/<b[^>]*>(.*?)<\/b>/g, '**$1**');
-  text = text.replace(/<li[^>]*>(.*?)<\/li>/g, '• $1\n');
+  text = text.replace(/<em[^>]*>(.*?)<\/em>/g, '*$1*');
+  text = text.replace(/<i[^>]*>(.*?)<\/i>/g, '*$1*');
+  text = text.replace(/<li[^>]*>(.*?)<\/li>/g, '- $1\n');
   text = text.replace(/<p[^>]*>(.*?)<\/p>/g, '$1\n\n');
   text = text.replace(/<br\s*\/?>/g, '\n');
-  text = text.replace(/<img[^>]*>/g, ''); // Remove base64 images for now, they're too large
-  text = text.replace(/<[^>]+>/g, ''); // Remove any remaining HTML tags
+
+  // Keep image placeholders in the text
+  text = text.replace(/<img[^>]*src="IMAGE_PLACEHOLDER_(\d+)"[^>]*>/g, '\n[IMAGE_$1]\n');
+
+  // Remove any remaining HTML tags
+  text = text.replace(/<[^>]+>/g, '');
+
+  // Decode HTML entities
   text = text.replace(/&nbsp;/g, ' ');
   text = text.replace(/&amp;/g, '&');
   text = text.replace(/&lt;/g, '<');
   text = text.replace(/&gt;/g, '>');
+  text = text.replace(/&quot;/g, '"');
+  text = text.replace(/&#39;/g, "'");
 
-  return text.trim();
+  return {
+    text: text.trim(),
+    images: extractedImages
+  };
 }
 
 export async function POST(request: NextRequest) {
@@ -111,22 +141,36 @@ export async function POST(request: NextRequest) {
       await mkdir(blogImagesDir, { recursive: true });
     }
 
-    // Save card image with standardized naming
+    // Create short category name from title/category (e.g., "DEWA Approvals" -> "dewa-approval")
+    const createCategorySlug = (text: string): string => {
+      return text
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/s$/, '') // Remove trailing 's' for singular form
+        .replace(/-+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .substring(0, 30); // Limit length
+    };
+
+    const categorySlug = createCategorySlug(category || title.split(' ').slice(0, 3).join(' '));
+
+    // Save card image with standardized naming: building-approvals-dubai-{category}-list.{ext}
     const cardImageExt = cardImage.name.split('.').pop();
-    const cardImageName = `building-approvals-${slug}-card.${cardImageExt}`;
+    const cardImageName = `building-approvals-dubai-${categorySlug}-list.${cardImageExt}`;
     const cardImagePath = path.join(blogImagesDir, cardImageName);
     const cardImageBuffer = Buffer.from(await cardImage.arrayBuffer());
     await writeFile(cardImagePath, cardImageBuffer);
 
-    // Save cover image with standardized naming
+    // Save cover image with standardized naming: building-approvals-dubai-{category}-cover.{ext}
     const coverImageExt = coverImage.name.split('.').pop();
-    const coverImageName = `building-approvals-${slug}.${coverImageExt}`;
+    const coverImageName = `building-approvals-dubai-${categorySlug}-cover.${coverImageExt}`;
     const coverImagePath = path.join(blogImagesDir, coverImageName);
     const coverImageBuffer = Buffer.from(await coverImage.arrayBuffer());
     await writeFile(coverImagePath, coverImageBuffer);
 
     // Parse content file (PDF/DOCX)
     let blogContent = '';
+    let extractedImages: Array<{ data: string; contentType: string; index: number }> = [];
     const contentBuffer = Buffer.from(await contentFile.arrayBuffer());
 
     const contentFileName = contentFile.name.toLowerCase();
@@ -145,7 +189,10 @@ export async function POST(request: NextRequest) {
       }
     } else if (contentFileName.endsWith('.docx')) {
       try {
-        blogContent = await extractDocxText(contentBuffer);
+        const docxResult = await extractDocxText(contentBuffer);
+        blogContent = docxResult.text;
+        extractedImages = docxResult.images;
+        console.log('DOCX parsed successfully. Text length:', blogContent.length, 'Images:', extractedImages.length);
       } catch (docxError: any) {
         console.error('DOCX parsing error:', docxError);
         console.error('Error stack:', docxError.stack);
@@ -159,6 +206,19 @@ export async function POST(request: NextRequest) {
         { error: 'DOC files are not supported. Please upload a DOCX file.' },
         { status: 400 }
       );
+    }
+
+    // Save extracted images from DOCX with standardized naming: building-approvals-dubai-{category}-content.{ext}
+    const savedImagePaths: { [key: number]: string } = {};
+    for (const img of extractedImages) {
+      const imageExt = img.contentType.split('/')[1] || 'png';
+      // If multiple images, append index after "content" (e.g., content-2, content-3)
+      const imageSuffix = extractedImages.length > 1 ? `content-${img.index + 1}` : 'content';
+      const imageName = `building-approvals-dubai-${categorySlug}-${imageSuffix}.${imageExt}`;
+      const imagePath = path.join(blogImagesDir, imageName);
+      const imageBuffer = Buffer.from(img.data, 'base64');
+      await writeFile(imagePath, imageBuffer);
+      savedImagePaths[img.index] = `/images/blog/${imageName}`;
     }
 
     // Generate SEO metadata
@@ -180,6 +240,7 @@ export async function POST(request: NextRequest) {
     const blogComponentContent = generateBlogComponent(title, blogContent, {
       coverImagePath: `/images/blog/${coverImageName}`,
       altText: `Building Approvals Dubai - ${title}`,
+      contentImages: savedImagePaths,
     });
     const componentDir = path.join(process.cwd(), 'src', 'app', 'blog', '[slug]', 'content');
     if (!existsSync(componentDir)) {
@@ -218,30 +279,36 @@ export async function POST(request: NextRequest) {
   }
 }
 
-function generateBlogComponent(title: string, content: string, imageOptions?: { coverImagePath: string; altText: string }): string {
-  // Enhanced PDF content parsing to preserve structure
+function generateBlogComponent(title: string, content: string, imageOptions?: { coverImagePath: string; altText: string; contentImages?: { [key: number]: string } }): string {
+  // Enhanced content parsing to preserve structure and handle images
   const lines = content.split('\n').map(line => line.trim()).filter(line => line.length > 0);
   const elements: string[] = [];
   let currentList: string[] = [];
   let listType: 'ul' | 'ol' | null = null;
 
+  const processInlineFormatting = (text: string): string => {
+    // First, convert markdown to HTML
+    let processed = text;
+
+    // Convert **bold** to <strong>
+    processed = processed.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+    // Convert *italic* to <em>
+    processed = processed.replace(/\*(.+?)\*/g, '<em>$1</em>');
+
+    // Now the text may have both existing <strong> tags and converted ones
+    // We need to NOT escape the HTML tags we want to keep
+    return processed;
+  };
+
   const flushList = () => {
     if (currentList.length > 0 && listType) {
       const listTag = listType === 'ul' ? 'ul' : 'ol';
-      const listItems = currentList.map(item => `        <li>${escapeHtml(item)}</li>`).join('\n');
+      const listItems = currentList.map(item => `        <li>${processInlineFormatting(item)}</li>`).join('\n');
       elements.push(`      <${listTag}>\n${listItems}\n      </${listTag}>`);
       currentList = [];
       listType = null;
     }
-  };
-
-  const escapeHtml = (text: string): string => {
-    return text
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
   };
 
   const isHeading = (line: string): boolean => {
@@ -271,8 +338,18 @@ function generateBlogComponent(title: string, content: string, imageOptions?: { 
     return false;
   };
 
-  const isKeyTakeaways = (line: string): boolean => {
-    return line.match(/^Key Takeaways?$/i) !== null;
+  const isKeyTakeaways = (line: string): { isMatch: boolean; fullTitle: string | null } => {
+    // Match various formats: "Key Takeaways", "Key Takeaways:", "Key Takeaway on X", etc.
+    const simpleMatch = line.match(/^Key Takeaways?:?$/i);
+    const extendedMatch = line.match(/^(Key Takeaways? on .+)$/i);
+
+    if (simpleMatch) {
+      return { isMatch: true, fullTitle: null };
+    }
+    if (extendedMatch) {
+      return { isMatch: true, fullTitle: extendedMatch[1] };
+    }
+    return { isMatch: false, fullTitle: null };
   };
 
   const isBulletPoint = (line: string): string | null => {
@@ -301,52 +378,85 @@ function generateBlogComponent(title: string, content: string, imageOptions?: { 
   };
 
   let inKeyTakeaways = false;
+  let keyTakeawaysTitle = 'Key Takeaways';
   const keyTakeawaysContent: string[] = [];
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
 
+    // Check for image placeholders from DOCX extraction
+    const imageMatch = line.match(/^\[IMAGE_(\d+)\]$/);
+    if (imageMatch && imageOptions?.contentImages) {
+      const imageIndex = parseInt(imageMatch[1], 10);
+      const imagePath = imageOptions.contentImages[imageIndex];
+      if (imagePath) {
+        flushList();
+        // Create descriptive alt text for the image
+        const imageAltText = imageIndex === 0
+          ? imageOptions.altText  // First image uses the main alt text
+          : `${imageOptions.altText} - Content Image ${imageIndex + 1}`;  // Subsequent images numbered
+        elements.push(`      <div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
+        <img
+          src="${imagePath}"
+          alt="${imageAltText}"
+          style={{ width: '100%', height: 'auto', display: 'block' }}
+        />
+      </div>`);
+        continue;
+      }
+    }
+
     // Check for Key Takeaways section
-    if (isKeyTakeaways(line)) {
+    const keyTakeawaysCheck = isKeyTakeaways(line);
+    if (keyTakeawaysCheck.isMatch) {
       flushList();
       inKeyTakeaways = true;
+      // Store the full title if provided (e.g., "Key Takeaways on DEWA Building Approvals")
+      keyTakeawaysTitle = keyTakeawaysCheck.fullTitle || 'Key Takeaways';
       continue;
     }
 
     // If we're in Key Takeaways section, collect content
     if (inKeyTakeaways) {
-      // Check if we've hit another major heading (end of Key Takeaways)
-      if (isHeading(line) && !line.match(/^Pro Tip:/i)) {
+      // First, check if this is a bullet point (most Key Takeaways content)
+      const bulletContent = isBulletPoint(line);
+      if (bulletContent) {
+        keyTakeawaysContent.push(processInlineFormatting(bulletContent));
+        continue;
+      }
+
+      // Check if we've hit another MAJOR heading (end of Key Takeaways)
+      // Only end if it's a clear section heading, not just a short line
+      const isMajorHeading = line.match(/^(Overview|Introduction|What is|How to|Step-by-Step|Key Requirements|Process|Conclusion|Final Thoughts|Important|Categories|Types|Requirements for|Documents Required|Common Issues|Tips to)/i);
+      if (isMajorHeading) {
         // End Key Takeaways section
         inKeyTakeaways = false;
 
-        // Add the Key Takeaways box
+        // Add the Key Takeaways box with the stored title
         const takeawayItems = keyTakeawaysContent.map(item => `        <li>${item}</li>`).join('\n');
         elements.push(`      <div className="key-takeaways-box">
-        <h3>Key Takeaways</h3>
+        <h3>${keyTakeawaysTitle}</h3>
         <ul>
 ${takeawayItems}
         </ul>
       </div>`);
 
-        // Clear the array
+        // Clear the array and reset title
         keyTakeawaysContent.length = 0;
+        keyTakeawaysTitle = 'Key Takeaways';
 
         // Process this line as a normal heading
         const headingLevel = isBoldLabel(line) || line.endsWith(':') ? 'h3' : 'h2';
-        elements.push(`      <${headingLevel}>${escapeHtml(line)}</${headingLevel}>`);
+        const cleanedLine = processInlineFormatting(line);
+        elements.push(`      <${headingLevel}>${cleanedLine}</${headingLevel}>`);
         continue;
       }
 
-      // Add content to Key Takeaways
-      const bulletContent = isBulletPoint(line);
-      if (bulletContent) {
-        keyTakeawaysContent.push(escapeHtml(bulletContent));
-      } else if (line.length > 0) {
+      // If it's not a bullet or major heading, add as regular content
+      if (line.length > 0) {
         // Handle Pro Tip or other special content
-        let processedLine = line;
-        processedLine = processedLine.replace(/^(Pro Tip|Note|Important|Warning):\s*/gi, '<strong>$1:</strong> ');
-        processedLine = processedLine.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        let processedLine = processInlineFormatting(line);
+        processedLine = processedLine.replace(/^(Note|Important|Warning|Tip|Pro Tip):\s*/gi, '<strong>$1:</strong> ');
         keyTakeawaysContent.push(processedLine);
       }
       continue;
@@ -380,24 +490,27 @@ ${takeawayItems}
     // Check for headings
     if (isHeading(line)) {
       const headingLevel = isBoldLabel(line) || line.endsWith(':') ? 'h3' : 'h2';
-      elements.push(`      <${headingLevel}>${escapeHtml(line)}</${headingLevel}>`);
+      const cleanedLine = processInlineFormatting(line);
+      elements.push(`      <${headingLevel}>${cleanedLine}</${headingLevel}>`);
       continue;
     }
 
     // Check for bold labels in middle of text
     if (isBoldLabel(line)) {
-      elements.push(`      <p><strong>${escapeHtml(line)}</strong></p>`);
+      const cleanedLine = processInlineFormatting(line);
+      elements.push(`      <p><strong>${cleanedLine}</strong></p>`);
       continue;
     }
 
     // Regular paragraph
     if (line.length > 0) {
-      // Check if line contains inline bold patterns like "Note:", "Important:"
-      let processedLine = line;
-      processedLine = processedLine.replace(/^(Note|Important|Warning|Tip|Example):\s*/gi, '<strong>$1:</strong> ');
-      processedLine = processedLine.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      // Process inline formatting (convert markdown and keep HTML)
+      let processedLine = processInlineFormatting(line);
 
-      elements.push(`      <p>${escapeHtml(processedLine)}</p>`);
+      // Add emphasis to special labels
+      processedLine = processedLine.replace(/^(Note|Important|Warning|Tip|Example):\s*/gi, '<strong>$1:</strong> ');
+
+      elements.push(`      <p>${processedLine}</p>`);
     }
   }
 
@@ -405,7 +518,7 @@ ${takeawayItems}
   if (keyTakeawaysContent.length > 0) {
     const takeawayItems = keyTakeawaysContent.map(item => `        <li>${item}</li>`).join('\n');
     elements.push(`      <div className="key-takeaways-box">
-        <h3>Key Takeaways</h3>
+        <h3>${keyTakeawaysTitle}</h3>
         <ul>
 ${takeawayItems}
         </ul>
@@ -415,63 +528,8 @@ ${takeawayItems}
   // Flush any remaining list
   flushList();
 
-  // Insert cover image in the middle of the content (after ~40% of headings)
+  // Don't automatically insert cover image - only use images from the document content
   let contentWithImage = elements.join('\n\n');
-
-  if (imageOptions) {
-    // Count h2 headings to find middle position
-    const h2Matches = contentWithImage.match(/<h2>/g);
-    const h2Count = h2Matches ? h2Matches.length : 0;
-
-    if (h2Count > 0) {
-      // Insert after ~40% of headings (or 3rd heading, whichever comes first)
-      const targetHeadingIndex = Math.min(Math.ceil(h2Count * 0.4), 3);
-
-      // Find the nth h2 closing tag
-      let currentIndex = 0;
-      let foundCount = 0;
-      let insertPosition = -1;
-
-      while (foundCount < targetHeadingIndex && currentIndex < contentWithImage.length) {
-        const nextH2Close = contentWithImage.indexOf('</h2>', currentIndex);
-        if (nextH2Close === -1) break;
-
-        foundCount++;
-        if (foundCount === targetHeadingIndex) {
-          // Find the next closing tag after this h2 (could be </p>, </ul>, etc.)
-          const nextPClose = contentWithImage.indexOf('</p>', nextH2Close);
-          const nextUlClose = contentWithImage.indexOf('</ul>', nextH2Close);
-          const nextOlClose = contentWithImage.indexOf('</ol>', nextH2Close);
-
-          // Find the earliest closing tag
-          const positions = [nextPClose, nextUlClose, nextOlClose].filter(pos => pos !== -1);
-          if (positions.length > 0) {
-            insertPosition = Math.min(...positions);
-            // Add the length of the closing tag
-            if (insertPosition === nextPClose) insertPosition += 4;
-            else if (insertPosition === nextUlClose) insertPosition += 5;
-            else if (insertPosition === nextOlClose) insertPosition += 5;
-          }
-          break;
-        }
-        currentIndex = nextH2Close + 5;
-      }
-
-      if (insertPosition !== -1) {
-        const imageElement = `
-
-      <div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
-        <img
-          src="${imageOptions.coverImagePath}"
-          alt="${imageOptions.altText}"
-          style={{ width: '100%', height: 'auto', display: 'block' }}
-        />
-      </div>`;
-
-        contentWithImage = contentWithImage.slice(0, insertPosition) + imageElement + contentWithImage.slice(insertPosition);
-      }
-    }
-  }
 
   return `export default function BlogContent() {
   return (
