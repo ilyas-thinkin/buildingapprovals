@@ -60,7 +60,7 @@ export const metadata: Metadata = {
       "Building Approvals Dubai is a leading consultancy for fast and reliable construction and fit-out approvals. We handle all major authority requirements, including Dubai Municipality, Civil Defence Dubai, Nakheel noc, JAFZA, DHA, DDA, DSO, and other authority approvals. Call Now",
     images: [
       {
-        url: "/images/BA OG Logo_imresizer (1).png",
+        url: "/images/BA OG Logo_imresizer (1).png?v=2",
         width: 1200,
         height: 1200,
         alt: "Building Approvals Dubai",
@@ -73,7 +73,7 @@ export const metadata: Metadata = {
     title: "Building Approvals Dubai | Leading Building Approval Services in Dubai",
     description:
       "Building Approvals Dubai is a leading consultancy for fast and reliable construction and fit-out approvals. We handle all major authority requirements, including Dubai Municipality, Civil Defence Dubai, Nakheel noc, JAFZA, DHA, DDA, DSO, and other authority approvals. Call Now",
-    images: ["/images/BA OG Logo_imresizer (1).png"],
+    images: ["/images/BA OG Logo_imresizer (1).png?v=2"],
   },
   // Canonical URL applied to all routes.
   alternates: {
@@ -194,8 +194,8 @@ export default function RootLayout({
               "@type": "Organization",
               name: "Building Approvals Dubai",
               url: siteUrl.href,
-              logo: `${siteUrl.origin}/images/BA OG Logo_imresizer (1).png`,
-              image: `${siteUrl.origin}/images/BA OG Logo_imresizer (1).png`,
+              logo: `${siteUrl.origin}/images/BA OG Logo_imresizer (1).png?v=2`,
+              image: `${siteUrl.origin}/images/BA OG Logo_imresizer (1).png?v=2`,
               contactPoint: {
                 "@type": "ContactPoint",
                 telephone: "+971589575610",
