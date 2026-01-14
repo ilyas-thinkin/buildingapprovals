@@ -98,11 +98,33 @@ function generateBlogComponent(blogContent: string, imageUrls: { [key: number]: 
   const elements: string[] = [];
   let currentList: string[] = [];
   let listType: 'ul' | 'ol' | null = null;
+  let inKeyTakeaways = false;
+  let keyTakeawaysContent: string[] = [];
+  let hasKeyTakeaways = false;
+
+  // Check if content has Key Takeaways section
+  const contentLower = blogContent.toLowerCase();
+  hasKeyTakeaways = contentLower.includes('key takeaway') || contentLower.includes('key takeaways');
+
+  // Clean text - remove markdown bold/italic markers and convert to HTML
+  const cleanText = (text: string): string => {
+    let cleaned = text;
+    // Convert **text** to <strong>text</strong>
+    cleaned = cleaned.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    // Convert *text* to <em>text</em> (but not bullet points)
+    cleaned = cleaned.replace(/(?<!\s)\*([^*\s][^*]*[^*\s])\*(?!\s)/g, '<em>$1</em>');
+    // Remove any remaining standalone asterisks that aren't bullet points
+    cleaned = cleaned.replace(/^\*\*\s*/, '');
+    cleaned = cleaned.replace(/\s*\*\*$/, '');
+    // Clean up double quotes
+    cleaned = cleaned.replace(/[""]([^""]+)[""]/g, '"$1"');
+    return cleaned;
+  };
 
   const flushList = () => {
     if (currentList.length > 0 && listType) {
       const listTag = listType === 'ul' ? 'ul' : 'ol';
-      const listItems = currentList.map(item => `        <li>${item}</li>`).join('\n');
+      const listItems = currentList.map(item => `        <li>${cleanText(item)}</li>`).join('\n');
       elements.push(`      <${listTag}>\n${listItems}\n      </${listTag}>`);
       currentList = [];
       listType = null;
@@ -111,26 +133,77 @@ function generateBlogComponent(blogContent: string, imageUrls: { [key: number]: 
 
   const isBulletPoint = (line: string): string | null => {
     const bulletPatterns = [
-      /^[•●○◦▪▫■□✓✔→➔➤➢⇒]\s+(.+)$/,
+      /^[•●○◦▪▫■□✓✔→➔➤➢⇒]\s*(.+)$/,
       /^[-–—]\s+(.+)$/,
-      /^[*]\s+(.+)$/,
+      /^\*\s+(.+)$/,
+      /^\d+\.\s+(.+)$/,
+      /^\d+\)\s+(.+)$/,
     ];
     for (const pattern of bulletPatterns) {
       const match = line.match(pattern);
-      if (match) return match[1] || match[0];
+      if (match) return match[1];
     }
     return null;
   };
 
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
+  const isHeading = (line: string): { level: number; text: string } | null => {
+    // Markdown headings
+    if (line.startsWith('## ')) return { level: 2, text: cleanText(line.substring(3)) };
+    if (line.startsWith('### ')) return { level: 3, text: cleanText(line.substring(4)) };
 
+    // Bold text that looks like a heading (short, no period at end)
+    const boldHeading = line.match(/^\*\*([^*]+)\*\*$/);
+    if (boldHeading && boldHeading[1].length < 100 && !boldHeading[1].endsWith('.')) {
+      return { level: 2, text: boldHeading[1] };
+    }
+
+    // Lines ending with colon that are short (likely headings)
+    if (line.endsWith(':') && line.length < 80 && !line.includes('.')) {
+      return { level: 3, text: cleanText(line) };
+    }
+
+    // Common heading patterns
+    const headingPatterns = [
+      /^(What is|Why|How to|When|Where|Who|Step \d+|Phase \d+|Category \d+|Types of|Benefits of|Requirements for|Documents Required|Common Issues|Tips|Final Thoughts|Conclusion|Overview|Introduction)/i
+    ];
+    for (const pattern of headingPatterns) {
+      if (pattern.test(line) && line.length < 120 && !line.includes('. ')) {
+        return { level: 2, text: cleanText(line) };
+      }
+    }
+
+    return null;
+  };
+
+  const isKeyTakeawaysHeading = (line: string): boolean => {
+    const lower = line.toLowerCase();
+    return lower.includes('key takeaway') || lower.includes('key takeaways') ||
+           lower.includes('pro tip') || lower.includes('pro tips');
+  };
+
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+
+    // Check for image placeholders
     const imageMatch = line.match(/^\[IMAGE_(\d+)\]$/);
     if (imageMatch) {
       const imageIndex = parseInt(imageMatch[1], 10);
       const imageUrl = imageUrls[imageIndex];
       if (imageUrl) {
         flushList();
+        if (inKeyTakeaways) {
+          // End key takeaways section before image
+          const sectionTitle = hasKeyTakeaways ? 'Key Takeaways' : 'Pro Tips';
+          const takeawayItems = keyTakeawaysContent.map(item => `        <li>${cleanText(item)}</li>`).join('\n');
+          elements.push(`      <div className="key-takeaways-box">
+        <h3>${sectionTitle}</h3>
+        <ul>
+${takeawayItems}
+        </ul>
+      </div>`);
+          keyTakeawaysContent = [];
+          inKeyTakeaways = false;
+        }
         elements.push(`      <div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
         <img
           src="${imageUrl}"
@@ -142,6 +215,48 @@ function generateBlogComponent(blogContent: string, imageUrls: { [key: number]: 
       }
     }
 
+    // Check for Key Takeaways / Pro Tips section start
+    if (isKeyTakeawaysHeading(line)) {
+      flushList();
+      inKeyTakeaways = true;
+      continue;
+    }
+
+    // If in Key Takeaways section, collect content
+    if (inKeyTakeaways) {
+      const bulletContent = isBulletPoint(line);
+      if (bulletContent) {
+        keyTakeawaysContent.push(bulletContent);
+        continue;
+      }
+      // Check if we hit a new major heading (end of Key Takeaways)
+      const heading = isHeading(line);
+      if (heading && heading.level === 2) {
+        // Output the Key Takeaways box
+        const sectionTitle = hasKeyTakeaways ? 'Key Takeaways' : 'Pro Tips';
+        if (keyTakeawaysContent.length > 0) {
+          const takeawayItems = keyTakeawaysContent.map(item => `        <li>${cleanText(item)}</li>`).join('\n');
+          elements.push(`      <div className="key-takeaways-box">
+        <h3>${sectionTitle}</h3>
+        <ul>
+${takeawayItems}
+        </ul>
+      </div>`);
+        }
+        keyTakeawaysContent = [];
+        inKeyTakeaways = false;
+        // Now process this line as a heading
+        elements.push(`      <h${heading.level}>${heading.text}</h${heading.level}>`);
+        continue;
+      }
+      // Non-bullet content in Key Takeaways - add as bullet anyway
+      if (line.length > 0) {
+        keyTakeawaysContent.push(line);
+      }
+      continue;
+    }
+
+    // Check for bullet points
     const bulletContent = isBulletPoint(line);
     if (bulletContent) {
       if (listType !== 'ul') {
@@ -152,18 +267,40 @@ function generateBlogComponent(blogContent: string, imageUrls: { [key: number]: 
       continue;
     }
 
+    // Flush any list before processing non-list content
     flushList();
 
-    if (line.startsWith('## ')) {
-      elements.push(`      <h2>${line.substring(3)}</h2>`);
-    } else if (line.startsWith('### ')) {
-      elements.push(`      <h3>${line.substring(4)}</h3>`);
-    } else if (line.length > 0) {
-      elements.push(`      <p>${line}</p>`);
+    // Check for headings
+    const heading = isHeading(line);
+    if (heading) {
+      elements.push(`      <h${heading.level}>${heading.text}</h${heading.level}>`);
+      continue;
+    }
+
+    // Regular paragraph - clean up any remaining markdown
+    if (line.length > 0) {
+      const cleanedLine = cleanText(line);
+      // Skip lines that are just asterisks or empty after cleaning
+      if (cleanedLine.replace(/[*\s]/g, '').length > 0) {
+        elements.push(`      <p>${cleanedLine}</p>`);
+      }
     }
   }
 
+  // Flush any remaining list
   flushList();
+
+  // If Key Takeaways was the last section
+  if (inKeyTakeaways && keyTakeawaysContent.length > 0) {
+    const sectionTitle = hasKeyTakeaways ? 'Key Takeaways' : 'Pro Tips';
+    const takeawayItems = keyTakeawaysContent.map(item => `        <li>${cleanText(item)}</li>`).join('\n');
+    elements.push(`      <div className="key-takeaways-box">
+        <h3>${sectionTitle}</h3>
+        <ul>
+${takeawayItems}
+        </ul>
+      </div>`);
+  }
 
   return `export default function BlogContent() {
   return (
