@@ -7,6 +7,7 @@ import DubaiMunicipalityUpdatedRulesContent from './content/dubai-municipality-a
 import DubaiCivilDefenceApprovalDcdCompleteGuideFor2026Content from './content/dubai-civil-defence-approval-dcd-complete-guide-for-2026';
 import FitOutApprovalDubaiSimplePracticalGuide2026Content from './content/fit-out-approval-dubai-simple-practical-guide-2026';
 import HowToGetDewaApprovalsInDubaiStepByStepProcessChecklistContent from './content/how-to-get-dewa-approvals-in-dubai-step-by-step-process-checklist';
+import HowToSecureANakheelNocInDubai2026Content from './content/how-to-secure-a-nakheel-noc-in-dubai-2026';
 
 
 interface BlogPostPageProps {
@@ -118,6 +119,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         if (post.slug === 'how-to-get-dewa-approvals-in-dubai-step-by-step-process-checklist') {
       return <HowToGetDewaApprovalsInDubaiStepByStepProcessChecklistContent />;
     }
+        if (post.slug === 'how-to-secure-a-nakheel-noc-in-dubai-2026') {
+      return <HowToSecureANakheelNocInDubai2026Content />;
+    }
+
     return null;
   };
 
