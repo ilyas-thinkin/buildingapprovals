@@ -330,16 +330,44 @@ export async function POST(request: NextRequest) {
     const repo = process.env.GITHUB_REPO || 'buildingapprovals';
     const branch = process.env.GITHUB_BRANCH || 'master';
 
+    // Verify repository access first
+    try {
+      await octokit.rest.repos.get({ owner, repo });
+    } catch (repoError: any) {
+      console.error('GitHub repository access error:', repoError);
+      return NextResponse.json(
+        {
+          error: `Cannot access GitHub repository: ${owner}/${repo}`,
+          details: repoError.message,
+          hint: 'Check that GITHUB_TOKEN has repo permissions and GITHUB_OWNER/GITHUB_REPO are correct.'
+        },
+        { status: 500 }
+      );
+    }
+
     // Create blog component file via GitHub API
     const componentPath = `src/app/blog/[slug]/content/${slug}.tsx`;
-    await octokit.rest.repos.createOrUpdateFileContents({
-      owner,
-      repo,
-      path: componentPath,
-      message: `Add blog content component for: ${title}`,
-      content: Buffer.from(componentContent).toString('base64'),
-      branch,
-    });
+    try {
+      await octokit.rest.repos.createOrUpdateFileContents({
+        owner,
+        repo,
+        path: componentPath,
+        message: `Add blog content component for: ${title}`,
+        content: Buffer.from(componentContent).toString('base64'),
+        branch,
+      });
+    } catch (createError: any) {
+      console.error('Error creating blog component:', createError);
+      return NextResponse.json(
+        {
+          error: 'Failed to create blog component file on GitHub',
+          details: createError.message,
+          path: componentPath,
+          hint: 'Check that the branch name is correct and token has write permissions.'
+        },
+        { status: 500 }
+      );
+    }
 
     // Update blogData.ts
     const blogDataPath = 'src/app/blog/blogData.ts';
