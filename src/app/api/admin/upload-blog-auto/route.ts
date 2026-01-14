@@ -253,18 +253,18 @@ export async function POST(request: NextRequest) {
     const categorySlug = createCategorySlug(category || title.split(' ').slice(0, 3).join(' '));
     const timestamp = Date.now();
 
-    // Upload card image to Vercel Blob
+    // Upload card image to Vercel Blob with unique timestamp
     const cardImageExt = cardImage.name.split('.').pop();
-    const cardImageName = `building-approvals-dubai-${categorySlug}-list.${cardImageExt}`;
+    const cardImageName = `building-approvals-dubai-${categorySlug}-list-${timestamp}.${cardImageExt}`;
     const cardImageBuffer = Buffer.from(await cardImage.arrayBuffer());
     const cardImageBlob = await put(`blog/${cardImageName}`, cardImageBuffer, {
       access: 'public',
       contentType: cardImage.type,
     });
 
-    // Upload cover image to Vercel Blob
+    // Upload cover image to Vercel Blob with unique timestamp
     const coverImageExt = coverImage.name.split('.').pop();
-    const coverImageName = `building-approvals-dubai-${categorySlug}-cover.${coverImageExt}`;
+    const coverImageName = `building-approvals-dubai-${categorySlug}-cover-${timestamp}.${coverImageExt}`;
     const coverImageBuffer = Buffer.from(await coverImage.arrayBuffer());
     const coverImageBlob = await put(`blog/${coverImageName}`, coverImageBuffer, {
       access: 'public',
@@ -290,12 +290,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Upload extracted images to Vercel Blob
+    // Upload extracted images to Vercel Blob with unique timestamp
     const savedImageUrls: { [key: number]: string } = {};
     for (const img of extractedImages) {
       const imageExt = img.contentType.split('/')[1] || 'png';
       const imageSuffix = extractedImages.length > 1 ? `content-${img.index + 1}` : 'content';
-      const imageName = `building-approvals-dubai-${categorySlug}-${imageSuffix}.${imageExt}`;
+      const imageName = `building-approvals-dubai-${categorySlug}-${imageSuffix}-${timestamp}.${imageExt}`;
       const imageBuffer = Buffer.from(img.data, 'base64');
 
       const imageBlob = await put(`blog/${imageName}`, imageBuffer, {
