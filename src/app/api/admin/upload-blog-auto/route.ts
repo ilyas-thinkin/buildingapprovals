@@ -99,56 +99,88 @@ async function extractDocxText(contentBuffer: Buffer): Promise<ExtractedDocxCont
 }
 
 function generateBlogComponent(blogContent: string, imageUrls: { [key: number]: string }, title: string): string {
-  let content = blogContent;
+  // Enhanced content parsing
+  const lines = blogContent.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+  const elements: string[] = [];
+  let currentList: string[] = [];
+  let listType: 'ul' | 'ol' | null = null;
 
-  // Replace image placeholders with img tags
-  Object.entries(imageUrls).forEach(([index, url]) => {
-    const pattern = new RegExp(`\\[IMAGE_${index}\\]`, 'g');
-    content = content.replace(
-      pattern,
-      `\n      <div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
+  const flushList = () => {
+    if (currentList.length > 0 && listType) {
+      const listTag = listType === 'ul' ? 'ul' : 'ol';
+      const listItems = currentList.map(item => `        <li>${item}</li>`).join('\n');
+      elements.push(`      <${listTag}>\n${listItems}\n      </${listTag}>`);
+      currentList = [];
+      listType = null;
+    }
+  };
+
+  const isBulletPoint = (line: string): string | null => {
+    const bulletPatterns = [
+      /^[•●○◦▪▫■□✓✔→➔➤➢⇒]\s+(.+)$/,
+      /^[-–—]\s+(.+)$/,
+      /^[*]\s+(.+)$/,
+    ];
+    for (const pattern of bulletPatterns) {
+      const match = line.match(pattern);
+      if (match) return match[1] || match[0];
+    }
+    return null;
+  };
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    // Check for image placeholders
+    const imageMatch = line.match(/^\[IMAGE_(\d+)\]$/);
+    if (imageMatch) {
+      const imageIndex = parseInt(imageMatch[1], 10);
+      const imageUrl = imageUrls[imageIndex];
+      if (imageUrl) {
+        flushList();
+        elements.push(`      <div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
         <img
-          src="${url}"
+          src="${imageUrl}"
           alt="Building Approvals Dubai - ${title}"
           style={{ width: '100%', height: 'auto', display: 'block' }}
         />
-      </div>\n`
-    );
-  });
+      </div>`);
+        continue;
+      }
+    }
 
-  // Convert markdown-style formatting to JSX
-  const lines = content.split('\n');
-  const jsxLines: string[] = [];
-
-  for (const line of lines) {
-    const trimmed = line.trim();
-
-    if (!trimmed) continue;
-
-    // Check if it's already a div (image)
-    if (trimmed.startsWith('<div')) {
-      jsxLines.push(trimmed);
+    // Check for bullet points
+    const bulletContent = isBulletPoint(line);
+    if (bulletContent) {
+      if (listType !== 'ul') {
+        flushList();
+        listType = 'ul';
+      }
+      currentList.push(bulletContent);
       continue;
     }
 
-    // Headings
-    if (trimmed.startsWith('## ')) {
-      jsxLines.push(`      <h2>${trimmed.substring(3)}</h2>`);
-    } else if (trimmed.startsWith('### ')) {
-      jsxLines.push(`      <h3>${trimmed.substring(4)}</h3>`);
-    } else if (trimmed.startsWith('- ')) {
-      // Handle list items (you'd want to group these properly)
-      jsxLines.push(`      <p>${trimmed.substring(2)}</p>`);
-    } else {
+    // If we're here, flush any list
+    flushList();
+
+    // Check for headings
+    if (line.startsWith('## ')) {
+      elements.push(`      <h2>${line.substring(3)}</h2>`);
+    } else if (line.startsWith('### ')) {
+      elements.push(`      <h3>${line.substring(4)}</h3>`);
+    } else if (line.length > 0) {
       // Regular paragraph
-      jsxLines.push(`      <p>${trimmed}</p>`);
+      elements.push(`      <p>${line}</p>`);
     }
   }
+
+  // Flush any remaining list
+  flushList();
 
   return `export default function BlogContent() {
   return (
     <div className="blog-content-wrapper">
-${jsxLines.join('\n\n')}
+${elements.join('\n\n')}
 
       <div className="cta-box">
         <h3>Need Help with Building Approvals?</h3>
@@ -353,12 +385,75 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    // Update page.tsx to import and render the new blog
+    const pagePath = 'src/app/blog/[slug]/page.tsx';
+    const { data: pageFile } = await octokit.rest.repos.getContent({
+      owner,
+      repo,
+      path: pagePath,
+      ref: branch,
+    });
+
+    if ('content' in pageFile) {
+      const pageContent = Buffer.from(pageFile.content, 'base64').toString('utf-8');
+
+      // Generate component name from slug
+      const componentName = slug
+        .split('-')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join('');
+
+      // Add import statement
+      const importStatement = `import ${componentName}Content from './content/${slug}';`;
+
+      let updatedPageContent = pageContent;
+
+      // Check if import doesn't exist
+      if (!updatedPageContent.includes(importStatement)) {
+        // Find the last import and add after it
+        const lastImportIndex = updatedPageContent.lastIndexOf('import ');
+        const nextLineIndex = updatedPageContent.indexOf('\n', lastImportIndex) + 1;
+        updatedPageContent = updatedPageContent.slice(0, nextLineIndex) + importStatement + '\n' + updatedPageContent.slice(nextLineIndex);
+      }
+
+      // Add render case
+      const renderCase = `    if (post.slug === '${slug}') {
+      return <${componentName}Content />;
+    }
+
+    `;
+
+      // Check if render case doesn't exist
+      if (!updatedPageContent.includes(`if (post.slug === '${slug}')`)) {
+        // Find "return null;" in renderContent function and add before it
+        const returnNullIndex = updatedPageContent.indexOf('return null;');
+        if (returnNullIndex !== -1) {
+          updatedPageContent = updatedPageContent.slice(0, returnNullIndex) + renderCase + updatedPageContent.slice(returnNullIndex);
+        }
+      }
+
+      await octokit.rest.repos.createOrUpdateFileContents({
+        owner,
+        repo,
+        path: pagePath,
+        message: `Update page.tsx to render blog: ${title}`,
+        content: Buffer.from(updatedPageContent).toString('base64'),
+        branch,
+        sha: pageFile.sha,
+      });
+    }
+
     return NextResponse.json({
       success: true,
       message: 'Blog uploaded successfully and automatically committed to GitHub! Vercel will deploy shortly.',
       slug,
       previewUrl: `https://www.buildingapprovals.ae/blog/${slug}`,
       note: 'Wait 2-3 minutes for Vercel to deploy the changes.',
+      filesCreated: [
+        `src/app/blog/[slug]/content/${slug}.tsx`,
+        'src/app/blog/blogData.ts (updated)',
+        'src/app/blog/[slug]/page.tsx (updated)',
+      ],
     });
   } catch (error: any) {
     console.error('Error uploading blog:', error);
