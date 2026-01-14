@@ -8,6 +8,7 @@ import DubaiCivilDefenceApprovalDcdCompleteGuideFor2026Content from './content/d
 import FitOutApprovalDubaiSimplePracticalGuide2026Content from './content/fit-out-approval-dubai-simple-practical-guide-2026';
 import HowToGetDewaApprovalsInDubaiStepByStepProcessChecklistContent from './content/how-to-get-dewa-approvals-in-dubai-step-by-step-process-checklist';
 import HowToSecureANakheelNocInDubai2026Content from './content/how-to-secure-a-nakheel-noc-in-dubai-2026';
+import DubaiMunicipalityApproval2026CompleteGuideForConstructionFitOutEngineeringProjectsInDubaiContent from './content/dubai-municipality-approval-2026-complete-guide-for-construction-fit-out-engineering-projects-in-dubai';
 
 
 interface BlogPostPageProps {
@@ -121,6 +122,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     }
         if (post.slug === 'how-to-secure-a-nakheel-noc-in-dubai-2026') {
       return <HowToSecureANakheelNocInDubai2026Content />;
+    }
+
+        if (post.slug === 'dubai-municipality-approval-2026-complete-guide-for-construction-fit-out-engineering-projects-in-dubai') {
+      return <DubaiMunicipalityApproval2026CompleteGuideForConstructionFitOutEngineeringProjectsInDubaiContent />;
     }
 
     return null;
