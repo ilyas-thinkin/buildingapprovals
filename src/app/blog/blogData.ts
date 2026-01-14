@@ -15,21 +15,6 @@ export interface BlogPost {
 }
 
 export const blogPosts: BlogPost[] = [
-  {
-    id: '1768409449667',
-    title: 'How to Secure a Nakheel NOC in Dubai 2026',
-    slug: 'how-to-secure-a-nakheel-noc-in-dubai-2026',
-    category: 'Nakheel',
-    author: 'Building Approvals Dubai',
-    date: '2026-01-14',
-    excerpt: 'This guide breaks down everything you need — from why the NOC matters, when it’s required, how to apply, and smart tips to avoid delays.',
-    image: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-nakheel-list-1768409442658.jpg',
-    coverImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-nakheel-cover-1768409442658.jpg',
-    metaTitle: 'How to Secure a Nakheel NOC in Dubai 2026 | Building Approvals Dubai',
-    metaDescription: 'This guide breaks down everything you need — from why the NOC matters, when it’s required, how to apply, and smart tips to avoid delays.',
-    keywords: ['Secure', 'Nakheel', 'Dubai', '2026'],
-    ogImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-nakheel-cover-1768409442658.jpg',
-  },
 
   {
     id: '1768287588802',
