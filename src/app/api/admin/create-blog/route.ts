@@ -108,6 +108,17 @@ async function extractDocxText(contentBuffer: Buffer): Promise<ExtractedDocxCont
 }
 
 export async function POST(request: NextRequest) {
+  // This API only works in development mode
+  if (process.env.NODE_ENV === 'production') {
+    return NextResponse.json(
+      {
+        error: 'Blog creation API is only available in development mode. Please create blogs locally and commit them to the repository.',
+        hint: 'Run this in your local development environment using: npm run dev'
+      },
+      { status: 403 }
+    );
+  }
+
   try {
     const formData = await request.formData();
 
