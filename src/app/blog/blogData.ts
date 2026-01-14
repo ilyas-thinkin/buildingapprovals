@@ -16,6 +16,22 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    id: '1768411786959',
+    title: 'Dubai Municipality Approval 2026 – Complete Guide for Construction, Fit-Out & Engineering Projects in Dubai',
+    slug: 'dubai-municipality-approval-2026-complete-guide-for-construction-fit-out-engineering-projects-in-dubai',
+    category: 'Dubai municipality approval',
+    author: 'Building Approvals Dubai',
+    date: '2026-01-14',
+    excerpt: 'Dubai Municipality Approval is the official authorization issued by Dubai Municipality (DM) to ensure that construction, engineering, and fit-out works comply with local building codes, safety regulations, environmental standards, and zoning laws.',
+    image: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-approval-list-1768411782338.jpg',
+    coverImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-approval-cover-1768411782338.jpg',
+    metaTitle: 'Dubai Municipality Approval 2026 – Complete Guide for Construction, Fit-Out & Engineering Projects in Dubai | Building Approvals Dubai',
+    metaDescription: 'Dubai Municipality Approval is the official authorization issued by Dubai Municipality (DM) to ensure that construction, engineering, and fit-out works comply with local building codes, safety regulations, environmental standards, and zoning laws.',
+    keywords: ['Dubai', 'Municipality', 'Approval', '2026', 'Complete', 'Guide', 'Construction,', 'Fit-Out', 'Engineering', 'Projects', 'Dubai'],
+    ogImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-approval-cover-1768411782338.jpg',
+  },
+
+  {
     id: '1768410382547',
     title: 'How to Secure a Nakheel NOC in Dubai 2026 ',
     slug: 'how-to-secure-a-nakheel-noc-in-dubai-2026',
