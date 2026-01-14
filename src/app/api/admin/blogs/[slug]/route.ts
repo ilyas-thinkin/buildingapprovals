@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import { existsSync } from 'fs';
-import path from 'path';
+import { Octokit } from 'octokit';
 
 export async function DELETE(
   request: NextRequest,
@@ -10,133 +8,158 @@ export async function DELETE(
   try {
     const { slug } = await params;
 
-    // Read blogData.ts file
-    const blogDataPath = path.join(process.cwd(), 'src/app/blog/blogData.ts');
-    const blogDataContent = await fs.readFile(blogDataPath, 'utf-8');
+    // Check for required environment variables
+    const githubToken = process.env.GITHUB_TOKEN;
+    const githubOwner = process.env.GITHUB_OWNER;
+    const githubRepo = process.env.GITHUB_REPO;
+    const githubBranch = process.env.GITHUB_BRANCH || 'master';
 
-    // Remove the blog entry with matching slug
+    if (!githubToken || !githubOwner || !githubRepo) {
+      return NextResponse.json(
+        {
+          error: 'GitHub API not configured. Please add GITHUB_TOKEN, GITHUB_OWNER, and GITHUB_REPO to environment variables.',
+        },
+        { status: 500 }
+      );
+    }
+
+    const octokit = new Octokit({ auth: githubToken });
+    const owner = githubOwner;
+    const repo = githubRepo;
+    const branch = githubBranch;
+
+    // 1. Update blogData.ts - remove the blog entry
+    const blogDataPath = 'src/app/blog/blogData.ts';
+    const { data: blogDataFile } = await octokit.rest.repos.getContent({
+      owner,
+      repo,
+      path: blogDataPath,
+      ref: branch,
+    });
+
+    if (!('content' in blogDataFile)) {
+      return NextResponse.json({ error: 'Could not read blogData.ts' }, { status: 500 });
+    }
+
+    const blogDataContent = Buffer.from(blogDataFile.content, 'base64').toString('utf-8');
+
+    // Find and remove the blog entry with matching slug
     const blogArrayMatch = blogDataContent.match(/export const blogPosts: BlogPost\[\] = \[([\s\S]*?)\];/);
     if (!blogArrayMatch) {
       return NextResponse.json({ error: 'Could not parse blog data' }, { status: 500 });
     }
 
-    // Parse individual blog objects
-    const blogsText = blogArrayMatch[1];
-    const blogObjects = blogsText.split(/},\s*{/).map((obj, index, arr) => {
-      if (index === 0) return obj + '}';
-      if (index === arr.length - 1) return '{' + obj;
-      return '{' + obj + '}';
-    });
-
-    // Filter out the blog with matching slug and extract category for image deletion
-    const blogToDelete = blogObjects.find(blogStr => blogStr.includes(`slug: '${slug}'`));
-    const filteredBlogs = blogObjects.filter(blogStr => !blogStr.includes(`slug: '${slug}'`));
-
-    if (filteredBlogs.length === blogObjects.length) {
+    // Check if blog exists
+    if (!blogDataContent.includes(`slug: '${slug}'`)) {
       return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
     }
 
-    // Extract category from the blog being deleted
-    let categorySlug = '';
-    if (blogToDelete) {
-      const categoryMatch = blogToDelete.match(/category: ['"]([^'"]*)['"]/);
-      if (categoryMatch) {
-        const category = categoryMatch[1];
-        // Recreate the same category slug logic used during creation
-        categorySlug = category
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/s$/, '') // Remove trailing 's'
-          .replace(/-+/g, '-')
-          .replace(/^-+|-+$/g, '')
-          .substring(0, 30);
-      }
-    }
-
-    // Rebuild the blogData.ts content
-    const newBlogsArray = filteredBlogs.join(',\n  ');
-    const newContent = blogDataContent.replace(
-      /export const blogPosts: BlogPost\[\] = \[([\s\S]*?)\];/,
-      `export const blogPosts: BlogPost[] = [\n  ${newBlogsArray}\n];`
+    // Remove the blog entry using regex
+    // Match the entire blog object including the trailing comma
+    const blogEntryRegex = new RegExp(
+      `\\s*\\{[^}]*slug:\\s*['"]${slug}['"][^}]*\\},?`,
+      'g'
     );
+    let newBlogDataContent = blogDataContent.replace(blogEntryRegex, '');
 
-    // Write the updated content
-    await fs.writeFile(blogDataPath, newContent, 'utf-8');
+    // Clean up any double commas or trailing commas before ]
+    newBlogDataContent = newBlogDataContent.replace(/,(\s*,)+/g, ',');
+    newBlogDataContent = newBlogDataContent.replace(/,(\s*)\]/g, '$1]');
+    newBlogDataContent = newBlogDataContent.replace(/\[\s*,/g, '[');
 
-    // Delete the blog content file
-    const contentPath = path.join(process.cwd(), 'src/app/blog/[slug]/content', `${slug}.tsx`);
+    // Update blogData.ts via GitHub API
+    await octokit.rest.repos.createOrUpdateFileContents({
+      owner,
+      repo,
+      path: blogDataPath,
+      message: `Remove blog: ${slug}`,
+      content: Buffer.from(newBlogDataContent).toString('base64'),
+      branch,
+      sha: blogDataFile.sha,
+    });
+
+    // 2. Delete the blog content file
+    const contentPath = `src/app/blog/[slug]/content/${slug}.tsx`;
     try {
-      if (existsSync(contentPath)) {
-        await fs.unlink(contentPath);
-        console.log('Deleted blog content file:', contentPath);
+      const { data: contentFile } = await octokit.rest.repos.getContent({
+        owner,
+        repo,
+        path: contentPath,
+        ref: branch,
+      });
+
+      if ('sha' in contentFile) {
+        await octokit.rest.repos.deleteFile({
+          owner,
+          repo,
+          path: contentPath,
+          message: `Delete blog content file: ${slug}`,
+          sha: contentFile.sha,
+          branch,
+        });
       }
-    } catch (error) {
-      console.error('Error deleting blog content file:', error);
+    } catch (contentError: any) {
+      // File might not exist, that's okay
+      console.log('Blog content file not found or already deleted:', contentPath);
     }
 
-    // Remove import and case from page.tsx
-    const pagePath = path.join(process.cwd(), 'src/app/blog/[slug]/page.tsx');
+    // 3. Update page.tsx - remove import and render case
+    const pagePath = 'src/app/blog/[slug]/page.tsx';
     try {
-      let pageContent = await fs.readFile(pagePath, 'utf-8');
+      const { data: pageFile } = await octokit.rest.repos.getContent({
+        owner,
+        repo,
+        path: pagePath,
+        ref: branch,
+      });
 
-      // Create component name from slug (e.g., "dewa-approvals" -> "DewaApprovalsContent")
-      const componentName = slug
-        .split('-')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join('') + 'Content';
+      if ('content' in pageFile) {
+        let pageContent = Buffer.from(pageFile.content, 'base64').toString('utf-8');
 
-      // Remove import statement (handles both single and double quotes)
-      const importRegex = new RegExp(`import ${componentName} from ['"]\\.\\/content\\/${slug}['"];?\\n`, 'g');
-      pageContent = pageContent.replace(importRegex, '');
+        // Create component name from slug
+        const componentName = slug
+          .split('-')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join('');
 
-      // Remove the if statement from renderContent (more flexible pattern)
-      // Matches: "    if (post.slug === 'slug') {\n      return <ComponentContent />;\n    }\n"
-      const caseRegex = new RegExp(`\\s*if \\(post\\.slug === ['"]${slug}['"]\\) \\{[\\s\\S]*?return <${componentName} \\/>;[\\s\\S]*?\\}\\s*\\n`, 'gm');
-      pageContent = pageContent.replace(caseRegex, '');
+        // Remove import statement
+        const importRegex = new RegExp(`import ${componentName}Content from ['"]\\.\\/content\\/${slug}['"];?\\n?`, 'g');
+        pageContent = pageContent.replace(importRegex, '');
 
-      // Write updated page.tsx
-      await fs.writeFile(pagePath, pageContent, 'utf-8');
-      console.log('Removed import and case from page.tsx');
-    } catch (pageError) {
-      console.error('Error updating page.tsx:', pageError);
-    }
+        // Remove the if statement from renderContent
+        const caseRegex = new RegExp(
+          `\\s*if \\(post\\.slug === ['"]${slug}['"]\\) \\{[\\s\\S]*?return <${componentName}Content \\/>;\n?\\s*\\}\\n?`,
+          'g'
+        );
+        pageContent = pageContent.replace(caseRegex, '');
 
-    // Delete all associated images if we have a category slug
-    if (categorySlug) {
-      const blogImagesDir = path.join(process.cwd(), 'public/images/blog');
-      try {
-        const files = await fs.readdir(blogImagesDir);
-        // Find all images matching the pattern: building-approvals-dubai-{categorySlug}-*
-        const imagePattern = `building-approvals-dubai-${categorySlug}-`;
-        const imagesToDelete = files.filter(file => file.startsWith(imagePattern));
-
-        // Delete each matching image
-        for (const imageFile of imagesToDelete) {
-          const imagePath = path.join(blogImagesDir, imageFile);
-          try {
-            await fs.unlink(imagePath);
-            console.log('Deleted image:', imageFile);
-          } catch (imgError) {
-            console.error('Error deleting image:', imageFile, imgError);
-          }
-        }
-
-        if (imagesToDelete.length > 0) {
-          console.log(`Deleted ${imagesToDelete.length} image(s) for category: ${categorySlug}`);
-        }
-      } catch (dirError) {
-        console.error('Error reading images directory:', dirError);
+        // Update page.tsx via GitHub API
+        await octokit.rest.repos.createOrUpdateFileContents({
+          owner,
+          repo,
+          path: pagePath,
+          message: `Remove import and render case for: ${slug}`,
+          content: Buffer.from(pageContent).toString('base64'),
+          branch,
+          sha: pageFile.sha,
+        });
       }
+    } catch (pageError: any) {
+      console.error('Error updating page.tsx:', pageError.message);
     }
 
     return NextResponse.json({
       success: true,
-      message: 'Blog and associated images deleted successfully',
-      deletedImages: categorySlug ? `Images for category '${categorySlug}' deleted` : 'No images found'
+      message: 'Blog deleted successfully. Vercel will redeploy automatically.',
+      slug,
+      note: 'Images stored in Vercel Blob are not automatically deleted. You can manage them in Vercel dashboard.',
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error deleting blog:', error);
-    return NextResponse.json({ error: 'Failed to delete blog' }, { status: 500 });
+    return NextResponse.json(
+      { error: error.message || 'Failed to delete blog' },
+      { status: 500 }
+    );
   }
 }
 
@@ -147,9 +170,38 @@ export async function GET(
   try {
     const { slug } = await params;
 
+    // Check for required environment variables
+    const githubToken = process.env.GITHUB_TOKEN;
+    const githubOwner = process.env.GITHUB_OWNER;
+    const githubRepo = process.env.GITHUB_REPO;
+    const githubBranch = process.env.GITHUB_BRANCH || 'master';
+
+    if (!githubToken || !githubOwner || !githubRepo) {
+      return NextResponse.json(
+        { error: 'GitHub API not configured' },
+        { status: 500 }
+      );
+    }
+
+    const octokit = new Octokit({ auth: githubToken });
+    const owner = githubOwner;
+    const repo = githubRepo;
+    const branch = githubBranch;
+
     // Read blogData.ts file
-    const blogDataPath = path.join(process.cwd(), 'src/app/blog/blogData.ts');
-    const blogDataContent = await fs.readFile(blogDataPath, 'utf-8');
+    const blogDataPath = 'src/app/blog/blogData.ts';
+    const { data: blogDataFile } = await octokit.rest.repos.getContent({
+      owner,
+      repo,
+      path: blogDataPath,
+      ref: branch,
+    });
+
+    if (!('content' in blogDataFile)) {
+      return NextResponse.json({ error: 'Could not read blogData.ts' }, { status: 500 });
+    }
+
+    const blogDataContent = Buffer.from(blogDataFile.content, 'base64').toString('utf-8');
 
     // Find the blog with matching slug
     const blogArrayMatch = blogDataContent.match(/export const blogPosts: BlogPost\[\] = \[([\s\S]*?)\];/);
@@ -157,9 +209,9 @@ export async function GET(
       return NextResponse.json({ error: 'Could not parse blog data' }, { status: 500 });
     }
 
-    // Extract blog data (simplified parsing)
+    // Extract blog data
     const blogsText = blogArrayMatch[1];
-    const blogMatch = blogsText.match(new RegExp(`{[^}]*slug: '${slug}'[^}]*}`, 's'));
+    const blogMatch = blogsText.match(new RegExp(`\\{[^}]*slug:\\s*['"]${slug}['"][^}]*\\}`, 's'));
 
     if (!blogMatch) {
       return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
@@ -169,31 +221,38 @@ export async function GET(
     const blogStr = blogMatch[0];
     const blog: any = {};
 
-    const fields = ['id', 'title', 'excerpt', 'date', 'author', 'category', 'image', 'coverImage', 'slug'];
+    const fields = ['id', 'title', 'excerpt', 'date', 'author', 'category', 'image', 'coverImage', 'slug', 'metaTitle', 'metaDescription'];
     fields.forEach(field => {
-      const regex = new RegExp(`${field}: ['"]([^'"]*?)['"]`);
+      const regex = new RegExp(`${field}:\\s*['"]([^'"]*?)['"]`);
       const match = blogStr.match(regex);
       if (match) {
         blog[field] = match[1];
       }
     });
 
-    // Read the blog content file
-    const contentDir = path.join(process.cwd(), 'src/app/blog/[slug]/content');
-    const contentPath = path.join(contentDir, `${slug}.tsx`);
-
+    // Try to read the blog content file
+    const contentPath = `src/app/blog/[slug]/content/${slug}.tsx`;
     try {
-      const contentFile = await fs.readFile(contentPath, 'utf-8');
-      blog.contentFile = contentFile;
+      const { data: contentFile } = await octokit.rest.repos.getContent({
+        owner,
+        repo,
+        path: contentPath,
+        ref: branch,
+      });
+
+      if ('content' in contentFile) {
+        blog.contentFile = Buffer.from(contentFile.content, 'base64').toString('utf-8');
+      }
     } catch (error) {
-      console.error('Error reading blog content:', error);
-      // Try with alternative path structure if exists
-      console.log('Attempted path:', contentPath);
+      console.log('Blog content file not found:', contentPath);
     }
 
     return NextResponse.json({ blog });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error fetching blog:', error);
-    return NextResponse.json({ error: 'Failed to fetch blog' }, { status: 500 });
+    return NextResponse.json(
+      { error: error.message || 'Failed to fetch blog' },
+      { status: 500 }
+    );
   }
 }
