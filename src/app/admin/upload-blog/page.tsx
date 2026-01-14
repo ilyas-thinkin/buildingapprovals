@@ -66,7 +66,7 @@ export default function UploadBlogPage() {
       if (files.coverImage) formDataToSend.append('coverImage', files.coverImage);
       if (files.contentFile) formDataToSend.append('contentFile', files.contentFile);
 
-      const response = await fetch('/api/admin/upload-blog-production', {
+      const response = await fetch('/api/admin/upload-blog-auto', {
         method: 'POST',
         body: formDataToSend,
       });
