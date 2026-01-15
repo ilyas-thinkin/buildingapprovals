@@ -18,7 +18,7 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
     cardImage: null as File | null,
     coverImage: null as File | null,
     contentFile: null as File | null,
-    contentType: 'file' as 'file' | 'manual',
+    contentType: 'manual' as 'file' | 'manual',
     manualContent: '',
     manualSEO: false,
     metaTitle: '',
@@ -34,7 +34,9 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
 
   const [contentImages, setContentImages] = useState<Array<{ file: File; preview: string }>>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
+  const titleRef = React.useRef<HTMLTextAreaElement>(null);
 
   // Load blog data when editing
   useEffect(() => {
@@ -61,12 +63,10 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
         coverImage: editingBlog.coverImage || '',
       });
 
-      // Fetch blog content
       fetch(`/api/admin/blogs/${editingBlog.slug}`)
         .then(res => res.json())
         .then(data => {
           if (data.blog && data.blog.contentFile) {
-            // Extract content from the BlogContent.tsx file
             const content = extractContentFromComponent(data.blog.contentFile);
             setFormData(prev => ({ ...prev, manualContent: content }));
           }
@@ -75,49 +75,26 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
   }, [editingBlog]);
 
   const extractContentFromComponent = (componentStr: string): string => {
-    // Extract content from JSX component and convert to markdown-like format
     let content = componentStr;
-
-    // Remove imports and function declaration
     content = content.replace(/import.*?;\n/g, '');
     content = content.replace(/export default function.*?\(\)\s*\{/g, '');
     content = content.replace(/return\s*\(/g, '');
     content = content.replace(/<>|<\/>/g, '');
     content = content.replace(/\s*\}\s*$/g, '');
-
-    // Convert JSX to plain text with markdown
-    // Headers
     content = content.replace(/<h2[^>]*>(.*?)<\/h2>/g, '\n## $1\n');
     content = content.replace(/<h3[^>]*>(.*?)<\/h3>/g, '\n### $1\n');
-
-    // Paragraphs
-    content = content.replace(/<p[^>]*>(.*?)<\/p>/g, (match, text) => {
-      // Keep <strong> and other inline elements for now
-      return '\n' + text + '\n';
-    });
-
-    // Lists
-    content = content.replace(/<ul[^>]*>(.*?)<\/ul>/g, (match, items) => {
-      return items;
-    });
+    content = content.replace(/<p[^>]*>(.*?)<\/p>/g, (match, text) => '\n' + text + '\n');
+    content = content.replace(/<ul[^>]*>(.*?)<\/ul>/g, (match, items) => items);
     content = content.replace(/<li[^>]*>(.*?)<\/li>/g, '- $1\n');
-
-    // Bold
     content = content.replace(/<strong[^>]*>(.*?)<\/strong>/g, '**$1**');
-
-    // Remove remaining HTML tags
     content = content.replace(/<[^>]*>/g, '');
-
-    // Clean up excessive newlines
     content = content.replace(/\n{3,}/g, '\n\n');
     content = content.trim();
-
     return content;
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
-
     if (type === 'checkbox') {
       const checked = (e.target as HTMLInputElement).checked;
       setFormData(prev => ({ ...prev, [name]: checked }));
@@ -130,7 +107,6 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
     const file = e.target.files?.[0] || null;
     setFormData(prev => ({ ...prev, [fieldName]: file }));
 
-    // Create preview for images
     if (file && (fieldName === 'cardImage' || fieldName === 'coverImage')) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -157,19 +133,14 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
       const newImageIndex = contentImages.length;
       setContentImages(prev => [...prev, { file, preview: reader.result as string }]);
 
-      // Insert image placeholder at cursor position
       const textarea = textareaRef.current;
       if (textarea) {
         const start = textarea.selectionStart;
         const beforeText = formData.manualContent.substring(0, start);
         const afterText = formData.manualContent.substring(start);
-
         const imagePlaceholder = `\n![Image ${newImageIndex + 1}](image_${newImageIndex})\n`;
         const newText = beforeText + imagePlaceholder + afterText;
-
         setFormData(prev => ({ ...prev, manualContent: newText }));
-
-        // Set cursor after the inserted image
         setTimeout(() => {
           textarea.focus();
           const newCursorPos = start + imagePlaceholder.length;
@@ -193,11 +164,9 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
     const selectedText = formData.manualContent.substring(start, end);
     const beforeText = formData.manualContent.substring(0, start);
     const afterText = formData.manualContent.substring(end);
-
     const newText = beforeText + before + selectedText + after + afterText;
     setFormData(prev => ({ ...prev, manualContent: newText }));
 
-    // Set cursor position after formatting
     setTimeout(() => {
       textarea.focus();
       const newCursorPos = start + before.length + selectedText.length + after.length;
@@ -213,14 +182,29 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
   const formatNumberedList = () => insertFormatting('\n1. ', '');
   const formatLink = () => insertFormatting('[', '](url)');
   const formatQuote = () => insertFormatting('\n> ', '');
+  const formatDivider = () => insertFormatting('\n---\n', '');
 
   const triggerImageUpload = () => {
     document.getElementById('contentImages')?.click();
   };
 
-  const handleTitleBlur = () => {
-    if (formData.title && !formData.slug) {
-      setFormData(prev => ({ ...prev, slug: generateSlug(formData.title) }));
+  const triggerCoverUpload = () => {
+    document.getElementById('coverImage')?.click();
+  };
+
+  const handleTitleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    setFormData(prev => ({ ...prev, title: value }));
+
+    // Auto-resize title textarea
+    if (titleRef.current) {
+      titleRef.current.style.height = 'auto';
+      titleRef.current.style.height = titleRef.current.scrollHeight + 'px';
+    }
+
+    // Auto-generate slug
+    if (!editingBlog) {
+      setFormData(prev => ({ ...prev, slug: generateSlug(value) }));
     }
   };
 
@@ -231,25 +215,21 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
     try {
       const data = new FormData();
 
-      // If editing, include the original slug
       if (editingBlog) {
         data.append('originalSlug', editingBlog.slug);
         data.append('isEditing', 'true');
       }
 
-      // Append text fields
       Object.entries(formData).forEach(([key, value]) => {
         if (value !== null && typeof value !== 'object') {
           data.append(key, value.toString());
         }
       });
 
-      // Append files only if they're new (not just previews)
       if (formData.cardImage) data.append('cardImage', formData.cardImage);
       if (formData.coverImage) data.append('coverImage', formData.coverImage);
       if (formData.contentFile) data.append('contentFile', formData.contentFile);
 
-      // If editing and no new images, keep existing ones
       if (editingBlog && !formData.cardImage) {
         data.append('existingCardImage', editingBlog.image);
       }
@@ -257,7 +237,6 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
         data.append('existingCoverImage', editingBlog.coverImage);
       }
 
-      // Append content images for manual editor
       contentImages.forEach((img, index) => {
         data.append(`contentImage_${index}`, img.file);
       });
@@ -273,7 +252,6 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
       if (response.ok) {
         alert(editingBlog ? 'Blog post updated successfully!' : 'Blog post created successfully!');
 
-        // Reset form
         setFormData({
           title: '',
           slug: '',
@@ -283,7 +261,7 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
           cardImage: null,
           coverImage: null,
           contentFile: null,
-          contentType: 'file',
+          contentType: 'manual',
           manualContent: '',
           manualSEO: false,
           metaTitle: '',
@@ -294,7 +272,6 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
         setPreviews({ cardImage: '', coverImage: '' });
         setContentImages([]);
 
-        // Call cancel edit to return to list
         if (onCancelEdit) {
           onCancelEdit();
         }
@@ -310,341 +287,335 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
   };
 
   return (
-    <div className="blog-editor">
+    <div className="linkedin-editor">
       <form onSubmit={handleSubmit}>
-        <div className="form-section">
-          <h2>Blog Information</h2>
-
-          <div className="form-group">
-            <label>Blog Title *</label>
-            <input
-              type="text"
-              name="title"
-              value={formData.title}
-              onChange={handleInputChange}
-              onBlur={handleTitleBlur}
-              required
-              placeholder="Enter blog title"
-            />
+        {/* Header with actions */}
+        <div className="editor-header">
+          <div className="editor-header-left">
+            <span className="editor-brand">Building Approvals</span>
+            <span className="editor-type">Article</span>
           </div>
-
-          <div className="form-group">
-            <label>Slug (URL) *</label>
-            <input
-              type="text"
-              name="slug"
-              value={formData.slug}
-              onChange={handleInputChange}
-              required
-              placeholder="blog-url-slug"
-            />
-          </div>
-
-          <div className="form-row">
-            <div className="form-group">
-              <label>Category *</label>
-              <input
-                type="text"
-                name="category"
-                value={formData.category}
-                onChange={handleInputChange}
-                required
-                placeholder="e.g., Dubai Municipality"
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Author *</label>
-              <input
-                type="text"
-                name="author"
-                value={formData.author}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-          </div>
-
-          <div className="form-group">
-            <label>Excerpt (Summary) *</label>
-            <textarea
-              name="excerpt"
-              value={formData.excerpt}
-              onChange={handleInputChange}
-              required
-              rows={3}
-              placeholder="Brief description for blog list"
-            />
-          </div>
-        </div>
-
-        <div className="form-section">
-          <h2>Images</h2>
-
-          <div className="form-group">
-            <label>Card Image (Blog List) * <span className="hint">Recommended: 1200x800px</span></label>
-            <div className="file-upload-wrapper">
-              <input
-                type="file"
-                id="cardImage"
-                accept="image/*"
-                onChange={(e) => handleFileChange(e, 'cardImage')}
-                required
-                style={{ display: 'none' }}
-              />
-              <label htmlFor="cardImage" className="file-upload-btn">
-                {formData.cardImage ? formData.cardImage.name : 'Choose Card Image'}
-              </label>
-              {previews.cardImage && (
-                <div className="image-preview">
-                  <img src={previews.cardImage} alt="Card preview" />
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="form-group">
-            <label>Cover Image (Blog Header) * <span className="hint">Recommended: 1920x1080px</span></label>
-            <div className="file-upload-wrapper">
-              <input
-                type="file"
-                id="coverImage"
-                accept="image/*"
-                onChange={(e) => handleFileChange(e, 'coverImage')}
-                required
-                style={{ display: 'none' }}
-              />
-              <label htmlFor="coverImage" className="file-upload-btn">
-                {formData.coverImage ? formData.coverImage.name : 'Choose Cover Image'}
-              </label>
-              {previews.coverImage && (
-                <div className="image-preview">
-                  <img src={previews.coverImage} alt="Cover preview" />
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className="form-section">
-          <h2>Blog Content</h2>
-
-          <div className="form-group">
-            <label>Content Input Method *</label>
-            <div className="content-type-selector">
-              <label className="radio-option">
-                <input
-                  type="radio"
-                  name="contentType"
-                  value="file"
-                  checked={formData.contentType === 'file'}
-                  onChange={(e) => setFormData(prev => ({ ...prev, contentType: 'file' as 'file' | 'manual' }))}
-                />
-                <span>Upload Document (PDF/DOCX)</span>
-              </label>
-              <label className="radio-option">
-                <input
-                  type="radio"
-                  name="contentType"
-                  value="manual"
-                  checked={formData.contentType === 'manual'}
-                  onChange={(e) => setFormData(prev => ({ ...prev, contentType: 'manual' as 'file' | 'manual' }))}
-                />
-                <span>Write Manually</span>
-              </label>
-            </div>
-          </div>
-
-          {formData.contentType === 'file' ? (
-            <div className="form-group">
-              <label>Content Document * <span className="hint">PDF or DOCX with text and images</span></label>
-              <div className="file-upload-wrapper">
-                <input
-                  type="file"
-                  id="contentFile"
-                  accept=".pdf,.doc,.docx"
-                  onChange={(e) => handleFileChange(e, 'contentFile')}
-                  required={formData.contentType === 'file'}
-                  style={{ display: 'none' }}
-                />
-                <label htmlFor="contentFile" className="file-upload-btn">
-                  {formData.contentFile ? formData.contentFile.name : 'Choose Content File'}
-                </label>
-                {formData.contentFile && (
-                  <div className="file-info">
-                    <span>📄 {formData.contentFile.name}</span>
-                    <span className="file-size">({(formData.contentFile.size / 1024).toFixed(2)} KB)</span>
-                  </div>
-                )}
-              </div>
-            </div>
-          ) : (
-            <>
-              <div className="form-group">
-                <label>Write Your Blog Content * <span className="hint">Use the toolbar to format your text</span></label>
-
-                <div className="editor-toolbar">
-                  <button type="button" onClick={formatBold} className="toolbar-btn" title="Bold">
-                    <strong>B</strong>
-                  </button>
-                  <button type="button" onClick={formatItalic} className="toolbar-btn" title="Italic">
-                    <em>I</em>
-                  </button>
-                  <div className="toolbar-divider"></div>
-                  <button type="button" onClick={formatHeading} className="toolbar-btn" title="Heading">
-                    H1
-                  </button>
-                  <button type="button" onClick={formatSubheading} className="toolbar-btn" title="Subheading">
-                    H2
-                  </button>
-                  <div className="toolbar-divider"></div>
-                  <button type="button" onClick={formatBulletList} className="toolbar-btn" title="Bullet List">
-                    &#8226; List
-                  </button>
-                  <button type="button" onClick={formatNumberedList} className="toolbar-btn" title="Numbered List">
-                    1. List
-                  </button>
-                  <div className="toolbar-divider"></div>
-                  <button type="button" onClick={triggerImageUpload} className="toolbar-btn toolbar-btn-image" title="Insert Image">
-                    📷 Image
-                  </button>
-                  <button type="button" onClick={formatLink} className="toolbar-btn" title="Insert Link">
-                    Link
-                  </button>
-                  <button type="button" onClick={formatQuote} className="toolbar-btn" title="Quote">
-                    &ldquo; Quote
-                  </button>
-                </div>
-
-                <input
-                  type="file"
-                  id="contentImages"
-                  accept="image/*"
-                  onChange={handleContentImageChange}
-                  style={{ display: 'none' }}
-                />
-
-                <textarea
-                  ref={textareaRef}
-                  name="manualContent"
-                  value={formData.manualContent}
-                  onChange={handleInputChange}
-                  required={formData.contentType === 'manual'}
-                  rows={20}
-                  className="rich-text-editor"
-                  placeholder="Start writing your blog content here. Use the toolbar buttons above to format. Click the 📷 Image button to insert images at your cursor position..."
-                />
-
-                {contentImages.length > 0 && (
-                  <div className="inline-images-preview">
-                    <p className="preview-label">Inserted Images:</p>
-                    <div className="content-images-grid">
-                      {contentImages.map((img, index) => (
-                        <div key={index} className="content-image-item">
-                          <img src={img.preview} alt={`Image ${index + 1}`} />
-                          <button
-                            type="button"
-                            onClick={() => removeContentImage(index)}
-                            className="remove-image-btn"
-                          >
-                            Remove
-                          </button>
-                          <p className="image-filename">{img.file.name}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </>
-          )}
-        </div>
-
-        <div className="form-section">
-          <h2>SEO Settings</h2>
-
-          <div className="form-group checkbox-group">
-            <label>
-              <input
-                type="checkbox"
-                name="manualSEO"
-                checked={formData.manualSEO}
-                onChange={handleInputChange}
-              />
-              Add manual SEO tags (uncheck to auto-generate)
-            </label>
-          </div>
-
-          {formData.manualSEO && (
-            <>
-              <div className="form-group">
-                <label>Meta Title <span className="hint">60 characters max</span></label>
-                <input
-                  type="text"
-                  name="metaTitle"
-                  value={formData.metaTitle}
-                  onChange={handleInputChange}
-                  maxLength={60}
-                  placeholder="SEO title for search results"
-                />
-                <span className="char-count">{formData.metaTitle.length}/60</span>
-              </div>
-
-              <div className="form-group">
-                <label>Meta Description <span className="hint">155-160 characters</span></label>
-                <textarea
-                  name="metaDescription"
-                  value={formData.metaDescription}
-                  onChange={handleInputChange}
-                  maxLength={160}
-                  rows={3}
-                  placeholder="SEO description for search snippets"
-                />
-                <span className="char-count">{formData.metaDescription.length}/160</span>
-              </div>
-
-              <div className="form-group">
-                <label>Focus Keyword</label>
-                <input
-                  type="text"
-                  name="focusKeyword"
-                  value={formData.focusKeyword}
-                  onChange={handleInputChange}
-                  placeholder="Main keyword for this blog"
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Keywords <span className="hint">Comma separated</span></label>
-                <input
-                  type="text"
-                  name="keywords"
-                  value={formData.keywords}
-                  onChange={handleInputChange}
-                  placeholder="keyword1, keyword2, keyword3"
-                />
-              </div>
-            </>
-          )}
-        </div>
-
-        <div className="form-actions">
-          {editingBlog && onCancelEdit && (
+          <div className="editor-header-right">
             <button
               type="button"
-              onClick={onCancelEdit}
-              className="cancel-btn"
-              disabled={isSubmitting}
+              className="settings-btn"
+              onClick={() => setShowSettings(!showSettings)}
             >
-              Cancel
+              Settings
             </button>
+            {editingBlog && onCancelEdit && (
+              <button type="button" onClick={onCancelEdit} className="cancel-btn-header" disabled={isSubmitting}>
+                Cancel
+              </button>
+            )}
+            <button type="submit" disabled={isSubmitting} className="publish-btn">
+              {isSubmitting ? 'Publishing...' : (editingBlog ? 'Update' : 'Publish')}
+            </button>
+          </div>
+        </div>
+
+        {/* Settings Panel */}
+        {showSettings && (
+          <div className="settings-panel">
+            <div className="settings-grid">
+              <div className="settings-group">
+                <label>Category</label>
+                <input
+                  type="text"
+                  name="category"
+                  value={formData.category}
+                  onChange={handleInputChange}
+                  placeholder="e.g., Dubai Municipality"
+                />
+              </div>
+              <div className="settings-group">
+                <label>Author</label>
+                <input
+                  type="text"
+                  name="author"
+                  value={formData.author}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="settings-group">
+                <label>URL Slug</label>
+                <input
+                  type="text"
+                  name="slug"
+                  value={formData.slug}
+                  onChange={handleInputChange}
+                  placeholder="blog-url-slug"
+                />
+              </div>
+              <div className="settings-group full-width">
+                <label>Excerpt (Summary for blog list)</label>
+                <textarea
+                  name="excerpt"
+                  value={formData.excerpt}
+                  onChange={handleInputChange}
+                  rows={2}
+                  placeholder="Brief description shown on blog cards"
+                />
+              </div>
+              <div className="settings-group">
+                <label>Card Image (for blog list)</label>
+                <input
+                  type="file"
+                  id="cardImage"
+                  accept="image/*"
+                  onChange={(e) => handleFileChange(e, 'cardImage')}
+                  style={{ display: 'none' }}
+                />
+                <button type="button" className="upload-btn-small" onClick={() => document.getElementById('cardImage')?.click()}>
+                  {formData.cardImage ? formData.cardImage.name : 'Choose Card Image'}
+                </button>
+                {previews.cardImage && (
+                  <div className="small-preview">
+                    <img src={previews.cardImage} alt="Card preview" />
+                  </div>
+                )}
+              </div>
+              <div className="settings-group">
+                <label className="checkbox-inline">
+                  <input
+                    type="checkbox"
+                    name="manualSEO"
+                    checked={formData.manualSEO}
+                    onChange={handleInputChange}
+                  />
+                  Custom SEO Settings
+                </label>
+              </div>
+              {formData.manualSEO && (
+                <>
+                  <div className="settings-group full-width">
+                    <label>Meta Title</label>
+                    <input
+                      type="text"
+                      name="metaTitle"
+                      value={formData.metaTitle}
+                      onChange={handleInputChange}
+                      maxLength={60}
+                      placeholder="SEO title for search results"
+                    />
+                  </div>
+                  <div className="settings-group full-width">
+                    <label>Meta Description</label>
+                    <textarea
+                      name="metaDescription"
+                      value={formData.metaDescription}
+                      onChange={handleInputChange}
+                      maxLength={160}
+                      rows={2}
+                      placeholder="SEO description for search snippets"
+                    />
+                  </div>
+                  <div className="settings-group">
+                    <label>Focus Keyword</label>
+                    <input
+                      type="text"
+                      name="focusKeyword"
+                      value={formData.focusKeyword}
+                      onChange={handleInputChange}
+                      placeholder="Main keyword"
+                    />
+                  </div>
+                  <div className="settings-group">
+                    <label>Keywords (comma separated)</label>
+                    <input
+                      type="text"
+                      name="keywords"
+                      value={formData.keywords}
+                      onChange={handleInputChange}
+                      placeholder="keyword1, keyword2"
+                    />
+                  </div>
+                </>
+              )}
+              <div className="settings-group full-width">
+                <label className="checkbox-inline">
+                  <input
+                    type="checkbox"
+                    checked={formData.contentType === 'file'}
+                    onChange={(e) => setFormData(prev => ({ ...prev, contentType: e.target.checked ? 'file' : 'manual' }))}
+                  />
+                  Upload Document (PDF/DOCX) instead of writing manually
+                </label>
+                {formData.contentType === 'file' && (
+                  <div className="file-upload-inline">
+                    <input
+                      type="file"
+                      id="contentFile"
+                      accept=".pdf,.doc,.docx"
+                      onChange={(e) => handleFileChange(e, 'contentFile')}
+                      style={{ display: 'none' }}
+                    />
+                    <button type="button" className="upload-btn-small" onClick={() => document.getElementById('contentFile')?.click()}>
+                      {formData.contentFile ? formData.contentFile.name : 'Choose Content File'}
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Main Editor Area */}
+        <div className="editor-main">
+          {/* Cover Image Area */}
+          <div
+            className={`cover-upload-area ${previews.coverImage ? 'has-image' : ''}`}
+            onClick={triggerCoverUpload}
+          >
+            {previews.coverImage ? (
+              <div className="cover-preview">
+                <img src={previews.coverImage} alt="Cover" />
+                <div className="cover-overlay">
+                  <span>Click to change cover image</span>
+                </div>
+              </div>
+            ) : (
+              <div className="cover-placeholder">
+                <div className="cover-icon">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                    <polyline points="21 15 16 10 5 21"/>
+                  </svg>
+                </div>
+                <p className="cover-text">Add a cover image or video to your article</p>
+                <button type="button" className="cover-btn">Upload from computer</button>
+              </div>
+            )}
+            <input
+              type="file"
+              id="coverImage"
+              accept="image/*"
+              onChange={(e) => handleFileChange(e, 'coverImage')}
+              style={{ display: 'none' }}
+            />
+          </div>
+
+          {/* Title Input */}
+          <div className="title-area">
+            <textarea
+              ref={titleRef}
+              className="title-input"
+              placeholder="Title"
+              value={formData.title}
+              onChange={handleTitleChange}
+              rows={1}
+            />
+          </div>
+
+          {/* Content Area */}
+          {formData.contentType === 'manual' && (
+            <div className="content-area">
+              <textarea
+                ref={textareaRef}
+                className="content-input"
+                placeholder="Write here. You can also include @mentions."
+                value={formData.manualContent}
+                onChange={(e) => setFormData(prev => ({ ...prev, manualContent: e.target.value }))}
+              />
+
+              {/* Formatting Toolbar - Floating */}
+              <div className="floating-toolbar">
+                <button type="button" onClick={formatBold} className="toolbar-icon" title="Bold">
+                  <strong>B</strong>
+                </button>
+                <button type="button" onClick={formatItalic} className="toolbar-icon" title="Italic">
+                  <em>I</em>
+                </button>
+                <span className="toolbar-sep"></span>
+                <button type="button" onClick={formatBulletList} className="toolbar-icon" title="Bullet List">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <circle cx="4" cy="6" r="2"/>
+                    <circle cx="4" cy="12" r="2"/>
+                    <circle cx="4" cy="18" r="2"/>
+                    <rect x="9" y="5" width="12" height="2"/>
+                    <rect x="9" y="11" width="12" height="2"/>
+                    <rect x="9" y="17" width="12" height="2"/>
+                  </svg>
+                </button>
+                <button type="button" onClick={formatNumberedList} className="toolbar-icon" title="Numbered List">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <text x="2" y="8" fontSize="8" fontWeight="bold">1</text>
+                    <text x="2" y="14" fontSize="8" fontWeight="bold">2</text>
+                    <text x="2" y="20" fontSize="8" fontWeight="bold">3</text>
+                    <rect x="9" y="5" width="12" height="2"/>
+                    <rect x="9" y="11" width="12" height="2"/>
+                    <rect x="9" y="17" width="12" height="2"/>
+                  </svg>
+                </button>
+                <span className="toolbar-sep"></span>
+                <button type="button" onClick={formatQuote} className="toolbar-icon" title="Quote">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/>
+                  </svg>
+                </button>
+                <button type="button" onClick={formatHeading} className="toolbar-icon toolbar-text" title="Heading">
+                  { }
+                </button>
+                <span className="toolbar-sep"></span>
+                <button type="button" onClick={formatDivider} className="toolbar-icon" title="Divider">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <rect x="3" y="11" width="18" height="2"/>
+                  </svg>
+                </button>
+                <button type="button" onClick={formatLink} className="toolbar-icon" title="Link">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                  </svg>
+                </button>
+                <button type="button" onClick={triggerImageUpload} className="toolbar-icon" title="Insert Image">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                    <polyline points="21 15 16 10 5 21"/>
+                  </svg>
+                </button>
+              </div>
+
+              <input
+                type="file"
+                id="contentImages"
+                accept="image/*"
+                onChange={handleContentImageChange}
+                style={{ display: 'none' }}
+              />
+
+              {contentImages.length > 0 && (
+                <div className="inserted-images">
+                  <p className="inserted-label">Inserted Images:</p>
+                  <div className="inserted-grid">
+                    {contentImages.map((img, index) => (
+                      <div key={index} className="inserted-item">
+                        <img src={img.preview} alt={`Image ${index + 1}`} />
+                        <button type="button" onClick={() => removeContentImage(index)} className="remove-btn">
+                          x
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           )}
-          <button type="submit" disabled={isSubmitting} className="submit-btn">
-            {isSubmitting
-              ? (editingBlog ? 'Updating Blog...' : 'Creating Blog...')
-              : (editingBlog ? 'Update Blog Post' : 'Create Blog Post')
-            }
-          </button>
+
+          {formData.contentType === 'file' && (
+            <div className="file-upload-notice">
+              <p>Content will be extracted from the uploaded document.</p>
+              <p>Go to <strong>Settings</strong> above to select your PDF or DOCX file.</p>
+            </div>
+          )}
+        </div>
+
+        {/* Draft indicator */}
+        <div className="draft-indicator">
+          <span className="draft-dot"></span>
+          Draft
         </div>
       </form>
     </div>
