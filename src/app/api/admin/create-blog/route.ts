@@ -499,19 +499,29 @@ export async function POST(request: NextRequest) {
     if ('content' in blogDataFile) {
       const blogDataContent = Buffer.from(blogDataFile.content, 'base64').toString('utf-8');
       const timestamp = Date.now();
+
+      // Helper to clean text for single-line strings (remove line breaks, escape quotes)
+      const cleanForString = (text: string): string => {
+        return text
+          .replace(/[\r\n]+/g, ' ')  // Replace line breaks with space
+          .replace(/\s+/g, ' ')       // Collapse multiple spaces
+          .replace(/'/g, "\\'")       // Escape single quotes
+          .trim();
+      };
+
       const newBlogEntry = `  {
     id: '${timestamp}',
-    title: '${title.replace(/'/g, "\\'")}',
+    title: '${cleanForString(title)}',
     slug: '${slug}',
-    category: '${category.replace(/'/g, "\\'")}',
-    author: '${author.replace(/'/g, "\\'")}',
+    category: '${cleanForString(category)}',
+    author: '${cleanForString(author)}',
     date: '${new Date().toISOString().split('T')[0]}',
-    excerpt: '${excerpt.replace(/'/g, "\\'")}',
+    excerpt: '${cleanForString(excerpt)}',
     image: '${cardImageBlob.url}',
     coverImage: '${coverImageBlob.url}',
-    metaTitle: '${seoData.metaTitle.replace(/'/g, "\\'")}',
-    metaDescription: '${seoData.metaDescription.replace(/'/g, "\\'")}',
-    keywords: [${seoData.keywords.map(k => `'${k.replace(/'/g, "\\'")}'`).join(', ')}],
+    metaTitle: '${cleanForString(seoData.metaTitle)}',
+    metaDescription: '${cleanForString(seoData.metaDescription)}',
+    keywords: [${seoData.keywords.map(k => `'${cleanForString(k)}'`).join(', ')}],
     ogImage: '${coverImageBlob.url}',
   },`;
 
@@ -546,10 +556,25 @@ export async function POST(request: NextRequest) {
     if ('content' in pageFile) {
       const pageContent = Buffer.from(pageFile.content, 'base64').toString('utf-8');
 
-      const componentName = slug
+      // Generate component name from slug, handling numbers at the start
+      let componentName = slug
         .split('-')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join('');
+
+      // If component name starts with a number, prefix with underscore and convert number to word
+      if (/^\d/.test(componentName)) {
+        const numberWords: { [key: string]: string } = {
+          '0': 'Zero_', '1': 'One_', '2': 'Two_', '3': 'Three_', '4': 'Four_',
+          '5': 'Five_', '6': 'Six_', '7': 'Seven_', '8': 'Eight_', '9': 'Nine_', '10': 'Ten_'
+        };
+        const match = componentName.match(/^(\d+)/);
+        if (match) {
+          const num = match[1];
+          const prefix = numberWords[num] || `N${num}_`;
+          componentName = prefix + componentName.slice(num.length);
+        }
+      }
 
       const importStatement = `import ${componentName}Content from './content/${slug}';`;
       let updatedPageContent = pageContent;

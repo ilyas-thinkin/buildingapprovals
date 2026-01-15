@@ -9,7 +9,7 @@ import FitOutApprovalDubaiSimplePracticalGuide2026Content from './content/fit-ou
 import HowToGetDewaApprovalsInDubaiStepByStepProcessChecklistContent from './content/how-to-get-dewa-approvals-in-dubai-step-by-step-process-checklist';
 import HowToSecureANakheelNocInDubai2026Content from './content/how-to-secure-a-nakheel-noc-in-dubai-2026';
 import DubaiMunicipalityApproval2026CompleteGuideForConstructionFitOutEngineeringProjectsInDubaiContent from './content/dubai-municipality-approval-2026-complete-guide-for-construction-fit-out-engineering-projects-in-dubai';
-import 10CommonFitOutApprovalMistakesThatDelayProjectsInDubaiContent from './content/10-common-fit-out-approval-mistakes-that-delay-projects-in-dubai';
+import Ten_CommonFitOutApprovalMistakesThatDelayProjectsInDubaiContent from './content/10-common-fit-out-approval-mistakes-that-delay-projects-in-dubai';
 
 
 interface BlogPostPageProps {
@@ -129,7 +129,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       return <DubaiMunicipalityApproval2026CompleteGuideForConstructionFitOutEngineeringProjectsInDubaiContent />;
     }
         if (post.slug === '10-common-fit-out-approval-mistakes-that-delay-projects-in-dubai') {
-      return <10CommonFitOutApprovalMistakesThatDelayProjectsInDubaiContent />;
+      return <Ten_CommonFitOutApprovalMistakesThatDelayProjectsInDubaiContent />;
     }
 
     return null;
