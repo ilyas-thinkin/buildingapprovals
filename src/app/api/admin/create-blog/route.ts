@@ -336,10 +336,14 @@ export async function POST(request: NextRequest) {
     const cardImage = formData.get('cardImage') as File;
     const coverImage = formData.get('coverImage') as File;
     const contentFile = formData.get('contentFile') as File;
+    const contentType = formData.get('contentType') as string;
+    const manualContent = formData.get('manualContent') as string;
 
-    if (!title || !slug || !cardImage || !coverImage || !contentFile) {
+    // Check required fields - content can be either file or manual
+    const hasContent = contentFile || (contentType === 'manual' && manualContent);
+    if (!title || !slug || !cardImage || !coverImage || !hasContent) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: 'Missing required fields: title, slug, cardImage, coverImage, and content (file or manual) are required' },
         { status: 400 }
       );
     }
@@ -391,23 +395,66 @@ export async function POST(request: NextRequest) {
       contentType: coverImage.type,
     });
 
-    // Parse content file
+    // Parse content - either from file or manual input
     let blogContent = '';
     let extractedImages: Array<{ data: string; contentType: string; index: number }> = [];
-    const contentBuffer = Buffer.from(await contentFile.arrayBuffer());
-    const contentFileName = contentFile.name.toLowerCase();
 
-    if (contentFileName.endsWith('.pdf')) {
-      blogContent = await extractPdfText(contentBuffer);
-    } else if (contentFileName.endsWith('.docx')) {
-      const docxResult = await extractDocxText(contentBuffer);
-      blogContent = docxResult.text;
-      extractedImages = docxResult.images;
-    } else {
-      return NextResponse.json(
-        { error: 'Only PDF and DOCX files are supported' },
-        { status: 400 }
-      );
+    if (contentType === 'manual' && manualContent) {
+      // Use manual content directly
+      blogContent = manualContent;
+    } else if (contentFile) {
+      // Parse content file
+      const contentBuffer = Buffer.from(await contentFile.arrayBuffer());
+      const contentFileName = contentFile.name.toLowerCase();
+
+      if (contentFileName.endsWith('.pdf')) {
+        blogContent = await extractPdfText(contentBuffer);
+      } else if (contentFileName.endsWith('.docx')) {
+        const docxResult = await extractDocxText(contentBuffer);
+        blogContent = docxResult.text;
+        extractedImages = docxResult.images;
+      } else {
+        return NextResponse.json(
+          { error: 'Only PDF and DOCX files are supported' },
+          { status: 400 }
+        );
+      }
+    }
+
+    // Handle manually uploaded content images
+    // The BlogEditor uses [IMAGE: img_xxx] format with timestamp IDs
+    // We need to map these to numeric indices and convert in content
+    const contentImageKeys = Array.from(formData.keys()).filter(key => key.startsWith('contentImage_'));
+
+    // Find all [IMAGE: xxx] placeholders in the content and map them to indices
+    const imagePlaceholderRegex = /\[IMAGE:\s*(img_\d+)\]/g;
+    const placeholderMatches = [...blogContent.matchAll(imagePlaceholderRegex)];
+    const imageIdToIndex: { [id: string]: number } = {};
+
+    placeholderMatches.forEach((match, index) => {
+      imageIdToIndex[match[1]] = index;
+    });
+
+    // Convert [IMAGE: img_xxx] to [IMAGE_X] format for generateBlogComponent
+    blogContent = blogContent.replace(imagePlaceholderRegex, (match, id) => {
+      const index = imageIdToIndex[id];
+      return `[IMAGE_${index}]`;
+    });
+
+    for (const key of contentImageKeys) {
+      const indexMatch = key.match(/contentImage_(\d+)/);
+      if (indexMatch) {
+        const index = parseInt(indexMatch[1], 10);
+        const file = formData.get(key) as File;
+        if (file) {
+          const imageBuffer = Buffer.from(await file.arrayBuffer());
+          extractedImages.push({
+            data: imageBuffer.toString('base64'),
+            contentType: file.type || 'image/png',
+            index
+          });
+        }
+      }
     }
 
     // Upload extracted images to Vercel Blob with unique timestamp
