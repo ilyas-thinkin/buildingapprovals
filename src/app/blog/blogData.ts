@@ -16,6 +16,22 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    id: '1768552874848',
+    title: '10 Common Fit-Out Approval Mistakes That Delay Projects in Dubai - 2026',
+    slug: '10-common-fit-out-approval-mistakes-that-delay-projects-in-dubai-2026',
+    category: 'Fit-Out Approvals',
+    author: 'Building Approvals Dubai',
+    date: '2026-01-16',
+    excerpt: 'This guide explains the key errors that delay projects in Dubai and how to avoid them, based on real approval scenarios across commercial buildings and free zones.',
+    image: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-fit-out-approval-list-1768552866539.png',
+    coverImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-fit-out-approval-cover-1768552866539.png',
+    metaTitle: '10 Common Fit-Out Approval Mistakes That Delay Projects in Dubai - 2026 | Building Approvals Dubai',
+    metaDescription: 'This guide explains the key errors that delay projects in Dubai and how to avoid them, based on real approval scenarios across commercial buildings and free zones.',
+    keywords: ['Common', 'Fit-Out', 'Approval', 'Mistakes', 'That', 'Delay', 'Projects', 'Dubai', '2026'],
+    ogImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-fit-out-approval-cover-1768552866539.png',
+  },
+
+  {
     id: '1768479996437',
     title: '10 Common Fit-Out Approval Mistakes That Delay Projects in  Dubai ',
     slug: '10-common-fit-out-approval-mistakes-that-delay-projects-in-dubai',
