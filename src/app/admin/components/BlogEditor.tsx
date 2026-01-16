@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BlogPost } from '@/app/blog/blogData';
 
 interface BlogEditorProps {
@@ -32,11 +32,11 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
     coverImage: '',
   });
 
-  const [contentImages, setContentImages] = useState<Array<{ file: File; preview: string }>>([]);
+  const [contentImages, setContentImages] = useState<Array<{ file: File; preview: string; id: string }>>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const textareaRef = React.useRef<HTMLTextAreaElement>(null);
-  const titleRef = React.useRef<HTMLTextAreaElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const titleRef = useRef<HTMLTextAreaElement>(null);
 
   // Load blog data when editing
   useEffect(() => {
@@ -123,36 +123,138 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
       .replace(/^-+|-+$/g, '');
   };
 
-  const handleContentImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
+  // Simple HTML to text - only preserve bold and paragraphs
+  const htmlToSimpleText = (html: string): string => {
+    let text = html;
 
-    const file = files[0];
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const newImageIndex = contentImages.length;
-      setContentImages(prev => [...prev, { file, preview: reader.result as string }]);
+    // Remove Word-specific stuff
+    text = text.replace(/<o:p>[\s\S]*?<\/o:p>/gi, '');
+    text = text.replace(/<!--[\s\S]*?-->/g, '');
+    text = text.replace(/<style[\s\S]*?<\/style>/gi, '');
+    text = text.replace(/class="[^"]*"/gi, '');
+    text = text.replace(/style="[^"]*"/gi, '');
+
+    // Convert bold to markdown
+    text = text.replace(/<b[^>]*>([\s\S]*?)<\/b>/gi, '**$1**');
+    text = text.replace(/<strong[^>]*>([\s\S]*?)<\/strong>/gi, '**$1**');
+
+    // Convert headings to just bold text on new line
+    text = text.replace(/<h[1-6][^>]*>([\s\S]*?)<\/h[1-6]>/gi, '\n**$1**\n');
+
+    // Remove lists formatting - just get the text
+    text = text.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, '$1\n');
+    text = text.replace(/<[uo]l[^>]*>/gi, '');
+    text = text.replace(/<\/[uo]l>/gi, '');
+
+    // Paragraphs become double newlines
+    text = text.replace(/<p[^>]*>([\s\S]*?)<\/p>/gi, '$1\n\n');
+    text = text.replace(/<br\s*\/?>/gi, ' ');
+    text = text.replace(/<div[^>]*>([\s\S]*?)<\/div>/gi, '$1\n');
+
+    // Remove all other HTML tags
+    text = text.replace(/<[^>]+>/g, '');
+
+    // Decode HTML entities
+    text = text.replace(/&nbsp;/g, ' ');
+    text = text.replace(/&amp;/g, '&');
+    text = text.replace(/&lt;/g, '<');
+    text = text.replace(/&gt;/g, '>');
+    text = text.replace(/&quot;/g, '"');
+    text = text.replace(/&#39;/g, "'");
+
+    // Clean up whitespace - collapse multiple spaces and clean up paragraphs
+    text = text.replace(/[ \t]+/g, ' ');
+    text = text.replace(/\n[ \t]+/g, '\n');
+    text = text.replace(/[ \t]+\n/g, '\n');
+    text = text.replace(/\n{3,}/g, '\n\n');
+    text = text.trim();
+
+    return text;
+  };
+
+  // Handle paste event
+  const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+    const clipboardData = e.clipboardData;
+
+    // Check for HTML content (from Word)
+    const htmlContent = clipboardData.getData('text/html');
+    if (htmlContent && htmlContent.length > 0) {
+      e.preventDefault();
+      const cleanText = htmlToSimpleText(htmlContent);
 
       const textarea = textareaRef.current;
       if (textarea) {
         const start = textarea.selectionStart;
-        const beforeText = formData.manualContent.substring(0, start);
-        const afterText = formData.manualContent.substring(start);
-        const imagePlaceholder = `\n![Image ${newImageIndex + 1}](image_${newImageIndex})\n`;
-        const newText = beforeText + imagePlaceholder + afterText;
-        setFormData(prev => ({ ...prev, manualContent: newText }));
+        const end = textarea.selectionEnd;
+        const before = formData.manualContent.substring(0, start);
+        const after = formData.manualContent.substring(end);
+        const newContent = before + cleanText + after;
+        setFormData(prev => ({ ...prev, manualContent: newContent }));
+
+        // Set cursor position after pasted content
         setTimeout(() => {
+          textarea.selectionStart = textarea.selectionEnd = start + cleanText.length;
           textarea.focus();
-          const newCursorPos = start + imagePlaceholder.length;
-          textarea.setSelectionRange(newCursorPos, newCursorPos);
         }, 0);
+      }
+      return;
+    }
+
+    // Check for images
+    const items = clipboardData.items;
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf('image') !== -1) {
+        e.preventDefault();
+        const file = items[i].getAsFile();
+        if (file) {
+          addImage(file);
+        }
+        return;
+      }
+    }
+  };
+
+  // Add image function
+  const addImage = (file: File) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const imageId = `img_${Date.now()}`;
+      setContentImages(prev => [...prev, { file, preview: reader.result as string, id: imageId }]);
+
+      const textarea = textareaRef.current;
+      const imagePlaceholder = `\n[IMAGE: ${imageId}]\n`;
+
+      if (textarea) {
+        const start = textarea.selectionStart;
+        const before = formData.manualContent.substring(0, start);
+        const after = formData.manualContent.substring(start);
+        setFormData(prev => ({ ...prev, manualContent: before + imagePlaceholder + after }));
+
+        setTimeout(() => {
+          textarea.selectionStart = textarea.selectionEnd = start + imagePlaceholder.length;
+          textarea.focus();
+        }, 0);
+      } else {
+        setFormData(prev => ({ ...prev, manualContent: prev.manualContent + imagePlaceholder }));
       }
     };
     reader.readAsDataURL(file);
   };
 
-  const removeContentImage = (index: number) => {
-    setContentImages(prev => prev.filter((_, i) => i !== index));
+  const handleContentImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    addImage(files[0]);
+    // Reset input so same file can be selected again
+    e.target.value = '';
+  };
+
+  const removeContentImage = (id: string) => {
+    setContentImages(prev => prev.filter(img => img.id !== id));
+    setFormData(prev => ({
+      ...prev,
+      manualContent: prev.manualContent.replace(new RegExp(`\\n?\\[IMAGE: ${id}\\]\\n?`, 'g'), '\n')
+    }));
   };
 
   const insertFormatting = (before: string, after: string = '') => {
@@ -169,20 +271,22 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
 
     setTimeout(() => {
       textarea.focus();
-      const newCursorPos = start + before.length + selectedText.length + after.length;
-      textarea.setSelectionRange(newCursorPos, newCursorPos);
+      if (selectedText) {
+        textarea.selectionStart = start + before.length;
+        textarea.selectionEnd = start + before.length + selectedText.length;
+      } else {
+        textarea.selectionStart = textarea.selectionEnd = start + before.length;
+      }
     }, 0);
   };
 
   const formatBold = () => insertFormatting('**', '**');
   const formatItalic = () => insertFormatting('*', '*');
   const formatHeading = () => insertFormatting('\n## ', '\n');
-  const formatSubheading = () => insertFormatting('\n### ', '\n');
   const formatBulletList = () => insertFormatting('\n- ', '');
   const formatNumberedList = () => insertFormatting('\n1. ', '');
   const formatLink = () => insertFormatting('[', '](url)');
   const formatQuote = () => insertFormatting('\n> ', '');
-  const formatDivider = () => insertFormatting('\n---\n', '');
 
   const triggerImageUpload = () => {
     document.getElementById('contentImages')?.click();
@@ -196,13 +300,11 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
     const value = e.target.value;
     setFormData(prev => ({ ...prev, title: value }));
 
-    // Auto-resize title textarea
     if (titleRef.current) {
       titleRef.current.style.height = 'auto';
       titleRef.current.style.height = titleRef.current.scrollHeight + 'px';
     }
 
-    // Auto-generate slug
     if (!editingBlog) {
       setFormData(prev => ({ ...prev, slug: generateSlug(value) }));
     }
@@ -313,6 +415,62 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
             </button>
           </div>
         </div>
+
+        {/* Formatting Toolbar */}
+        {formData.contentType === 'manual' && (
+          <div className="top-toolbar">
+            <button type="button" onClick={formatBold} className="toolbar-btn" title="Bold">
+              <strong>B</strong>
+            </button>
+            <button type="button" onClick={formatItalic} className="toolbar-btn" title="Italic">
+              <em>I</em>
+            </button>
+            <div className="toolbar-divider"></div>
+            <button type="button" onClick={formatBulletList} className="toolbar-btn" title="Bullet List">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="4" cy="6" r="2"/>
+                <circle cx="4" cy="12" r="2"/>
+                <circle cx="4" cy="18" r="2"/>
+                <rect x="9" y="5" width="12" height="2"/>
+                <rect x="9" y="11" width="12" height="2"/>
+                <rect x="9" y="17" width="12" height="2"/>
+              </svg>
+            </button>
+            <button type="button" onClick={formatNumberedList} className="toolbar-btn" title="Numbered List">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <text x="1" y="8" fontSize="8" fontWeight="bold">1.</text>
+                <text x="1" y="14" fontSize="8" fontWeight="bold">2.</text>
+                <text x="1" y="20" fontSize="8" fontWeight="bold">3.</text>
+                <rect x="9" y="5" width="12" height="2"/>
+                <rect x="9" y="11" width="12" height="2"/>
+                <rect x="9" y="17" width="12" height="2"/>
+              </svg>
+            </button>
+            <div className="toolbar-divider"></div>
+            <button type="button" onClick={formatQuote} className="toolbar-btn" title="Quote">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/>
+              </svg>
+            </button>
+            <button type="button" onClick={formatHeading} className="toolbar-btn" title="Heading">
+              <strong>H</strong>
+            </button>
+            <div className="toolbar-divider"></div>
+            <button type="button" onClick={formatLink} className="toolbar-btn" title="Insert Link">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+              </svg>
+            </button>
+            <button type="button" onClick={triggerImageUpload} className="toolbar-btn" title="Insert Image">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+            </button>
+          </div>
+        )}
 
         {/* Settings Panel */}
         {showSettings && (
@@ -483,7 +641,7 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
                     <polyline points="21 15 16 10 5 21"/>
                   </svg>
                 </div>
-                <p className="cover-text">Add a cover image or video to your article</p>
+                <p className="cover-text">Add a cover image to your article</p>
                 <button type="button" className="cover-btn">Upload from computer</button>
               </div>
             )}
@@ -514,69 +672,11 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
               <textarea
                 ref={textareaRef}
                 className="content-input"
-                placeholder="Write here. You can also include @mentions."
+                placeholder="Write here or paste content from Word..."
                 value={formData.manualContent}
                 onChange={(e) => setFormData(prev => ({ ...prev, manualContent: e.target.value }))}
+                onPaste={handlePaste}
               />
-
-              {/* Formatting Toolbar - Floating */}
-              <div className="floating-toolbar">
-                <button type="button" onClick={formatBold} className="toolbar-icon" title="Bold">
-                  <strong>B</strong>
-                </button>
-                <button type="button" onClick={formatItalic} className="toolbar-icon" title="Italic">
-                  <em>I</em>
-                </button>
-                <span className="toolbar-sep"></span>
-                <button type="button" onClick={formatBulletList} className="toolbar-icon" title="Bullet List">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <circle cx="4" cy="6" r="2"/>
-                    <circle cx="4" cy="12" r="2"/>
-                    <circle cx="4" cy="18" r="2"/>
-                    <rect x="9" y="5" width="12" height="2"/>
-                    <rect x="9" y="11" width="12" height="2"/>
-                    <rect x="9" y="17" width="12" height="2"/>
-                  </svg>
-                </button>
-                <button type="button" onClick={formatNumberedList} className="toolbar-icon" title="Numbered List">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <text x="2" y="8" fontSize="8" fontWeight="bold">1</text>
-                    <text x="2" y="14" fontSize="8" fontWeight="bold">2</text>
-                    <text x="2" y="20" fontSize="8" fontWeight="bold">3</text>
-                    <rect x="9" y="5" width="12" height="2"/>
-                    <rect x="9" y="11" width="12" height="2"/>
-                    <rect x="9" y="17" width="12" height="2"/>
-                  </svg>
-                </button>
-                <span className="toolbar-sep"></span>
-                <button type="button" onClick={formatQuote} className="toolbar-icon" title="Quote">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/>
-                  </svg>
-                </button>
-                <button type="button" onClick={formatHeading} className="toolbar-icon toolbar-text" title="Heading">
-                  { }
-                </button>
-                <span className="toolbar-sep"></span>
-                <button type="button" onClick={formatDivider} className="toolbar-icon" title="Divider">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <rect x="3" y="11" width="18" height="2"/>
-                  </svg>
-                </button>
-                <button type="button" onClick={formatLink} className="toolbar-icon" title="Link">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-                  </svg>
-                </button>
-                <button type="button" onClick={triggerImageUpload} className="toolbar-icon" title="Insert Image">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                    <circle cx="8.5" cy="8.5" r="1.5"/>
-                    <polyline points="21 15 16 10 5 21"/>
-                  </svg>
-                </button>
-              </div>
 
               <input
                 type="file"
@@ -586,16 +686,20 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
                 style={{ display: 'none' }}
               />
 
+              {/* Show uploaded images */}
               {contentImages.length > 0 && (
-                <div className="inserted-images">
-                  <p className="inserted-label">Inserted Images:</p>
-                  <div className="inserted-grid">
-                    {contentImages.map((img, index) => (
-                      <div key={index} className="inserted-item">
-                        <img src={img.preview} alt={`Image ${index + 1}`} />
-                        <button type="button" onClick={() => removeContentImage(index)} className="remove-btn">
-                          x
-                        </button>
+                <div className="uploaded-images-section">
+                  <p className="uploaded-images-label">Uploaded Images:</p>
+                  <div className="uploaded-images-grid">
+                    {contentImages.map((img) => (
+                      <div key={img.id} className="uploaded-image-item">
+                        <img src={img.preview} alt="Uploaded" />
+                        <div className="uploaded-image-info">
+                          <span className="uploaded-image-id">{img.id}</span>
+                          <button type="button" onClick={() => removeContentImage(img.id)} className="uploaded-image-remove">
+                            Remove
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
