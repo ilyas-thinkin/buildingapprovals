@@ -133,29 +133,52 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
     text = text.replace(/<style[\s\S]*?<\/style>/gi, '');
     text = text.replace(/class="[^"]*"/gi, '');
     text = text.replace(/style="[^"]*"/gi, '');
+    text = text.replace(/\r\n/g, ' ');
+    text = text.replace(/\r/g, ' ');
+    text = text.replace(/\n/g, ' ');
 
-    // Convert headings to markdown
-    text = text.replace(/<h1[^>]*>([\s\S]*?)<\/h1>/gi, '\n## $1\n');
-    text = text.replace(/<h2[^>]*>([\s\S]*?)<\/h2>/gi, '\n## $1\n');
-    text = text.replace(/<h3[^>]*>([\s\S]*?)<\/h3>/gi, '\n### $1\n');
-    text = text.replace(/<h[4-6][^>]*>([\s\S]*?)<\/h[4-6]>/gi, '\n### $1\n');
+    // Convert headings to markdown (extract text content first)
+    text = text.replace(/<h1[^>]*>([\s\S]*?)<\/h1>/gi, (_, content) => {
+      const cleanContent = content.replace(/<[^>]+>/g, '').trim();
+      return `\n\n## ${cleanContent}\n\n`;
+    });
+    text = text.replace(/<h2[^>]*>([\s\S]*?)<\/h2>/gi, (_, content) => {
+      const cleanContent = content.replace(/<[^>]+>/g, '').trim();
+      return `\n\n## ${cleanContent}\n\n`;
+    });
+    text = text.replace(/<h3[^>]*>([\s\S]*?)<\/h3>/gi, (_, content) => {
+      const cleanContent = content.replace(/<[^>]+>/g, '').trim();
+      return `\n\n### ${cleanContent}\n\n`;
+    });
+    text = text.replace(/<h[4-6][^>]*>([\s\S]*?)<\/h[4-6]>/gi, (_, content) => {
+      const cleanContent = content.replace(/<[^>]+>/g, '').trim();
+      return `\n\n### ${cleanContent}\n\n`;
+    });
 
     // Convert bold to markdown
-    text = text.replace(/<b[^>]*>([\s\S]*?)<\/b>/gi, '**$1**');
-    text = text.replace(/<strong[^>]*>([\s\S]*?)<\/strong>/gi, '**$1**');
+    text = text.replace(/<b[^>]*>([\s\S]*?)<\/b>/gi, (_, content) => {
+      const cleanContent = content.replace(/<[^>]+>/g, '').trim();
+      return `**${cleanContent}**`;
+    });
+    text = text.replace(/<strong[^>]*>([\s\S]*?)<\/strong>/gi, (_, content) => {
+      const cleanContent = content.replace(/<[^>]+>/g, '').trim();
+      return `**${cleanContent}**`;
+    });
 
     // Preserve images
     text = text.replace(/<img[^>]*src="([^"]*)"[^>]*>/gi, '\n[IMG:$1]\n');
 
     // Lists - just get text
-    text = text.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, '$1\n');
+    text = text.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, '$1 ');
     text = text.replace(/<[uo]l[^>]*>/gi, '');
     text = text.replace(/<\/[uo]l>/gi, '');
 
     // Paragraphs become double newlines
-    text = text.replace(/<p[^>]*>([\s\S]*?)<\/p>/gi, '$1\n\n');
+    text = text.replace(/<\/p>/gi, '\n\n');
+    text = text.replace(/<p[^>]*>/gi, '');
     text = text.replace(/<br\s*\/?>/gi, ' ');
-    text = text.replace(/<div[^>]*>([\s\S]*?)<\/div>/gi, '$1\n\n');
+    text = text.replace(/<\/div>/gi, '\n\n');
+    text = text.replace(/<div[^>]*>/gi, '');
 
     // Remove all other HTML tags
     text = text.replace(/<[^>]+>/g, '');
@@ -168,10 +191,10 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
     text = text.replace(/&quot;/g, '"');
     text = text.replace(/&#39;/g, "'");
 
-    // Clean up whitespace
+    // Clean up whitespace - single spaces within lines
     text = text.replace(/[ \t]+/g, ' ');
-    text = text.replace(/\n[ \t]+/g, '\n');
-    text = text.replace(/[ \t]+\n/g, '\n');
+    text = text.replace(/ \n/g, '\n');
+    text = text.replace(/\n /g, '\n');
     text = text.replace(/\n{3,}/g, '\n\n');
     text = text.trim();
 
