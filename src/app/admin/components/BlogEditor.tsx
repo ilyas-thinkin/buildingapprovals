@@ -165,8 +165,8 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
       return `**${cleanContent}**`;
     });
 
-    // Preserve images
-    text = text.replace(/<img[^>]*src="([^"]*)"[^>]*>/gi, '\n[IMG:$1]\n');
+    // Remove inline images (base64 data URLs are too large)
+    text = text.replace(/<img[^>]*>/gi, '');
 
     // Lists - just get text
     text = text.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, '$1 ');
