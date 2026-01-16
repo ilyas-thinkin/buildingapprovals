@@ -123,7 +123,7 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
       .replace(/^-+|-+$/g, '');
   };
 
-  // Simple HTML to text - only preserve bold and paragraphs
+  // Convert HTML to markdown - keep heading, bold, paragraphs
   const htmlToSimpleText = (html: string): string => {
     let text = html;
 
@@ -134,14 +134,20 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
     text = text.replace(/class="[^"]*"/gi, '');
     text = text.replace(/style="[^"]*"/gi, '');
 
+    // Convert headings to markdown
+    text = text.replace(/<h1[^>]*>([\s\S]*?)<\/h1>/gi, '\n## $1\n');
+    text = text.replace(/<h2[^>]*>([\s\S]*?)<\/h2>/gi, '\n## $1\n');
+    text = text.replace(/<h3[^>]*>([\s\S]*?)<\/h3>/gi, '\n### $1\n');
+    text = text.replace(/<h[4-6][^>]*>([\s\S]*?)<\/h[4-6]>/gi, '\n### $1\n');
+
     // Convert bold to markdown
     text = text.replace(/<b[^>]*>([\s\S]*?)<\/b>/gi, '**$1**');
     text = text.replace(/<strong[^>]*>([\s\S]*?)<\/strong>/gi, '**$1**');
 
-    // Convert headings to just bold text on new line
-    text = text.replace(/<h[1-6][^>]*>([\s\S]*?)<\/h[1-6]>/gi, '\n**$1**\n');
+    // Preserve images
+    text = text.replace(/<img[^>]*src="([^"]*)"[^>]*>/gi, '\n[IMG:$1]\n');
 
-    // Remove lists formatting - just get the text
+    // Lists - just get text
     text = text.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, '$1\n');
     text = text.replace(/<[uo]l[^>]*>/gi, '');
     text = text.replace(/<\/[uo]l>/gi, '');
@@ -149,7 +155,7 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
     // Paragraphs become double newlines
     text = text.replace(/<p[^>]*>([\s\S]*?)<\/p>/gi, '$1\n\n');
     text = text.replace(/<br\s*\/?>/gi, ' ');
-    text = text.replace(/<div[^>]*>([\s\S]*?)<\/div>/gi, '$1\n');
+    text = text.replace(/<div[^>]*>([\s\S]*?)<\/div>/gi, '$1\n\n');
 
     // Remove all other HTML tags
     text = text.replace(/<[^>]+>/g, '');
@@ -162,7 +168,7 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
     text = text.replace(/&quot;/g, '"');
     text = text.replace(/&#39;/g, "'");
 
-    // Clean up whitespace - collapse multiple spaces and clean up paragraphs
+    // Clean up whitespace
     text = text.replace(/[ \t]+/g, ' ');
     text = text.replace(/\n[ \t]+/g, '\n');
     text = text.replace(/[ \t]+\n/g, '\n');
