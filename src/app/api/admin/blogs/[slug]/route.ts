@@ -116,15 +116,36 @@ export async function DELETE(
       if ('content' in pageFile) {
         let pageContent = Buffer.from(pageFile.content, 'base64').toString('utf-8');
 
-        // Create component name from slug
-        const componentName = slug
+        // Create component name from slug (handle numbers at start)
+        let componentName = slug
           .split('-')
           .map(word => word.charAt(0).toUpperCase() + word.slice(1))
           .join('');
 
-        // Remove import statement
-        const importRegex = new RegExp(`import ${componentName}Content from ['"]\\.\\/content\\/${slug}['"];?\\n?`, 'g');
-        pageContent = pageContent.replace(importRegex, '');
+        // If component name starts with a number, prefix with number word
+        if (/^\d/.test(componentName)) {
+          const numberWords: { [key: string]: string } = {
+            '0': 'Zero_', '1': 'One_', '2': 'Two_', '3': 'Three_', '4': 'Four_',
+            '5': 'Five_', '6': 'Six_', '7': 'Seven_', '8': 'Eight_', '9': 'Nine_', '10': 'Ten_'
+          };
+          const match = componentName.match(/^(\d+)/);
+          if (match) {
+            const num = match[1];
+            const prefix = numberWords[num] || `N${num}_`;
+            componentName = prefix + componentName.slice(num.length);
+          }
+        }
+
+        // Remove dynamic import statement (new format)
+        const dynamicImportRegex = new RegExp(
+          `const ${componentName}Content = dynamic\\(\\(\\) => import\\(['"]\\.\\/content\\/${slug}['"]\\)\\.catch\\(\\(\\) => \\(\\) => null\\), \\{ ssr: true \\}\\);?\\n?`,
+          'g'
+        );
+        pageContent = pageContent.replace(dynamicImportRegex, '');
+
+        // Remove static import statement (old format)
+        const staticImportRegex = new RegExp(`import ${componentName}Content from ['"]\\.\\/content\\/${slug}['"];?\\n?`, 'g');
+        pageContent = pageContent.replace(staticImportRegex, '');
 
         // Remove the if statement from renderContent
         const caseRegex = new RegExp(
