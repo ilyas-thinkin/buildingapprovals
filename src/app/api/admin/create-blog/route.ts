@@ -513,13 +513,30 @@ export async function POST(request: NextRequest) {
     // Create blog component file via GitHub API
     const componentPath = `src/app/blog/[slug]/content/${slug}.tsx`;
     try {
+      // Check if file already exists to get SHA (required for updates)
+      let existingSha: string | undefined;
+      try {
+        const { data: existingFile } = await octokit.rest.repos.getContent({
+          owner,
+          repo,
+          path: componentPath,
+          ref: branch,
+        });
+        if ('sha' in existingFile) {
+          existingSha = existingFile.sha;
+        }
+      } catch (e) {
+        // File doesn't exist, which is expected for new blogs
+      }
+
       await octokit.rest.repos.createOrUpdateFileContents({
         owner,
         repo,
         path: componentPath,
-        message: `Add blog content component for: ${title}`,
+        message: existingSha ? `Update blog content component for: ${title}` : `Add blog content component for: ${title}`,
         content: Buffer.from(componentContent).toString('base64'),
         branch,
+        ...(existingSha && { sha: existingSha }),
       });
     } catch (createError: any) {
       console.error('Error creating blog component:', createError);
