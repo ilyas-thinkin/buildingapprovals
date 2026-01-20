@@ -107,15 +107,35 @@ function generateBlogComponent(blogContent: string, imageUrls: { [key: number]: 
   hasKeyTakeaways = contentLower.includes('key takeaway') || contentLower.includes('key takeaways');
 
   // Clean text - remove markdown bold/italic markers and convert to HTML
+  // Also escape all characters that can break JSX compilation
   const cleanText = (text: string): string => {
     let cleaned = text;
 
-    // First, escape standalone > and < characters that aren't part of HTML/markdown
-    // Escape > at start of line (blockquote markers) for JSX
+    // ========== JSX SAFETY ESCAPING ==========
+    // These characters MUST be escaped to prevent JSX compilation errors
+
+    // 1. Escape curly braces { } - JSX interprets these as expressions
+    cleaned = cleaned.replace(/\{/g, '&#123;');
+    cleaned = cleaned.replace(/\}/g, '&#125;');
+
+    // 2. Escape > at start of line (blockquote markers) for JSX
     cleaned = cleaned.replace(/^>\s*/g, '&gt; ');
-    // Escape standalone < and > that aren't part of tags
-    cleaned = cleaned.replace(/(?<!<[a-zA-Z\/]*)>(?![a-zA-Z]*>)/g, '&gt;');
-    cleaned = cleaned.replace(/<(?![a-zA-Z\/])/g, '&lt;');
+
+    // 3. Escape standalone < and > that aren't part of HTML tags
+    // This prevents "Unexpected token" errors in JSX
+    cleaned = cleaned.replace(/(?<!<[a-zA-Z\/][^>]*)>(?![\s\S]*<\/)/g, '&gt;');
+    cleaned = cleaned.replace(/<(?![a-zA-Z\/!])/g, '&lt;');
+
+    // 4. Escape backticks - can break template literals if any exist
+    cleaned = cleaned.replace(/`/g, '&#96;');
+
+    // 5. Escape dollar signs followed by curly braces (template literal expressions)
+    cleaned = cleaned.replace(/\$&#123;/g, '&#36;&#123;');
+
+    // 6. Clean up any stray backslashes that could escape characters
+    cleaned = cleaned.replace(/\\(?![nrt"'])/g, '&#92;');
+
+    // ========== MARKDOWN TO HTML CONVERSION ==========
 
     // Convert **text** to <strong>text</strong>
     cleaned = cleaned.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
@@ -126,8 +146,23 @@ function generateBlogComponent(blogContent: string, imageUrls: { [key: number]: 
     // Remove any remaining standalone asterisks that aren't bullet points
     cleaned = cleaned.replace(/^\*\*\s*/, '');
     cleaned = cleaned.replace(/\s*\*\*$/, '');
-    // Clean up double quotes
+
+    // ========== TYPOGRAPHY CLEANUP ==========
+
+    // Clean up smart quotes to regular quotes
     cleaned = cleaned.replace(/[""]([^""]+)[""]/g, '"$1"');
+    cleaned = cleaned.replace(/['']/g, "'");
+
+    // Clean up em dashes and en dashes
+    cleaned = cleaned.replace(/—/g, '-');
+    cleaned = cleaned.replace(/–/g, '-');
+
+    // Clean up ellipsis
+    cleaned = cleaned.replace(/…/g, '...');
+
+    // Clean up non-breaking spaces
+    cleaned = cleaned.replace(/\u00A0/g, ' ');
+
     return cleaned;
   };
 
