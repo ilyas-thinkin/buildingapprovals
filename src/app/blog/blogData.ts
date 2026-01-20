@@ -16,6 +16,22 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    id: '1768907592777',
+    title: 'Complete Guide to Approvals & Compliance in Dubai - 2026',
+    slug: 'complete-guide-to-approvals-compliance-in-dubai-2026',
+    category: 'Dubai Municipality Services Categories',
+    author: 'Building Approvals Dubai',
+    date: '2026-01-20',
+    excerpt: 'This comprehensive guide to Dubai Municipality Services Categories explains the approval framework in a clear, structured, and practical way. It is designed to help business owners, homeowners, consultants, and developers understand which approvals apply to their projects, how the local process works, and how to avoid costly delays in Dubai.',
+    image: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-services-ca-list-1768907586041.jpg',
+    coverImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-services-ca-cover-1768907586041.jpg',
+    metaTitle: 'Complete Guide to Approvals & Compliance in Dubai - 2026 | Building Approvals Dubai',
+    metaDescription: 'This comprehensive guide to Dubai Municipality Services Categories explains the approval framework in a clear, structured, and practical way. It is designed to help business owners, homeowners, consultants, and developers understand which approvals apply to their projects, how the local process works, and how to avoid costly delays in Dubai.',
+    keywords: ['Complete', 'Guide', 'Approvals', 'Compliance', 'Dubai', '2026'],
+    ogImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-services-ca-cover-1768907586041.jpg',
+  },
+
+  {
     id: '1768906027058',
     title: 'Dubai Municipality Services Categories & Approvals 2026',
     slug: 'dubai-municipality-services-categories',
