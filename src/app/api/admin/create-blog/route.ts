@@ -113,6 +113,8 @@ function generateBlogComponent(blogContent: string, imageUrls: { [key: number]: 
     cleaned = cleaned.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
     // Convert *text* to <em>text</em> (but not bullet points)
     cleaned = cleaned.replace(/(?<!\s)\*([^*\s][^*]*[^*\s])\*(?!\s)/g, '<em>$1</em>');
+    // Convert [text](url) to <a href="url">text</a>
+    cleaned = cleaned.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
     // Remove any remaining standalone asterisks that aren't bullet points
     cleaned = cleaned.replace(/^\*\*\s*/, '');
     cleaned = cleaned.replace(/\s*\*\*$/, '');

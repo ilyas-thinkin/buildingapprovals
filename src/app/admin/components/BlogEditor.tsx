@@ -35,8 +35,13 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
   const [contentImages, setContentImages] = useState<Array<{ file: File; preview: string; id: string }>>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [showHeadingMenu, setShowHeadingMenu] = useState(false);
+  const [showLinkModal, setShowLinkModal] = useState(false);
+  const [linkText, setLinkText] = useState('');
+  const [linkUrl, setLinkUrl] = useState('');
+  const editorRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLTextAreaElement>(null);
+  const savedSelectionRef = useRef<Range | null>(null);
 
   // Load blog data when editing
   useEffect(() => {
@@ -123,149 +128,68 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
       .replace(/^-+|-+$/g, '');
   };
 
-  // Convert HTML to markdown - keep heading, bold, paragraphs
-  const htmlToSimpleText = (html: string): string => {
-    let text = html;
-
-    // Remove Word-specific stuff
-    text = text.replace(/<o:p>[\s\S]*?<\/o:p>/gi, '');
-    text = text.replace(/<!--[\s\S]*?-->/g, '');
-    text = text.replace(/<style[\s\S]*?<\/style>/gi, '');
-    text = text.replace(/class="[^"]*"/gi, '');
-    text = text.replace(/style="[^"]*"/gi, '');
-    text = text.replace(/\r\n/g, ' ');
-    text = text.replace(/\r/g, ' ');
-    text = text.replace(/\n/g, ' ');
-
-    // Convert headings to markdown (extract text content first)
-    text = text.replace(/<h1[^>]*>([\s\S]*?)<\/h1>/gi, (_, content) => {
-      const cleanContent = content.replace(/<[^>]+>/g, '').trim();
-      return `\n\n## ${cleanContent}\n\n`;
-    });
-    text = text.replace(/<h2[^>]*>([\s\S]*?)<\/h2>/gi, (_, content) => {
-      const cleanContent = content.replace(/<[^>]+>/g, '').trim();
-      return `\n\n## ${cleanContent}\n\n`;
-    });
-    text = text.replace(/<h3[^>]*>([\s\S]*?)<\/h3>/gi, (_, content) => {
-      const cleanContent = content.replace(/<[^>]+>/g, '').trim();
-      return `\n\n### ${cleanContent}\n\n`;
-    });
-    text = text.replace(/<h[4-6][^>]*>([\s\S]*?)<\/h[4-6]>/gi, (_, content) => {
-      const cleanContent = content.replace(/<[^>]+>/g, '').trim();
-      return `\n\n### ${cleanContent}\n\n`;
-    });
-
-    // Convert bold to markdown
-    text = text.replace(/<b[^>]*>([\s\S]*?)<\/b>/gi, (_, content) => {
-      const cleanContent = content.replace(/<[^>]+>/g, '').trim();
-      return `**${cleanContent}**`;
-    });
-    text = text.replace(/<strong[^>]*>([\s\S]*?)<\/strong>/gi, (_, content) => {
-      const cleanContent = content.replace(/<[^>]+>/g, '').trim();
-      return `**${cleanContent}**`;
-    });
-
-    // Remove inline images (base64 data URLs are too large)
-    text = text.replace(/<img[^>]*>/gi, '');
-
-    // Lists - just get text
-    text = text.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, '$1 ');
-    text = text.replace(/<[uo]l[^>]*>/gi, '');
-    text = text.replace(/<\/[uo]l>/gi, '');
-
-    // Paragraphs become double newlines
-    text = text.replace(/<\/p>/gi, '\n\n');
-    text = text.replace(/<p[^>]*>/gi, '');
-    text = text.replace(/<br\s*\/?>/gi, ' ');
-    text = text.replace(/<\/div>/gi, '\n\n');
-    text = text.replace(/<div[^>]*>/gi, '');
-
-    // Remove all other HTML tags
-    text = text.replace(/<[^>]+>/g, '');
-
-    // Decode HTML entities
-    text = text.replace(/&nbsp;/g, ' ');
-    text = text.replace(/&amp;/g, '&');
-    text = text.replace(/&lt;/g, '<');
-    text = text.replace(/&gt;/g, '>');
-    text = text.replace(/&quot;/g, '"');
-    text = text.replace(/&#39;/g, "'");
-
-    // Clean up whitespace - single spaces within lines
-    text = text.replace(/[ \t]+/g, ' ');
-    text = text.replace(/ \n/g, '\n');
-    text = text.replace(/\n /g, '\n');
-    text = text.replace(/\n{3,}/g, '\n\n');
-    text = text.trim();
-
-    return text;
-  };
-
-  // Handle paste event
-  const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+  // Handle paste event for contenteditable
+  const handleEditorPaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
     const clipboardData = e.clipboardData;
 
-    // Check for HTML content (from Word)
-    const htmlContent = clipboardData.getData('text/html');
-    if (htmlContent && htmlContent.length > 0) {
-      e.preventDefault();
-      const cleanText = htmlToSimpleText(htmlContent);
-
-      const textarea = textareaRef.current;
-      if (textarea) {
-        const start = textarea.selectionStart;
-        const end = textarea.selectionEnd;
-        const before = formData.manualContent.substring(0, start);
-        const after = formData.manualContent.substring(end);
-        const newContent = before + cleanText + after;
-        setFormData(prev => ({ ...prev, manualContent: newContent }));
-
-        // Set cursor position after pasted content
-        setTimeout(() => {
-          textarea.selectionStart = textarea.selectionEnd = start + cleanText.length;
-          textarea.focus();
-        }, 0);
-      }
-      return;
-    }
-
-    // Check for images
+    // Check for images first
     const items = clipboardData.items;
     for (let i = 0; i < items.length; i++) {
       if (items[i].type.indexOf('image') !== -1) {
         e.preventDefault();
         const file = items[i].getAsFile();
         if (file) {
-          addImage(file);
+          addImageToEditor(file);
         }
         return;
       }
     }
+
+    // Check for HTML content (from Word)
+    const htmlContent = clipboardData.getData('text/html');
+    if (htmlContent && htmlContent.length > 0) {
+      e.preventDefault();
+
+      // Clean the HTML from Word
+      let cleanHtml = htmlContent;
+
+      // Remove Word-specific stuff
+      cleanHtml = cleanHtml.replace(/<o:p>[\s\S]*?<\/o:p>/gi, '');
+      cleanHtml = cleanHtml.replace(/<!--[\s\S]*?-->/g, '');
+      cleanHtml = cleanHtml.replace(/<style[\s\S]*?<\/style>/gi, '');
+      cleanHtml = cleanHtml.replace(/class="[^"]*"/gi, '');
+      cleanHtml = cleanHtml.replace(/style="[^"]*"/gi, '');
+
+      // Keep structural tags but clean attributes
+      cleanHtml = cleanHtml.replace(/<(h[1-6]|p|ul|ol|li|strong|b|em|i|a)[^>]*>/gi, '<$1>');
+
+      // Convert b to strong, i to em for consistency
+      cleanHtml = cleanHtml.replace(/<b>/gi, '<strong>');
+      cleanHtml = cleanHtml.replace(/<\/b>/gi, '</strong>');
+      cleanHtml = cleanHtml.replace(/<i>/gi, '<em>');
+      cleanHtml = cleanHtml.replace(/<\/i>/gi, '</em>');
+
+      // Remove inline images (base64 data URLs are too large)
+      cleanHtml = cleanHtml.replace(/<img[^>]*>/gi, '');
+
+      // Insert at cursor position
+      document.execCommand('insertHTML', false, cleanHtml);
+      syncEditorToState();
+      return;
+    }
   };
 
-  // Add image function
-  const addImage = (file: File) => {
+  // Add image to editor
+  const addImageToEditor = (file: File) => {
     const reader = new FileReader();
     reader.onloadend = () => {
       const imageId = `img_${Date.now()}`;
       setContentImages(prev => [...prev, { file, preview: reader.result as string, id: imageId }]);
 
-      const textarea = textareaRef.current;
-      const imagePlaceholder = `\n[IMAGE: ${imageId}]\n`;
-
-      if (textarea) {
-        const start = textarea.selectionStart;
-        const before = formData.manualContent.substring(0, start);
-        const after = formData.manualContent.substring(start);
-        setFormData(prev => ({ ...prev, manualContent: before + imagePlaceholder + after }));
-
-        setTimeout(() => {
-          textarea.selectionStart = textarea.selectionEnd = start + imagePlaceholder.length;
-          textarea.focus();
-        }, 0);
-      } else {
-        setFormData(prev => ({ ...prev, manualContent: prev.manualContent + imagePlaceholder }));
-      }
+      // Insert image placeholder at cursor
+      const imagePlaceholder = `<p>[IMAGE: ${imageId}]</p>`;
+      document.execCommand('insertHTML', false, imagePlaceholder);
+      syncEditorToState();
     };
     reader.readAsDataURL(file);
   };
@@ -273,49 +197,185 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
   const handleContentImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
-    addImage(files[0]);
+    addImageToEditor(files[0]);
     // Reset input so same file can be selected again
     e.target.value = '';
   };
 
   const removeContentImage = (id: string) => {
     setContentImages(prev => prev.filter(img => img.id !== id));
-    setFormData(prev => ({
-      ...prev,
-      manualContent: prev.manualContent.replace(new RegExp(`\\n?\\[IMAGE: ${id}\\]\\n?`, 'g'), '\n')
-    }));
+
+    // Remove from contenteditable
+    if (editorRef.current) {
+      editorRef.current.innerHTML = editorRef.current.innerHTML.replace(
+        new RegExp(`<p>\\[IMAGE: ${id}\\]</p>|\\[IMAGE: ${id}\\]`, 'g'),
+        ''
+      );
+      syncEditorToState();
+    }
   };
 
-  const insertFormatting = (before: string, after: string = '') => {
-    const textarea = textareaRef.current;
-    if (!textarea) return;
+  // Save current selection for later restoration
+  const saveSelection = () => {
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0) {
+      savedSelectionRef.current = selection.getRangeAt(0).cloneRange();
+    }
+  };
 
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const selectedText = formData.manualContent.substring(start, end);
-    const beforeText = formData.manualContent.substring(0, start);
-    const afterText = formData.manualContent.substring(end);
-    const newText = beforeText + before + selectedText + after + afterText;
-    setFormData(prev => ({ ...prev, manualContent: newText }));
-
-    setTimeout(() => {
-      textarea.focus();
-      if (selectedText) {
-        textarea.selectionStart = start + before.length;
-        textarea.selectionEnd = start + before.length + selectedText.length;
-      } else {
-        textarea.selectionStart = textarea.selectionEnd = start + before.length;
+  // Restore saved selection
+  const restoreSelection = () => {
+    if (savedSelectionRef.current) {
+      const selection = window.getSelection();
+      if (selection) {
+        selection.removeAllRanges();
+        selection.addRange(savedSelectionRef.current);
       }
-    }, 0);
+    }
   };
 
-  const formatBold = () => insertFormatting('**', '**');
-  const formatItalic = () => insertFormatting('*', '*');
-  const formatHeading = () => insertFormatting('\n## ', '\n');
-  const formatBulletList = () => insertFormatting('\n- ', '');
-  const formatNumberedList = () => insertFormatting('\n1. ', '');
-  const formatLink = () => insertFormatting('[', '](url)');
-  const formatQuote = () => insertFormatting('\n> ', '');
+  // Execute formatting command
+  const execFormat = (command: string, value?: string) => {
+    editorRef.current?.focus();
+    document.execCommand(command, false, value);
+    syncEditorToState();
+  };
+
+  const formatBold = () => execFormat('bold');
+  const formatItalic = () => execFormat('italic');
+  const formatHeading = (level: number) => {
+    execFormat('formatBlock', `h${level}`);
+    setShowHeadingMenu(false);
+  };
+  const formatBulletList = () => execFormat('insertUnorderedList');
+  const formatNumberedList = () => execFormat('insertOrderedList');
+  const formatQuote = () => execFormat('formatBlock', 'blockquote');
+
+  const openLinkModal = () => {
+    saveSelection();
+    const selection = window.getSelection();
+    if (selection) {
+      setLinkText(selection.toString());
+    }
+    setLinkUrl('');
+    setShowLinkModal(true);
+  };
+
+  const insertLink = () => {
+    restoreSelection();
+    const url = linkUrl || '/';
+    const text = linkText || 'link';
+
+    if (window.getSelection()?.toString()) {
+      execFormat('createLink', url);
+    } else {
+      const linkHtml = `<a href="${url}">${text}</a>`;
+      execFormat('insertHTML', linkHtml);
+    }
+
+    setShowLinkModal(false);
+    setLinkText('');
+    setLinkUrl('');
+  };
+
+  // Sync contenteditable HTML to state (convert to markdown-like format for storage)
+  const syncEditorToState = () => {
+    const editor = editorRef.current;
+    if (!editor) return;
+
+    // Store the HTML directly - we'll convert on submit
+    setFormData(prev => ({ ...prev, manualContent: editor.innerHTML }));
+  };
+
+  // Handle editor input
+  const handleEditorInput = () => {
+    syncEditorToState();
+  };
+
+  // Convert HTML content to clean format for API
+  const getCleanContent = (): string => {
+    const editor = editorRef.current;
+    if (!editor) return formData.manualContent;
+
+    let html = editor.innerHTML;
+
+    // Convert HTML to markdown-like format for the API
+    // H1, H2, H3 -> ## format
+    html = html.replace(/<h1[^>]*>(.*?)<\/h1>/gi, '\n# $1\n');
+    html = html.replace(/<h2[^>]*>(.*?)<\/h2>/gi, '\n## $1\n');
+    html = html.replace(/<h3[^>]*>(.*?)<\/h3>/gi, '\n### $1\n');
+
+    // Bold and italic
+    html = html.replace(/<strong[^>]*>(.*?)<\/strong>/gi, '**$1**');
+    html = html.replace(/<b[^>]*>(.*?)<\/b>/gi, '**$1**');
+    html = html.replace(/<em[^>]*>(.*?)<\/em>/gi, '*$1*');
+    html = html.replace(/<i[^>]*>(.*?)<\/i>/gi, '*$1*');
+
+    // Links
+    html = html.replace(/<a[^>]*href=["']([^"']+)["'][^>]*>(.*?)<\/a>/gi, '[$2]($1)');
+
+    // Lists
+    html = html.replace(/<ul[^>]*>([\s\S]*?)<\/ul>/gi, (_, content) => {
+      return content.replace(/<li[^>]*>(.*?)<\/li>/gi, '- $1\n');
+    });
+    html = html.replace(/<ol[^>]*>([\s\S]*?)<\/ol>/gi, (_, content) => {
+      let i = 0;
+      return content.replace(/<li[^>]*>(.*?)<\/li>/gi, () => `${++i}. $1\n`);
+    });
+
+    // Blockquote
+    html = html.replace(/<blockquote[^>]*>(.*?)<\/blockquote>/gi, '\n> $1\n');
+
+    // Paragraphs and breaks
+    html = html.replace(/<\/p>/gi, '\n\n');
+    html = html.replace(/<p[^>]*>/gi, '');
+    html = html.replace(/<br\s*\/?>/gi, '\n');
+    html = html.replace(/<div[^>]*>/gi, '\n');
+    html = html.replace(/<\/div>/gi, '');
+
+    // Remove remaining HTML tags
+    html = html.replace(/<[^>]+>/g, '');
+
+    // Decode entities
+    html = html.replace(/&nbsp;/g, ' ');
+    html = html.replace(/&amp;/g, '&');
+    html = html.replace(/&lt;/g, '<');
+    html = html.replace(/&gt;/g, '>');
+    html = html.replace(/&quot;/g, '"');
+
+    // Clean up whitespace
+    html = html.replace(/\n{3,}/g, '\n\n');
+    html = html.trim();
+
+    return html;
+  };
+
+  // Initialize editor content when editing existing blog
+  useEffect(() => {
+    if (editorRef.current && formData.manualContent && !editorRef.current.innerHTML) {
+      // If content is markdown, convert to HTML for display
+      let content = formData.manualContent;
+
+      // Convert markdown to HTML if needed
+      if (content.includes('##') || content.includes('**')) {
+        content = content.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+        content = content.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+        content = content.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+        content = content.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        content = content.replace(/\*(.+?)\*/g, '<em>$1</em>');
+        content = content.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+        content = content.replace(/^- (.+)$/gm, '<li>$1</li>');
+        content = content.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
+        content = content.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
+        content = content.replace(/\n\n/g, '</p><p>');
+        content = '<p>' + content + '</p>';
+        content = content.replace(/<p><(h[1-3]|ul|ol|blockquote)/g, '<$1');
+        content = content.replace(/<\/(h[1-3]|ul|ol|blockquote)><\/p>/g, '</$1>');
+      }
+
+      editorRef.current.innerHTML = content;
+    }
+  }, [formData.manualContent]);
 
   const triggerImageUpload = () => {
     document.getElementById('contentImages')?.click();
@@ -351,9 +411,17 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
         data.append('isEditing', 'true');
       }
 
+      // Get clean content from the visual editor
+      const cleanContent = getCleanContent();
+
       Object.entries(formData).forEach(([key, value]) => {
         if (value !== null && typeof value !== 'object') {
-          data.append(key, value.toString());
+          // Use the clean content instead of raw HTML
+          if (key === 'manualContent') {
+            data.append(key, cleanContent);
+          } else {
+            data.append(key, value.toString());
+          }
         }
       });
 
@@ -402,6 +470,11 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
         });
         setPreviews({ cardImage: '', coverImage: '' });
         setContentImages([]);
+
+        // Clear the visual editor content
+        if (editorRef.current) {
+          editorRef.current.innerHTML = '';
+        }
 
         if (onCancelEdit) {
           onCancelEdit();
@@ -455,7 +528,35 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
               <em>I</em>
             </button>
             <div className="toolbar-divider"></div>
-            <button type="button" onClick={formatBulletList} className="toolbar-btn" title="Bullet List">
+            {/* Heading Dropdown */}
+            <div className="toolbar-dropdown">
+              <button
+                type="button"
+                onClick={() => setShowHeadingMenu(!showHeadingMenu)}
+                className="toolbar-btn toolbar-dropdown-btn"
+                title="Heading"
+              >
+                <span>H</span>
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M7 10l5 5 5-5z"/>
+                </svg>
+              </button>
+              {showHeadingMenu && (
+                <div className="toolbar-dropdown-menu">
+                  <button type="button" onClick={() => formatHeading(1)} className="dropdown-item heading-h1">
+                    <span className="heading-preview-h1">H1</span> Main Title
+                  </button>
+                  <button type="button" onClick={() => formatHeading(2)} className="dropdown-item heading-h2">
+                    <span className="heading-preview-h2">H2</span> Section
+                  </button>
+                  <button type="button" onClick={() => formatHeading(3)} className="dropdown-item heading-h3">
+                    <span className="heading-preview-h3">H3</span> Subsection
+                  </button>
+                </div>
+              )}
+            </div>
+            <div className="toolbar-divider"></div>
+            <button type="button" onClick={formatBulletList} className="toolbar-btn" title="Bullet List (select lines first)">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 <circle cx="4" cy="6" r="2"/>
                 <circle cx="4" cy="12" r="2"/>
@@ -465,7 +566,7 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
                 <rect x="9" y="17" width="12" height="2"/>
               </svg>
             </button>
-            <button type="button" onClick={formatNumberedList} className="toolbar-btn" title="Numbered List">
+            <button type="button" onClick={formatNumberedList} className="toolbar-btn" title="Numbered List (select lines first)">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 <text x="1" y="8" fontSize="8" fontWeight="bold">1.</text>
                 <text x="1" y="14" fontSize="8" fontWeight="bold">2.</text>
@@ -481,11 +582,7 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
                 <path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/>
               </svg>
             </button>
-            <button type="button" onClick={formatHeading} className="toolbar-btn" title="Heading">
-              <strong>H</strong>
-            </button>
-            <div className="toolbar-divider"></div>
-            <button type="button" onClick={formatLink} className="toolbar-btn" title="Insert Link">
+            <button type="button" onClick={openLinkModal} className="toolbar-btn" title="Insert Link">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
                 <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
@@ -498,6 +595,43 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
                 <polyline points="21 15 16 10 5 21"/>
               </svg>
             </button>
+          </div>
+        )}
+
+        {/* Link Modal */}
+        {showLinkModal && (
+          <div className="link-modal-overlay" onClick={() => setShowLinkModal(false)}>
+            <div className="link-modal" onClick={(e) => e.stopPropagation()}>
+              <h3>Insert Link</h3>
+              <div className="link-modal-field">
+                <label>Link Text</label>
+                <input
+                  type="text"
+                  value={linkText}
+                  onChange={(e) => setLinkText(e.target.value)}
+                  placeholder="Text to display"
+                  autoFocus
+                />
+              </div>
+              <div className="link-modal-field">
+                <label>URL</label>
+                <input
+                  type="text"
+                  value={linkUrl}
+                  onChange={(e) => setLinkUrl(e.target.value)}
+                  placeholder="https://example.com or /contact"
+                />
+                <span className="link-hint">Use /page for internal links, https:// for external</span>
+              </div>
+              <div className="link-modal-actions">
+                <button type="button" onClick={() => setShowLinkModal(false)} className="link-cancel-btn">
+                  Cancel
+                </button>
+                <button type="button" onClick={insertLink} className="link-insert-btn">
+                  Insert Link
+                </button>
+              </div>
+            </div>
           </div>
         )}
 
@@ -695,16 +829,17 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
             />
           </div>
 
-          {/* Content Area */}
+          {/* Content Area - Visual WYSIWYG Editor */}
           {formData.contentType === 'manual' && (
             <div className="content-area">
-              <textarea
-                ref={textareaRef}
-                className="content-input"
-                placeholder="Write here or paste content from Word..."
-                value={formData.manualContent}
-                onChange={(e) => setFormData(prev => ({ ...prev, manualContent: e.target.value }))}
-                onPaste={handlePaste}
+              <div
+                ref={editorRef}
+                className="content-input visual-editor"
+                contentEditable
+                onInput={handleEditorInput}
+                onPaste={handleEditorPaste}
+                data-placeholder="Write here or paste content from Word..."
+                suppressContentEditableWarning
               />
 
               <input

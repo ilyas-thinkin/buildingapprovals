@@ -94,12 +94,18 @@ function generateBlogComponent(title: string, content: string): string {
   };
 
   const escapeHtml = (text: string): string => {
-    return text
+    // First convert markdown links to HTML anchors with placeholder
+    let result = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '%%LINK_START%%$2%%LINK_MID%%$1%%LINK_END%%');
+    // Escape HTML entities
+    result = result
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#039;');
+    // Restore links with proper HTML
+    result = result.replace(/%%LINK_START%%([^%]+)%%LINK_MID%%([^%]+)%%LINK_END%%/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$2</a>');
+    return result;
   };
 
   const isHeading = (line: string): boolean => {
