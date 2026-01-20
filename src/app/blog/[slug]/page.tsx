@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import { blogPosts } from '../blogData';
 import './blog-post.css';
 import DubaiMunicipalityServicesCategoriesContent from './content/dubai-municipality-services-categories';
+import CompleteGuideToApprovalsComplianceInDubai2026Content from './content/complete-guide-to-approvals-compliance-in-dubai-2026';
 
 // Dynamic imports with error handling - prevents build failures if content file is missing
 const DubaiMunicipalityApprovalContent = dynamic(() => import('./content/dubai-municipality-approval-process-2026').catch(() => () => null), { ssr: true });
@@ -136,6 +137,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       return <Ten_CommonFitOutApprovalMistakesThatDelayProjectsInDubai2026Content />;
     }        if (post.slug === 'dubai-municipality-services-categories') {
       return <DubaiMunicipalityServicesCategoriesContent />;
+    }
+
+        if (post.slug === 'complete-guide-to-approvals-compliance-in-dubai-2026') {
+      return <CompleteGuideToApprovalsComplianceInDubai2026Content />;
     }
 
     return null;
