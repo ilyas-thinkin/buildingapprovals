@@ -109,6 +109,14 @@ function generateBlogComponent(blogContent: string, imageUrls: { [key: number]: 
   // Clean text - remove markdown bold/italic markers and convert to HTML
   const cleanText = (text: string): string => {
     let cleaned = text;
+
+    // First, escape standalone > and < characters that aren't part of HTML/markdown
+    // Escape > at start of line (blockquote markers) for JSX
+    cleaned = cleaned.replace(/^>\s*/g, '&gt; ');
+    // Escape standalone < and > that aren't part of tags
+    cleaned = cleaned.replace(/(?<!<[a-zA-Z\/]*)>(?![a-zA-Z]*>)/g, '&gt;');
+    cleaned = cleaned.replace(/<(?![a-zA-Z\/])/g, '&lt;');
+
     // Convert **text** to <strong>text</strong>
     cleaned = cleaned.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
     // Convert *text* to <em>text</em> (but not bullet points)

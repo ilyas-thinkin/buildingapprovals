@@ -150,27 +150,86 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
     if (htmlContent && htmlContent.length > 0) {
       e.preventDefault();
 
-      // Clean the HTML from Word
+      // Work with the original HTML to detect Word formatting before cleaning
       let cleanHtml = htmlContent;
 
-      // Remove Word-specific stuff
-      cleanHtml = cleanHtml.replace(/<o:p>[\s\S]*?<\/o:p>/gi, '');
+      // First, detect and convert Word headings (before removing styles)
+      // Word uses mso-style-name or specific outline levels for headings
+      // Pattern: <p class=MsoTitle...> or <p style="...mso-outline-level:1...">
+      cleanHtml = cleanHtml.replace(/<p[^>]*class="?MsoTitle"?[^>]*>([\s\S]*?)<\/p>/gi, '<h1>$1</h1>');
+      cleanHtml = cleanHtml.replace(/<p[^>]*mso-outline-level:\s*1[^>]*>([\s\S]*?)<\/p>/gi, '<h1>$1</h1>');
+      cleanHtml = cleanHtml.replace(/<p[^>]*class="?MsoHeading1"?[^>]*>([\s\S]*?)<\/p>/gi, '<h1>$1</h1>');
+      cleanHtml = cleanHtml.replace(/<p[^>]*class="?MsoHeading2"?[^>]*>([\s\S]*?)<\/p>/gi, '<h2>$1</h2>');
+      cleanHtml = cleanHtml.replace(/<p[^>]*class="?MsoHeading3"?[^>]*>([\s\S]*?)<\/p>/gi, '<h3>$1</h3>');
+      cleanHtml = cleanHtml.replace(/<p[^>]*mso-outline-level:\s*2[^>]*>([\s\S]*?)<\/p>/gi, '<h2>$1</h2>');
+      cleanHtml = cleanHtml.replace(/<p[^>]*mso-outline-level:\s*3[^>]*>([\s\S]*?)<\/p>/gi, '<h3>$1</h3>');
+
+      // Convert Word numbered headings like "1. Building & Construction Services" to h2
+      // These are typically bold paragraphs starting with a number
+      cleanHtml = cleanHtml.replace(/<p[^>]*>(\s*<[^>]*>)*\s*(\d+\.)\s*(<b>|<strong>)([\s\S]*?)(<\/b>|<\/strong>)([\s\S]*?)<\/p>/gi,
+        (match, prefix, num, boldOpen, content, boldClose, suffix) => {
+          const text = `${num} ${content}${suffix}`.replace(/<[^>]+>/g, '').trim();
+          return `<h2>${text}</h2>`;
+        });
+
+      // Remove Word-specific namespaced tags and content
+      cleanHtml = cleanHtml.replace(/<o:p[^>]*>[\s\S]*?<\/o:p>/gi, '');
+      cleanHtml = cleanHtml.replace(/<w:[^>]*>[\s\S]*?<\/w:[^>]*>/gi, '');
+      cleanHtml = cleanHtml.replace(/<m:[^>]*>[\s\S]*?<\/m:[^>]*>/gi, '');
       cleanHtml = cleanHtml.replace(/<!--[\s\S]*?-->/g, '');
       cleanHtml = cleanHtml.replace(/<style[\s\S]*?<\/style>/gi, '');
-      cleanHtml = cleanHtml.replace(/class="[^"]*"/gi, '');
-      cleanHtml = cleanHtml.replace(/style="[^"]*"/gi, '');
+      cleanHtml = cleanHtml.replace(/<xml[\s\S]*?<\/xml>/gi, '');
+      cleanHtml = cleanHtml.replace(/<!\[if[^>]*>[\s\S]*?<!\[endif\]>/gi, '');
 
-      // Keep structural tags but clean attributes
-      cleanHtml = cleanHtml.replace(/<(h[1-6]|p|ul|ol|li|strong|b|em|i|a)[^>]*>/gi, '<$1>');
+      // Handle Word lists: detect mso-list paragraphs and convert to proper lists
+      // Word uses <p class=MsoListParagraph style="mso-list:l0 level1...">
+      // First, mark list items by converting them
+      cleanHtml = cleanHtml.replace(/<p[^>]*mso-list[^>]*>([\s\S]*?)<\/p>/gi, '<li>$1</li>');
+      cleanHtml = cleanHtml.replace(/<p[^>]*class="?MsoListParagraph"?[^>]*>([\s\S]*?)<\/p>/gi, '<li>$1</li>');
+
+      // Wrap consecutive <li> elements in <ul>
+      cleanHtml = cleanHtml.replace(/(<li>[\s\S]*?<\/li>)(\s*<li>)/gi, '$1$2');
+      cleanHtml = cleanHtml.replace(/(<li>[\s\S]*?<\/li>)+/gi, (match) => `<ul>${match}</ul>`);
+
+      // Remove class and style attributes but keep the tags
+      cleanHtml = cleanHtml.replace(/\s+class="[^"]*"/gi, '');
+      cleanHtml = cleanHtml.replace(/\s+style="[^"]*"/gi, '');
+      cleanHtml = cleanHtml.replace(/\s+lang="[^"]*"/gi, '');
+      cleanHtml = cleanHtml.replace(/\s+align="[^"]*"/gi, '');
+
+      // Clean up empty paragraphs and spans
+      cleanHtml = cleanHtml.replace(/<p[^>]*>\s*<\/p>/gi, '');
+      cleanHtml = cleanHtml.replace(/<span[^>]*>\s*<\/span>/gi, '');
+      cleanHtml = cleanHtml.replace(/<span[^>]*>/gi, '');
+      cleanHtml = cleanHtml.replace(/<\/span>/gi, '');
 
       // Convert b to strong, i to em for consistency
-      cleanHtml = cleanHtml.replace(/<b>/gi, '<strong>');
+      cleanHtml = cleanHtml.replace(/<b[^>]*>/gi, '<strong>');
       cleanHtml = cleanHtml.replace(/<\/b>/gi, '</strong>');
-      cleanHtml = cleanHtml.replace(/<i>/gi, '<em>');
+      cleanHtml = cleanHtml.replace(/<i[^>]*>/gi, '<em>');
       cleanHtml = cleanHtml.replace(/<\/i>/gi, '</em>');
 
       // Remove inline images (base64 data URLs are too large)
       cleanHtml = cleanHtml.replace(/<img[^>]*>/gi, '');
+
+      // Clean up remaining attributes from structural tags
+      cleanHtml = cleanHtml.replace(/<(p|h[1-6]|ul|ol|li|strong|em|a|div|br)[^>]*>/gi, '<$1>');
+
+      // Clean list item markers that Word leaves (like "·" or numbered prefixes)
+      cleanHtml = cleanHtml.replace(/<li>\s*[·•]\s*/gi, '<li>');
+      cleanHtml = cleanHtml.replace(/<li>\s*\d+\.\s*/gi, '<li>');
+
+      // Remove &nbsp; sequences (Word loves these)
+      cleanHtml = cleanHtml.replace(/(&nbsp;)+/g, ' ');
+
+      // Clean up multiple spaces
+      cleanHtml = cleanHtml.replace(/\s+/g, ' ');
+
+      // Clean up empty tags
+      cleanHtml = cleanHtml.replace(/<(\w+)>\s*<\/\1>/gi, '');
+
+      // Fix nested ul tags (from our wrapping above)
+      cleanHtml = cleanHtml.replace(/<\/ul>\s*<ul>/gi, '');
 
       // Insert at cursor position
       document.execCommand('insertHTML', false, cleanHtml);

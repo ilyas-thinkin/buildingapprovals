@@ -133,7 +133,7 @@ export default function BlogContent() {
         <li>Approval issuance and permit release</li>
       </ul>
 
-      <p>> Approval timelines vary depending on the Dubai Municipality services category and project complexity.</p>
+      <p>&gt; Approval timelines vary depending on the Dubai Municipality services category and project complexity.</p>
 
       <p>Best Practices for Faster Approvals in Dubai</p>
 
