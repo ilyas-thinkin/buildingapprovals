@@ -300,10 +300,19 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
     let html = editor.innerHTML;
 
     // Convert HTML to markdown-like format for the API
-    // H1, H2, H3 -> ## format
-    html = html.replace(/<h1[^>]*>(.*?)<\/h1>/gi, '\n# $1\n');
-    html = html.replace(/<h2[^>]*>(.*?)<\/h2>/gi, '\n## $1\n');
-    html = html.replace(/<h3[^>]*>(.*?)<\/h3>/gi, '\n### $1\n');
+    // H1, H2, H3 -> ## format (only if they have content)
+    html = html.replace(/<h1[^>]*>(.*?)<\/h1>/gi, (_, content) => {
+      const text = content.replace(/<[^>]+>/g, '').trim();
+      return text ? `\n## ${text}\n` : '';
+    });
+    html = html.replace(/<h2[^>]*>(.*?)<\/h2>/gi, (_, content) => {
+      const text = content.replace(/<[^>]+>/g, '').trim();
+      return text ? `\n## ${text}\n` : '';
+    });
+    html = html.replace(/<h3[^>]*>(.*?)<\/h3>/gi, (_, content) => {
+      const text = content.replace(/<[^>]+>/g, '').trim();
+      return text ? `\n### ${text}\n` : '';
+    });
 
     // Bold and italic
     html = html.replace(/<strong[^>]*>(.*?)<\/strong>/gi, '**$1**');
@@ -314,13 +323,21 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
     // Links
     html = html.replace(/<a[^>]*href=["']([^"']+)["'][^>]*>(.*?)<\/a>/gi, '[$2]($1)');
 
-    // Lists
-    html = html.replace(/<ul[^>]*>([\s\S]*?)<\/ul>/gi, (_, content) => {
-      return content.replace(/<li[^>]*>(.*?)<\/li>/gi, '- $1\n');
+    // Lists - preserve structure properly
+    html = html.replace(/<ul[^>]*>([\s\S]*?)<\/ul>/gi, (_match: string, content: string) => {
+      const items = content.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, (_m: string, item: string) => {
+        const cleanItem = item.replace(/<[^>]+>/g, '').trim();
+        return cleanItem ? `- ${cleanItem}\n` : '';
+      });
+      return `\n${items}`;
     });
-    html = html.replace(/<ol[^>]*>([\s\S]*?)<\/ol>/gi, (_, content) => {
+    html = html.replace(/<ol[^>]*>([\s\S]*?)<\/ol>/gi, (_match: string, content: string) => {
       let i = 0;
-      return content.replace(/<li[^>]*>(.*?)<\/li>/gi, () => `${++i}. $1\n`);
+      const items = content.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, (_m: string, item: string) => {
+        const cleanItem = item.replace(/<[^>]+>/g, '').trim();
+        return cleanItem ? `${++i}. ${cleanItem}\n` : '';
+      });
+      return `\n${items}`;
     });
 
     // Blockquote
@@ -342,6 +359,9 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
     html = html.replace(/&lt;/g, '<');
     html = html.replace(/&gt;/g, '>');
     html = html.replace(/&quot;/g, '"');
+
+    // Remove empty heading markers (### or ## with nothing after)
+    html = html.replace(/^#{2,6}\s*$/gm, '');
 
     // Clean up whitespace
     html = html.replace(/\n{3,}/g, '\n\n');

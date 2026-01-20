@@ -134,6 +134,9 @@ function generateBlogComponent(blogContent: string, imageUrls: { [key: number]: 
   };
 
   const isBulletPoint = (line: string): string | null => {
+    // Don't treat numbered questions (ending with ?) as bullet points - they're FAQ headings
+    if (/^\d+\.\s+.+\?$/.test(line)) return null;
+
     const bulletPatterns = [
       /^[•●○◦▪▫■□✓✔→➔➤➢⇒]\s*(.+)$/,
       /^[-–—]\s+(.+)$/,
@@ -149,9 +152,20 @@ function generateBlogComponent(blogContent: string, imageUrls: { [key: number]: 
   };
 
   const isHeading = (line: string): { level: number; text: string } | null => {
-    // Markdown headings
-    if (line.startsWith('## ')) return { level: 2, text: cleanText(line.substring(3)) };
+    // Skip empty heading markers (just ### or ## with no text)
+    if (/^#{2,6}\s*$/.test(line)) return null;
+
+    // Markdown headings (with or without space after #)
     if (line.startsWith('### ')) return { level: 3, text: cleanText(line.substring(4)) };
+    if (line.startsWith('###') && line.length > 3) return { level: 3, text: cleanText(line.substring(3).trim()) };
+    if (line.startsWith('## ')) return { level: 2, text: cleanText(line.substring(3)) };
+    if (line.startsWith('##') && line.length > 2 && !line.startsWith('###')) return { level: 2, text: cleanText(line.substring(2).trim()) };
+
+    // Numbered FAQ questions (e.g., "1. How many categories are there?")
+    const faqMatch = line.match(/^\d+\.\s+(.+\?)$/);
+    if (faqMatch) {
+      return { level: 3, text: cleanText(faqMatch[1]) };
+    }
 
     // Bold text that looks like a heading (short, no period at end)
     const boldHeading = line.match(/^\*\*([^*]+)\*\*$/);
