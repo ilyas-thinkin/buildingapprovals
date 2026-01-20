@@ -1,35 +1,4 @@
-export interface BlogPost {
-  id: string;
-  title: string;
-  excerpt: string;
-  date: string;
-  author: string;
-  category: string;
-  image: string;
-  coverImage?: string;
-  slug: string;
-  metaTitle?: string;
-  metaDescription?: string;
-  keywords?: string[];
-  ogImage?: string;
-}
-
-export const blogPosts: BlogPost[] = [
-  {
-    id: '1768907592777',
-    title: 'Complete Guide to Approvals & Compliance in Dubai - 2026',
-    slug: 'complete-guide-to-approvals-compliance-in-dubai-2026',
-    category: 'Dubai Municipality Services Categories',
-    author: 'Building Approvals Dubai',
-    date: '2026-01-20',
-    excerpt: 'This comprehensive guide to Dubai Municipality Services Categories explains the approval framework in a clear, structured, and practical way. It is designed to help business owners, homeowners, consultants, and developers understand which approvals apply to their projects, how the local process works, and how to avoid costly delays in Dubai.',
-    image: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-services-ca-list-1768907586041.jpg',
-    coverImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-services-ca-cover-1768907586041.jpg',
-    metaTitle: 'Complete Guide to Approvals & Compliance in Dubai - 2026 | Building Approvals Dubai',
-    metaDescription: 'This comprehensive guide to Dubai Municipality Services Categories explains the approval framework in a clear, structured, and practical way. It is designed to help business owners, homeowners, consultants, and developers understand which approvals apply to their projects, how the local process works, and how to avoid costly delays in Dubai.',
-    keywords: ['Complete', 'Guide', 'Approvals', 'Compliance', 'Dubai', '2026'],
-    ogImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-services-ca-cover-1768907586041.jpg',
-  },
+export interface BlogPost
 
   {
     id: '1768906027058',
@@ -63,8 +32,6 @@ export const blogPosts: BlogPost[] = [
     ogImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-cover-1768903096521.jpg',
   },
 
-
-
   {
     id: '1768552874848',
     title: '10 Common Fit-Out Approval Mistakes That Delay Projects in Dubai - 2026',
@@ -80,8 +47,6 @@ export const blogPosts: BlogPost[] = [
     keywords: ['Common', 'Fit-Out', 'Approval', 'Mistakes', 'That', 'Delay', 'Projects', 'Dubai', '2026'],
     ogImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-fit-out-approval-cover-1768552866539.png',
   },
-
-
 
   {
     id: '1768411786959',
@@ -114,7 +79,6 @@ export const blogPosts: BlogPost[] = [
     keywords: ['Secure', 'Nakheel', 'Dubai', '2026'],
     ogImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-nakheel-cover-1768410376594.jpg',
   },
-
 
   {
     id: '1768287588802',
@@ -192,12 +156,5 @@ export const blogPosts: BlogPost[] = [
     keywords: ['Dubai Civil Defence approval', 'DCD approval Dubai', 'fire safety Dubai', 'building approvals Dubai', 'UAE Fire and Life Safety Code', 'DCD certification', 'fire protection systems Dubai'],
     ogImage: '/images/blog/building-approvals-dubai-civil-defence-approval-card.jpg',
   }
-
-
-
-
-
-
-
 
 ];
