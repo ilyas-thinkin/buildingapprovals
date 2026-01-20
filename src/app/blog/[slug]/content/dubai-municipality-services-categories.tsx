@@ -12,19 +12,11 @@ export default function BlogContent() {
 
       <p>This guide on <a href="https://hub.dm.gov.ae/link/service/" target="_blank" rel="noopener noreferrer">Dubai Municipality Services Categories</a> breaks everything down clearly and practically so business owners, homeowners, and developers know exactly which approvals apply, how the local approval process works, and how to avoid costly delays in Dubai.</p>
 
-      <p>What are the Dubai Municipality Services Categories?</p>
+      <p>What Are Dubai Municipality Services Categories?</p>
 
       <p><a href="https://hub.dm.gov.ae/link/service/" target="_blank" rel="noopener noreferrer">Dubai Municipality Services Categories</a> refer to the structured departments and approval streams managed by <a href="https://www.buildingapprovals.ae/services/dubai-municipality" target="_blank" rel="noopener noreferrer">Dubai Municipality</a>. Each category governs specific activities from building permits and planning to food safety, environmental health, and public safety.</p>
 
       <p>Choosing the right category is the foundation of a smooth approval journey under <a href="https://www.buildingapprovals.ae/services/dubai-municipality" target="_blank" rel="noopener noreferrer">Dubai Municipality Approvals.</a></p>
-
-      <div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
-        <img
-          src="https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-content-1768903096521.jpeg"
-          alt="Building Approvals Dubai - Dubai Municipality Services Categories & Approvals 2026"
-          style={{ width: '100%', height: 'auto', display: 'block' }}
-        />
-      </div>
 
       <p>Major Dubai Municipality Services Categories</p>
 
@@ -39,7 +31,7 @@ export default function BlogContent() {
         <li>Completion certificates</li>
       </ul>
 
-      <p><strong>Best practice:</strong> Ensure drawings meet UAE building codes before submission to reduce revisions.</p>
+      <p><strong>Best practice: </strong>Ensure drawings meet UAE building codes before submission to reduce revisions.</p>
 
       <ul>
         <li>Planning & Zoning Services</li>
@@ -69,7 +61,15 @@ export default function BlogContent() {
         <li>Villa interior renovations</li>
       </ul>
 
-      <p><strong>Common pitfall: </strong>Starting work before fit-out approval can lead to penalties and work stoppage.</p>
+      <p><strong>Common pitfall:</strong> Starting work before <a href="https://www.buildingapprovals.ae/blog/fit-out-approval-dubai-simple-practical-guide-2026" target="_blank" rel="noopener noreferrer">fit-out approval</a> can lead to penalties and work stoppage.</p>
+
+      <div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
+        <img
+          src="https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-content-1768906020276.jpeg"
+          alt="Building Approvals Dubai - Dubai Municipality Services Categories & Approvals 2026"
+          style={{ width: '100%', height: 'auto', display: 'block' }}
+        />
+      </div>
 
       <ul>
         <li>Food Safety & Public Health Services</li>
@@ -84,7 +84,7 @@ export default function BlogContent() {
         <li>Food Control Department inspections</li>
       </ul>
 
-      <p><strong>Industry insight:</strong> Layout approval is as important as trade licensing—both must align.</p>
+      <p><strong>Industry insight:</strong> Layout approval is as important as trade licensing; both must align.</p>
 
       <ul>
         <li>Environmental & Waste Management Services</li>
@@ -117,11 +117,11 @@ export default function BlogContent() {
         <h3>Key Takeaways</h3>
         <ul>
         <li></li>
+        <li>How Dubai Municipality Approvals Work (Local Process Overview)</li>
+        <li></li>
         <li></li>
         </ul>
       </div>
-
-      <h2>How Dubai Municipality Approvals Work (Local Process Overview)</h2>
 
       <h2>The local approval process in Dubai typically follows these steps:</h2>
 
@@ -149,7 +149,7 @@ export default function BlogContent() {
 
       <h2>1. How many Dubai Municipality service categories are there?</h2>
 
-      <p><a href="https://www.buildingapprovals.ae/services/dubai-municipality" target="_blank" rel="noopener noreferrer">Dubai Municipality</a> operates multiple service categories, covering construction, planning, health, safety, and the environment—each designed to meet specific approval needs.</p>
+      <p><a href="https://www.buildingapprovals.ae/services/dubai-municipality" target="_blank" rel="noopener noreferrer">Dubai Municipality</a> operates multiple service categories covering construction, planning, health, safety, and environment—each designed for specific approval needs.</p>
 
       <h2>2. Do small renovations require Dubai Municipality approval?</h2>
 
@@ -161,7 +161,7 @@ export default function BlogContent() {
 
       <h2>4. Can approvals be processed online?</h2>
 
-      <p>Yes. Dubai Municipality uses digital platforms for submissions, tracking, and approvals.</p>
+      <p>Yes. <a href="https://www.buildingapprovals.ae/services/dubai-municipality" target="_blank" rel="noopener noreferrer">Dubai Municipality</a> uses digital platforms for submissions, tracking, and approvals.</p>
 
       <h2>5. What causes delays in approvals?</h2>
 
@@ -172,7 +172,7 @@ export default function BlogContent() {
         <ul>
         <li>Each project must align with the correct service category</li>
         <li>Early planning reduces approval delays</li>
-        <li>Compliance with <a href="https://www.buildingapprovals.ae/services/dubai-municipality" target="_blank" rel="noopener noreferrer">Dubai Municipality approvals</a> is mandatory</li>
+        <li>Compliance with Dubai Municipality approvals is mandatory</li>
         <li>Expert guidance improves approval success rates</li>
         <li>Local knowledge of Dubai regulations makes a big difference</li>
         <li></li>
