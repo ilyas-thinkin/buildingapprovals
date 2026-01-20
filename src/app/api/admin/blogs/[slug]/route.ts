@@ -54,10 +54,10 @@ export async function DELETE(
       return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
     }
 
-    // Remove the blog entry using regex
-    // Match the entire blog object including the trailing comma
+    // Remove ALL blog entries with matching slug (handles duplicates)
+    // Match the entire blog object including the trailing comma - handles multi-line objects
     const blogEntryRegex = new RegExp(
-      `\\s*\\{[^}]*slug:\\s*['"]${slug}['"][^}]*\\},?`,
+      `\\s*\\{[\\s\\S]*?slug:\\s*['"]${slug}['"][\\s\\S]*?\\},?`,
       'g'
     );
     let newBlogDataContent = blogDataContent.replace(blogEntryRegex, '');
@@ -66,6 +66,8 @@ export async function DELETE(
     newBlogDataContent = newBlogDataContent.replace(/,(\s*,)+/g, ',');
     newBlogDataContent = newBlogDataContent.replace(/,(\s*)\]/g, '$1]');
     newBlogDataContent = newBlogDataContent.replace(/\[\s*,/g, '[');
+    // Clean up excessive blank lines
+    newBlogDataContent = newBlogDataContent.replace(/\n{3,}/g, '\n\n');
 
     // Update blogData.ts via GitHub API
     await octokit.rest.repos.createOrUpdateFileContents({
@@ -136,23 +138,53 @@ export async function DELETE(
           }
         }
 
-        // Remove dynamic import statement (new format)
-        const dynamicImportRegex = new RegExp(
-          `const ${componentName}Content = dynamic\\(\\(\\) => import\\(['"]\\.\\/content\\/${slug}['"]\\)\\.catch\\(\\(\\) => \\(\\) => null\\), \\{ ssr: true \\}\\);?\\n?`,
+        // Remove dynamic import statement (multiple formats)
+        // Format 1: const XContent = dynamic(() => import('./content/x').catch(() => () => null), { ssr: true });
+        const dynamicImportRegex1 = new RegExp(
+          `const\\s+${componentName}Content\\s*=\\s*dynamic\\([^;]+\\);?\\s*\\n?`,
           'g'
         );
-        pageContent = pageContent.replace(dynamicImportRegex, '');
+        pageContent = pageContent.replace(dynamicImportRegex1, '');
+
+        // Format 2: More relaxed dynamic import pattern
+        const dynamicImportRegex2 = new RegExp(
+          `const\\s+\\w*${slug.replace(/-/g, '')}\\w*Content\\s*=\\s*dynamic\\([^;]+['"]${slug}['"][^;]*\\);?\\s*\\n?`,
+          'gi'
+        );
+        pageContent = pageContent.replace(dynamicImportRegex2, '');
 
         // Remove static import statement (old format)
-        const staticImportRegex = new RegExp(`import ${componentName}Content from ['"]\\.\\/content\\/${slug}['"];?\\n?`, 'g');
-        pageContent = pageContent.replace(staticImportRegex, '');
-
-        // Remove the if statement from renderContent
-        const caseRegex = new RegExp(
-          `\\s*if \\(post\\.slug === ['"]${slug}['"]\\) \\{[\\s\\S]*?return <${componentName}Content \\/>;\n?\\s*\\}\\n?`,
+        // Format: import XContent from './content/x';
+        const staticImportRegex = new RegExp(
+          `import\\s+${componentName}Content\\s+from\\s+['"]\\.\\/content\\/${slug}['"];?\\s*\\n?`,
           'g'
         );
-        pageContent = pageContent.replace(caseRegex, '');
+        pageContent = pageContent.replace(staticImportRegex, '');
+
+        // Also try with any component name that imports from this slug
+        const anyStaticImportRegex = new RegExp(
+          `import\\s+\\w+Content\\s+from\\s+['"]\\.\\/content\\/${slug}['"];?\\s*\\n?`,
+          'g'
+        );
+        pageContent = pageContent.replace(anyStaticImportRegex, '');
+
+        // Remove the if statement from renderContent (multiple formats)
+        // Format 1: if (post.slug === 'x') { return <XContent />; }
+        const caseRegex1 = new RegExp(
+          `\\s*if\\s*\\(post\\.slug\\s*===\\s*['"]${slug}['"]\\)\\s*\\{[\\s\\S]*?return\\s*<\\w+Content\\s*\\/>;?\\s*\\}\\s*\\n?`,
+          'g'
+        );
+        pageContent = pageContent.replace(caseRegex1, '');
+
+        // Format 2: More compact version without newlines
+        const caseRegex2 = new RegExp(
+          `if\\s*\\(post\\.slug\\s*===\\s*['"]${slug}['"]\\)\\s*\\{\\s*return\\s*<\\w+Content\\s*\\/>;?\\s*\\}`,
+          'g'
+        );
+        pageContent = pageContent.replace(caseRegex2, '');
+
+        // Clean up any double newlines that may have been left
+        pageContent = pageContent.replace(/\n{3,}/g, '\n\n');
 
         // Update page.tsx via GitHub API
         await octokit.rest.repos.createOrUpdateFileContents({
