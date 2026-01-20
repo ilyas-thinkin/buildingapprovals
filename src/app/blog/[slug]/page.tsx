@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { blogPosts } from '../blogData';
 import './blog-post.css';
-import DubaiMunicipalityServicesCategories2026Content from './content/dubai-municipality-services-categories-2026';
 
 // Dynamic imports with error handling - prevents build failures if content file is missing
 const DubaiMunicipalityApprovalContent = dynamic(() => import('./content/dubai-municipality-approval-process-2026').catch(() => () => null), { ssr: true });
@@ -134,11 +133,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     }
     if (post.slug === '10-common-fit-out-approval-mistakes-that-delay-projects-in-dubai-2026') {
       return <Ten_CommonFitOutApprovalMistakesThatDelayProjectsInDubai2026Content />;
-    }
-        if (post.slug === 'dubai-municipality-services-categories-2026') {
-      return <DubaiMunicipalityServicesCategories2026Content />;
-    }
-    return null;
+    }    return null;
   };
 
   // Generate JSON-LD structured data for SEO
