@@ -15,6 +15,22 @@ export interface BlogPost {
 }
 
 export const blogPosts: BlogPost[] = [
+  {
+    id: '1768903103411',
+    title: 'Dubai Municipality Services Categories & Approvals 2026',
+    slug: 'dubai-municipality-services-categories',
+    category: 'Dubai Municipality',
+    author: 'Building Approvals Dubai',
+    date: '2026-01-20',
+    excerpt: 'Explore all Dubai Municipality services categories, approvals, and processes in Dubai. A clear guide for owners, developers & businesses.',
+    image: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-list-1768903096521.jpg',
+    coverImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-cover-1768903096521.jpg',
+    metaTitle: 'Dubai Municipality Services Categories & Approvals 2026 | Building Approvals Dubai',
+    metaDescription: 'Explore all Dubai Municipality services categories, approvals, and processes in Dubai. A clear guide for owners, developers & businesses.',
+    keywords: ['Dubai', 'Municipality', 'Services', 'Categories', 'Approvals', '2026'],
+    ogImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-cover-1768903096521.jpg',
+  },
+
 
 
   {
