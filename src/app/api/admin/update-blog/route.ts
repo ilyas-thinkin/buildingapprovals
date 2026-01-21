@@ -1,290 +1,208 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import path from 'path';
+import { put } from '@vercel/blob';
+import { Octokit } from 'octokit';
 
-async function extractPdfText(contentBuffer: Buffer): Promise<string> {
-  const pdfParseModule: any = await import('pdf-parse');
-  const PDFParseClass = pdfParseModule?.PDFParse ?? pdfParseModule?.default?.PDFParse;
+// Escape text for safe JSX rendering
+function escapeForJSX(text: string): string {
+  let escaped = text;
 
-  if (typeof PDFParseClass === 'function') {
-    const parser = new PDFParseClass({ data: contentBuffer });
-    try {
-      const textResult = await parser.getText();
-      return textResult?.text ?? '';
-    } finally {
-      if (typeof parser.destroy === 'function') {
-        await parser.destroy();
-      }
-    }
-  }
+  // Escape curly braces
+  escaped = escaped.replace(/\{/g, '&#123;');
+  escaped = escaped.replace(/\}/g, '&#125;');
 
-  const pdfParseFn =
-    (typeof pdfParseModule === 'function' && pdfParseModule) ||
-    (typeof pdfParseModule?.default === 'function' && pdfParseModule.default) ||
-    (typeof pdfParseModule?.default?.default === 'function' && pdfParseModule.default.default) ||
-    null;
-
-  if (!pdfParseFn) {
-    throw new Error('Could not load PDF parser function');
-  }
-
-  const pdfData = await pdfParseFn(contentBuffer);
-  return pdfData?.text ?? '';
-}
-
-async function extractDocxText(contentBuffer: Buffer): Promise<string> {
-  const mammothModule: any = await import('mammoth');
-  const mammoth = mammothModule?.default ?? mammothModule;
-
-  if (typeof mammoth?.convertToHtml !== 'function') {
-    throw new Error('Could not load DOCX parser function');
-  }
-
-  // Convert DOCX to HTML to preserve formatting and structure
-  const result = await mammoth.convertToHtml(
-    { buffer: contentBuffer },
-    {
-      convertImage: mammoth.images.imgElement((image: any) => {
-        return image.read('base64').then((imageBuffer: string) => {
-          return {
-            src: `data:${image.contentType};base64,${imageBuffer}`
-          };
-        });
-      })
+  // Protect valid HTML tags
+  const tagPlaceholders: string[] = [];
+  escaped = escaped.replace(/<(\/?)([a-zA-Z][a-zA-Z0-9]*)((?:\s+[a-zA-Z][a-zA-Z0-9-]*(?:=(?:"[^"]*"|'[^']*'|[^\s>]*))?)*\s*\/?)>/g,
+    (match) => {
+      const placeholder = `__TAG_PLACEHOLDER_${tagPlaceholders.length}__`;
+      tagPlaceholders.push(match);
+      return placeholder;
     }
   );
 
-  // Convert HTML back to plain text while preserving structure
-  let text = result.value;
+  // Escape remaining < and >
+  escaped = escaped.replace(/</g, '&lt;');
+  escaped = escaped.replace(/>/g, '&gt;');
 
-  // Convert HTML elements to text markers
-  text = text.replace(/<h1[^>]*>(.*?)<\/h1>/g, '\n$1\n');
-  text = text.replace(/<h2[^>]*>(.*?)<\/h2>/g, '\n$1\n');
-  text = text.replace(/<h3[^>]*>(.*?)<\/h3>/g, '\n$1:\n');
-  text = text.replace(/<strong[^>]*>(.*?)<\/strong>/g, '**$1**');
-  text = text.replace(/<b[^>]*>(.*?)<\/b>/g, '**$1**');
-  text = text.replace(/<li[^>]*>(.*?)<\/li>/g, '• $1\n');
-  text = text.replace(/<p[^>]*>(.*?)<\/p>/g, '$1\n\n');
-  text = text.replace(/<br\s*\/?>/g, '\n');
-  text = text.replace(/<img[^>]*>/g, ''); // Remove base64 images for now, they're too large
-  text = text.replace(/<[^>]+>/g, ''); // Remove any remaining HTML tags
+  // Restore valid tags
+  tagPlaceholders.forEach((tag, i) => {
+    escaped = escaped.replace(`__TAG_PLACEHOLDER_${i}__`, tag);
+  });
+
+  // Escape backticks
+  escaped = escaped.replace(/`/g, '&#96;');
+
+  // Escape template expressions
+  escaped = escaped.replace(/\$\{/g, '&#36;{');
+  escaped = escaped.replace(/\$&#123;/g, '&#36;&#123;');
+
+  // Escape backslashes
+  escaped = escaped.replace(/\\(?![nrt"'\\])/g, '&#92;');
+
+  return escaped;
+}
+
+// Clean inline HTML - remove tags but preserve text
+function cleanInlineHTML(html: string): string {
+  let text = html;
   text = text.replace(/&nbsp;/g, ' ');
   text = text.replace(/&amp;/g, '&');
   text = text.replace(/&lt;/g, '<');
   text = text.replace(/&gt;/g, '>');
-
-  return text.trim();
+  text = text.replace(/&quot;/g, '"');
+  text = text.replace(/&#39;/g, "'");
+  text = text.replace(/&#x27;/g, "'");
+  text = text.replace(/&#(\d+);/g, (_, code) => String.fromCharCode(parseInt(code, 10)));
+  text = text.replace(/<[^>]+>/g, '');
+  text = text.replace(/\s+/g, ' ').trim();
+  return text;
 }
 
-function generateBlogComponent(title: string, content: string): string {
-  // Enhanced PDF content parsing to preserve structure
-  const lines = content.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+// Process inline formatting
+function processInlineFormatting(text: string): string {
+  let processed = text;
+  processed = processed.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  processed = processed.replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em>$1</em>');
+  processed = processed.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+  return processed;
+}
+
+// Generate blog component from HTML content
+function generateBlogComponentFromHTML(htmlContent: string, imageUrls: { [key: number]: string }, title: string): string {
   const elements: string[] = [];
-  let currentList: string[] = [];
-  let listType: 'ul' | 'ol' | null = null;
+  let html = htmlContent;
 
-  const flushList = () => {
-    if (currentList.length > 0 && listType) {
-      const listTag = listType === 'ul' ? 'ul' : 'ol';
-      const listItems = currentList.map(item => `        <li>${escapeHtml(item)}</li>`).join('\n');
-      elements.push(`      <${listTag}>\n${listItems}\n      </${listTag}>`);
-      currentList = [];
-      listType = null;
-    }
-  };
-
-  const escapeHtml = (text: string): string => {
-    // First convert markdown links to HTML anchors with placeholder
-    let result = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '%%LINK_START%%$2%%LINK_MID%%$1%%LINK_END%%');
-    // Escape HTML entities
-    result = result
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
-    // Restore links with proper HTML
-    result = result.replace(/%%LINK_START%%([^%]+)%%LINK_MID%%([^%]+)%%LINK_END%%/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$2</a>');
-    return result;
-  };
-
-  const isHeading = (line: string): boolean => {
-    // Detect headings by common patterns
-    if (line.length < 10) return false;
-
-    // Major section headings
-    if (line.match(/^(Overview|Introduction|What is|How to|Step-by-Step|Key Requirements|Process|Conclusion|Important|Categories|Types|Requirements for)/i)) {
-      return true;
-    }
-
-    // Lines ending with colon (subsection headers)
-    if (line.endsWith(':') && line.length < 80) {
-      return true;
-    }
-
-    // Short lines without much punctuation (likely headers)
-    if (line.length < 100 && !line.includes('.') && !line.includes(',')) {
-      return true;
-    }
-
-    // Numbered steps
-    if (line.match(/^(Step \d+|Phase \d+|\d+\.|Category \d+)/i)) {
-      return true;
-    }
-
-    return false;
-  };
-
-  const isBulletPoint = (line: string): string | null => {
-    // Detect various bullet point formats
-    const bulletPatterns = [
-      /^[•●○◦▪▫■□✓✔→➔➤➢⇒]\s+(.+)$/,  // Unicode bullets
-      /^[-–—]\s+(.+)$/,  // Dashes
-      /^[*]\s+(.+)$/,  // Asterisk
-      /^[\d+]\)\s+(.+)$/,  // 1) 2) 3)
-      /^[\d+]\.\s+(.+)$/,  // 1. 2. 3.
-    ];
-
-    for (const pattern of bulletPatterns) {
-      const match = line.match(pattern);
-      if (match) {
-        return match[1] || match[0];
+  // Handle image placeholders
+  html = html.replace(/\[IMAGE:\s*img_\d+\]/g, (match) => {
+    const idMatch = match.match(/img_(\d+)/);
+    if (idMatch) {
+      const index = Object.keys(imageUrls).find(k => imageUrls[parseInt(k)]);
+      if (index !== undefined) {
+        return `__IMAGE_PLACEHOLDER_${index}__`;
       }
     }
+    return match;
+  });
+  html = html.replace(/\[IMAGE_(\d+)\]/g, '__IMAGE_PLACEHOLDER_$1__');
 
-    return null;
-  };
+  // Process the HTML content
+  const blockRegex = /<(h[1-6]|p|ul|ol|blockquote|div)[^>]*>[\s\S]*?<\/\1>|__IMAGE_PLACEHOLDER_\d+__|<br\s*\/?>/gi;
+  const blocks: string[] = [];
+  const regex = new RegExp(blockRegex.source, 'gi');
+  let lastIndex = 0;
+  let match;
 
-  const isBoldLabel = (line: string): boolean => {
-    // Detect bold labels like "Key Requirements:", "Notes:", "Applicable for:"
-    return line.match(/^[A-Z][a-zA-Z\s]+:$/) !== null;
-  };
-
-  const isKeyTakeaways = (line: string): boolean => {
-    return line.match(/^Key Takeaways?$/i) !== null;
-  };
-
-  let inKeyTakeaways = false;
-  const keyTakeawaysContent: string[] = [];
-
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-
-    // Check for Key Takeaways section
-    if (isKeyTakeaways(line)) {
-      flushList();
-      inKeyTakeaways = true;
-      continue;
-    }
-
-    // If we're in Key Takeaways section, collect content
-    if (inKeyTakeaways) {
-      // Check if we've hit another major heading (end of Key Takeaways)
-      if (isHeading(line) && !line.match(/^Pro Tip:/i)) {
-        // End Key Takeaways section
-        inKeyTakeaways = false;
-
-        // Add the Key Takeaways box
-        const takeawayItems = keyTakeawaysContent.map(item => `        <li>${item}</li>`).join('\n');
-        elements.push(`      <div className="key-takeaways-box">
-        <h3>Key Takeaways</h3>
-        <ul>
-${takeawayItems}
-        </ul>
-      </div>`);
-
-        // Clear the array
-        keyTakeawaysContent.length = 0;
-
-        // Process this line as a normal heading
-        const headingLevel = isBoldLabel(line) || line.endsWith(':') ? 'h3' : 'h2';
-        elements.push(`      <${headingLevel}>${escapeHtml(line)}</${headingLevel}>`);
-        continue;
-      }
-
-      // Add content to Key Takeaways
-      const bulletContent = isBulletPoint(line);
-      if (bulletContent) {
-        keyTakeawaysContent.push(escapeHtml(bulletContent));
-      } else if (line.length > 0) {
-        // Handle Pro Tip or other special content
-        let processedLine = line;
-        processedLine = processedLine.replace(/^(Pro Tip|Note|Important|Warning):\s*/gi, '<strong>$1:</strong> ');
-        processedLine = processedLine.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-        keyTakeawaysContent.push(processedLine);
-      }
-      continue;
-    }
-
-    // Check for bullet points
-    const bulletContent = isBulletPoint(line);
-    if (bulletContent) {
-      if (listType !== 'ul') {
-        flushList();
-        listType = 'ul';
-      }
-      currentList.push(bulletContent);
-      continue;
-    }
-
-    // Check for numbered lists
-    if (line.match(/^\d+\.\s+/)) {
-      const content = line.replace(/^\d+\.\s+/, '');
-      if (listType !== 'ol') {
-        flushList();
-        listType = 'ol';
-      }
-      currentList.push(content);
-      continue;
-    }
-
-    // If we're here, we're not in a list anymore
-    flushList();
-
-    // Check for headings
-    if (isHeading(line)) {
-      const headingLevel = isBoldLabel(line) || line.endsWith(':') ? 'h3' : 'h2';
-      elements.push(`      <${headingLevel}>${escapeHtml(line)}</${headingLevel}>`);
-      continue;
-    }
-
-    // Check for bold labels in middle of text
-    if (isBoldLabel(line)) {
-      elements.push(`      <p><strong>${escapeHtml(line)}</strong></p>`);
-      continue;
-    }
-
-    // Regular paragraph
-    if (line.length > 0) {
-      // Check if line contains inline bold patterns like "Note:", "Important:"
-      let processedLine = line;
-      processedLine = processedLine.replace(/^(Note|Important|Warning|Tip|Example):\s*/gi, '<strong>$1:</strong> ');
-      processedLine = processedLine.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-
-      elements.push(`      <p>${escapeHtml(processedLine)}</p>`);
-    }
+  while ((match = regex.exec(html)) !== null) {
+    const before = html.slice(lastIndex, match.index).trim();
+    if (before) blocks.push(before);
+    blocks.push(match[0]);
+    lastIndex = regex.lastIndex;
   }
 
-  // If Key Takeaways was the last section
-  if (keyTakeawaysContent.length > 0) {
-    const takeawayItems = keyTakeawaysContent.map(item => `        <li>${item}</li>`).join('\n');
-    elements.push(`      <div className="key-takeaways-box">
-        <h3>Key Takeaways</h3>
-        <ul>
-${takeawayItems}
-        </ul>
+  const remaining = html.slice(lastIndex).trim();
+  if (remaining) blocks.push(remaining);
+
+  for (const block of blocks) {
+    if (!block.trim()) continue;
+
+    const imageMatch = block.match(/__IMAGE_PLACEHOLDER_(\d+)__/);
+    if (imageMatch) {
+      const imageIndex = parseInt(imageMatch[1], 10);
+      const imageUrl = imageUrls[imageIndex];
+      if (imageUrl) {
+        elements.push(`      <div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
+        <img
+          src="${imageUrl}"
+          alt="Building Approvals Dubai - ${escapeForJSX(title)}"
+          style={{ width: '100%', height: 'auto', display: 'block' }}
+        />
       </div>`);
+      }
+      continue;
+    }
+
+    const h1Match = block.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
+    if (h1Match) {
+      const content = cleanInlineHTML(h1Match[1]);
+      if (content.trim()) elements.push(`      <h1>${escapeForJSX(content)}</h1>`);
+      continue;
+    }
+
+    const h2Match = block.match(/<h2[^>]*>([\s\S]*?)<\/h2>/i);
+    if (h2Match) {
+      const content = cleanInlineHTML(h2Match[1]);
+      if (content.trim()) elements.push(`      <h2>${escapeForJSX(content)}</h2>`);
+      continue;
+    }
+
+    const h3Match = block.match(/<h3[^>]*>([\s\S]*?)<\/h3>/i);
+    if (h3Match) {
+      const content = cleanInlineHTML(h3Match[1]);
+      if (content.trim()) elements.push(`      <h3>${escapeForJSX(content)}</h3>`);
+      continue;
+    }
+
+    const ulMatch = block.match(/<ul[^>]*>([\s\S]*?)<\/ul>/i);
+    if (ulMatch) {
+      const listContent = ulMatch[1];
+      const items: string[] = [];
+      const liRegex = /<li[^>]*>([\s\S]*?)<\/li>/gi;
+      let liMatch;
+      while ((liMatch = liRegex.exec(listContent)) !== null) {
+        const itemContent = cleanInlineHTML(liMatch[1]);
+        if (itemContent.trim()) {
+          items.push(`        <li>${processInlineFormatting(escapeForJSX(itemContent))}</li>`);
+        }
+      }
+      if (items.length > 0) elements.push(`      <ul>\n${items.join('\n')}\n      </ul>`);
+      continue;
+    }
+
+    const olMatch = block.match(/<ol[^>]*>([\s\S]*?)<\/ol>/i);
+    if (olMatch) {
+      const listContent = olMatch[1];
+      const items: string[] = [];
+      const liRegex = /<li[^>]*>([\s\S]*?)<\/li>/gi;
+      let liMatch;
+      while ((liMatch = liRegex.exec(listContent)) !== null) {
+        const itemContent = cleanInlineHTML(liMatch[1]);
+        if (itemContent.trim()) {
+          items.push(`        <li>${processInlineFormatting(escapeForJSX(itemContent))}</li>`);
+        }
+      }
+      if (items.length > 0) elements.push(`      <ol>\n${items.join('\n')}\n      </ol>`);
+      continue;
+    }
+
+    const blockquoteMatch = block.match(/<blockquote[^>]*>([\s\S]*?)<\/blockquote>/i);
+    if (blockquoteMatch) {
+      const content = cleanInlineHTML(blockquoteMatch[1]);
+      if (content.trim()) elements.push(`      <blockquote>${processInlineFormatting(escapeForJSX(content))}</blockquote>`);
+      continue;
+    }
+
+    const pMatch = block.match(/<p[^>]*>([\s\S]*?)<\/p>/i);
+    if (pMatch) {
+      const content = cleanInlineHTML(pMatch[1]);
+      if (content.trim()) elements.push(`      <p>${processInlineFormatting(escapeForJSX(content))}</p>`);
+      continue;
+    }
+
+    const divMatch = block.match(/<div[^>]*>([\s\S]*?)<\/div>/i);
+    if (divMatch) {
+      const content = cleanInlineHTML(divMatch[1]);
+      if (content.trim()) elements.push(`      <p>${processInlineFormatting(escapeForJSX(content))}</p>`);
+      continue;
+    }
+
+    const plainText = block.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, '').trim();
+    if (plainText) elements.push(`      <p>${processInlineFormatting(escapeForJSX(plainText))}</p>`);
   }
-
-  // Flush any remaining list
-  flushList();
-
-  const formattedContent = elements.join('\n\n');
 
   return `export default function BlogContent() {
   return (
     <div className="blog-content-wrapper">
-${formattedContent}
+${elements.join('\n\n')}
 
       <div className="cta-box">
         <h3>Need Help with Building Approvals?</h3>
@@ -314,157 +232,395 @@ export async function POST(request: NextRequest) {
     const excerpt = formData.get('excerpt') as string;
     const contentType = formData.get('contentType') as string;
     const manualContent = formData.get('manualContent') as string;
-    const contentFile = formData.get('contentFile') as File | null;
 
     const cardImage = formData.get('cardImage') as File | null;
     const coverImage = formData.get('coverImage') as File | null;
     const existingCardImage = formData.get('existingCardImage') as string;
     const existingCoverImage = formData.get('existingCoverImage') as string;
 
-    // Read current blogData.ts
-    const blogDataPath = path.join(process.cwd(), 'src/app/blog/blogData.ts');
-    let blogDataContent = await fs.readFile(blogDataPath, 'utf-8');
+    // Check for required environment variables
+    const githubToken = process.env.GITHUB_TOKEN;
+    const githubOwner = process.env.GITHUB_OWNER;
+    const githubRepo = process.env.GITHUB_REPO;
+    const githubBranch = process.env.GITHUB_BRANCH || 'master';
 
-    // Find and update the blog entry
-    const blogArrayMatch = blogDataContent.match(/export const blogPosts: BlogPost\[\] = \[([\s\S]*?)\];/);
-    if (!blogArrayMatch) {
-      return NextResponse.json({ error: 'Could not parse blog data' }, { status: 500 });
+    if (!githubToken || !githubOwner || !githubRepo) {
+      return NextResponse.json(
+        { error: 'GitHub API not configured' },
+        { status: 500 }
+      );
     }
 
-    // Parse individual blog objects - handle both with and without trailing commas
-    const blogsText = blogArrayMatch[1].trim();
+    const octokit = new Octokit({ auth: githubToken });
+    const owner = githubOwner;
+    const repo = githubRepo;
+    const branch = githubBranch;
 
-    // Split by object boundaries using a more flexible regex that handles multi-line objects
-    const blogMatches = blogsText.match(/\{[\s\S]*?slug:\s*'[^']*'[\s\S]*?\}/g);
-    if (!blogMatches || blogMatches.length === 0) {
-      return NextResponse.json({ error: 'Could not parse blog objects' }, { status: 500 });
+    // Handle images - upload new ones to Vercel Blob if provided
+    let cardImagePath = existingCardImage;
+    let coverImagePath = existingCoverImage;
+    const timestamp = Date.now();
+
+    const createCategorySlug = (text: string): string => {
+      return text
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/s$/, '')
+        .replace(/-+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .substring(0, 30);
+    };
+
+    const categorySlug = createCategorySlug(category || title.split(' ').slice(0, 3).join(' '));
+
+    if (cardImage && cardImage.size > 0) {
+      const cardImageExt = cardImage.name.split('.').pop();
+      const cardImageName = `building-approvals-dubai-${categorySlug}-list-${timestamp}.${cardImageExt}`;
+      const cardImageBuffer = Buffer.from(await cardImage.arrayBuffer());
+      const cardImageBlob = await put(`blog/${cardImageName}`, cardImageBuffer, {
+        access: 'public',
+        contentType: cardImage.type,
+      });
+      cardImagePath = cardImageBlob.url;
     }
 
-    // Find the blog to update
-    const blogIndex = blogMatches.findIndex(blogStr => blogStr.includes(`slug: '${originalSlug}'`));
+    if (coverImage && coverImage.size > 0) {
+      const coverImageExt = coverImage.name.split('.').pop();
+      const coverImageName = `building-approvals-dubai-${categorySlug}-cover-${timestamp}.${coverImageExt}`;
+      const coverImageBuffer = Buffer.from(await coverImage.arrayBuffer());
+      const coverImageBlob = await put(`blog/${coverImageName}`, coverImageBuffer, {
+        access: 'public',
+        contentType: coverImage.type,
+      });
+      coverImagePath = coverImageBlob.url;
+    }
+
+    // Read current blogData.ts from GitHub
+    const blogDataPath = 'src/app/blog/blogData.ts';
+    const { data: blogDataFile } = await octokit.rest.repos.getContent({
+      owner,
+      repo,
+      path: blogDataPath,
+      ref: branch,
+    });
+
+    if (!('content' in blogDataFile)) {
+      return NextResponse.json({ error: 'Could not read blogData.ts' }, { status: 500 });
+    }
+
+    const blogDataContent = Buffer.from(blogDataFile.content, 'base64').toString('utf-8');
+
+    // Check if blog exists
+    const slugExists = blogDataContent.includes(`slug: '${originalSlug}'`) || blogDataContent.includes(`slug: "${originalSlug}"`);
+    if (!slugExists) {
+      return NextResponse.json({ error: `Blog not found with slug: ${originalSlug}` }, { status: 404 });
+    }
+
+    // Parse blog objects
+    const interfaceMatch = blogDataContent.match(/(export interface BlogPost[\s\S]*?}\n)/);
+    const arrayStartIndex = blogDataContent.indexOf('export const blogPosts: BlogPost[] = [') + 'export const blogPosts: BlogPost[] = ['.length;
+    const arrayEndIndex = blogDataContent.lastIndexOf('];');
+    const arrayContent = blogDataContent.substring(arrayStartIndex, arrayEndIndex);
+
+    // Parse individual blog objects
+    const blogObjects: string[] = [];
+    let depth = 0;
+    let currentObject = '';
+    let inObject = false;
+
+    for (let i = 0; i < arrayContent.length; i++) {
+      const char = arrayContent[i];
+      if (char === '{') {
+        if (depth === 0) {
+          inObject = true;
+          currentObject = '{';
+        } else {
+          currentObject += char;
+        }
+        depth++;
+      } else if (char === '}') {
+        depth--;
+        currentObject += char;
+        if (depth === 0 && inObject) {
+          blogObjects.push(currentObject.trim());
+          currentObject = '';
+          inObject = false;
+        }
+      } else if (inObject) {
+        currentObject += char;
+      }
+    }
+
+    // Find and extract the original blog data
+    const blogIndex = blogObjects.findIndex(obj =>
+      obj.includes(`slug: '${originalSlug}'`) || obj.includes(`slug: "${originalSlug}"`)
+    );
+
     if (blogIndex === -1) {
       return NextResponse.json({ error: `Blog not found with slug: ${originalSlug}` }, { status: 404 });
     }
 
-    const blogObjects = blogMatches;
+    const originalBlog = blogObjects[blogIndex];
 
-    // Extract current blog data
-    const currentBlog = blogObjects[blogIndex];
-    const idMatch = currentBlog.match(/id: '(\d+)'/);
-    const dateMatch = currentBlog.match(/date: '([^']+)'/);
-    const id = idMatch ? idMatch[1] : '1';
+    // Extract original ID and date
+    const idMatch = originalBlog.match(/id:\s*['"](\d+)['"]/);
+    const dateMatch = originalBlog.match(/date:\s*['"]([^'"]+)['"]/);
+    const id = idMatch ? idMatch[1] : String(Date.now());
     const date = dateMatch ? dateMatch[1] : new Date().toISOString().split('T')[0];
 
-    // Handle images
-    let cardImagePath = existingCardImage;
-    let coverImagePath = existingCoverImage;
+    // Helper to format string values
+    const cleanForString = (text: string): string => {
+      let cleaned = text
+        .replace(/[\r\n]+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
 
-    if (cardImage) {
-      const cardImageBuffer = Buffer.from(await cardImage.arrayBuffer());
-      const cardImageName = `${slug}-card.jpg`;
-      const cardImageFilePath = path.join(process.cwd(), 'public/images/blog', cardImageName);
-      await fs.writeFile(cardImageFilePath, cardImageBuffer);
-      cardImagePath = `/images/blog/${cardImageName}`;
-    }
-
-    if (coverImage) {
-      const coverImageBuffer = Buffer.from(await coverImage.arrayBuffer());
-      const coverImageName = `${slug}-cover.jpg`;
-      const coverImageFilePath = path.join(process.cwd(), 'public/images/blog', coverImageName);
-      await fs.writeFile(coverImageFilePath, coverImageBuffer);
-      coverImagePath = `/images/blog/${coverImageName}`;
-    }
+      if (cleaned.includes("'")) {
+        cleaned = cleaned.replace(/"/g, '\\"');
+        return `"${cleaned}"`;
+      }
+      return `'${cleaned}'`;
+    };
 
     // Build updated blog entry
     const updatedBlog = `{
     id: '${id}',
-    title: '${title.replace(/'/g, "\\'")}',
-    excerpt: '${excerpt.replace(/'/g, "\\'")}',
+    title: ${cleanForString(title)},
+    slug: '${slug}',
+    category: ${cleanForString(category)},
+    author: ${cleanForString(author)},
     date: '${date}',
-    author: '${author}',
-    category: '${category}',
+    excerpt: ${cleanForString(excerpt)},
     image: '${cardImagePath}',
     coverImage: '${coverImagePath}',
-    slug: '${slug}',
+    metaTitle: ${cleanForString(`${title} | Building Approvals Dubai`)},
+    metaDescription: ${cleanForString(excerpt)},
+    keywords: [${title.split(' ').filter(w => w.length > 3).map(k => `'${k.replace(/'/g, "\\'")}'`).join(', ')}],
+    ogImage: '${coverImagePath}',
   }`;
 
     // Replace the blog entry
     blogObjects[blogIndex] = updatedBlog;
-    const newBlogsArray = blogObjects.join(',\n  ');
-    blogDataContent = blogDataContent.replace(
-      /export const blogPosts: BlogPost\[\] = \[([\s\S]*?)\];/,
-      `export const blogPosts: BlogPost[] = [\n  ${newBlogsArray}\n];`
-    );
 
-    // Write updated blogData.ts
-    await fs.writeFile(blogDataPath, blogDataContent, 'utf-8');
+    // Rebuild the file
+    const interfacePart = interfaceMatch ? interfaceMatch[1] : '';
+    const newArrayContent = '\n' + blogObjects.map(obj => '  ' + obj).join(',\n\n') + '\n';
+    const newBlogDataContent = `${interfacePart}
+export const blogPosts: BlogPost[] = [${newArrayContent}];
+`;
 
-    // Update content file if manual content changed or a new file was uploaded
-    if (contentType === 'file' && contentFile) {
-      const contentBuffer = Buffer.from(await contentFile.arrayBuffer());
-      const contentFileName = contentFile.name.toLowerCase();
-      let blogContent = '';
+    // Update blogData.ts via GitHub API
+    await octokit.rest.repos.createOrUpdateFileContents({
+      owner,
+      repo,
+      path: blogDataPath,
+      message: `Update blog: ${title}`,
+      content: Buffer.from(newBlogDataContent).toString('base64'),
+      branch,
+      sha: blogDataFile.sha,
+    });
 
-      try {
-        if (contentFileName.endsWith('.pdf')) {
-          blogContent = await extractPdfText(contentBuffer);
-        } else if (contentFileName.endsWith('.docx')) {
-          blogContent = await extractDocxText(contentBuffer);
-        } else if (contentFileName.endsWith('.doc')) {
-          return NextResponse.json(
-            { error: 'DOC files are not supported. Please upload a DOCX file.' },
-            { status: 400 }
-          );
-        } else {
-          return NextResponse.json(
-            { error: 'Unsupported content file type' },
-            { status: 400 }
-          );
+    // Update content file if manual content changed
+    if (contentType === 'manual' && manualContent) {
+      const isHTMLContent = /<[a-z][\s\S]*>/i.test(manualContent);
+      const imageUrls: { [key: number]: string } = {};
+
+      // Handle content images
+      const contentImageKeys = Array.from(formData.keys()).filter(key => key.startsWith('contentImage_'));
+      for (const key of contentImageKeys) {
+        const indexMatch = key.match(/contentImage_(\d+)/);
+        if (indexMatch) {
+          const index = parseInt(indexMatch[1], 10);
+          const file = formData.get(key) as File;
+          if (file && file.size > 0) {
+            const imageBuffer = Buffer.from(await file.arrayBuffer());
+            const imageExt = file.type.split('/')[1] || 'png';
+            const imageName = `building-approvals-dubai-${categorySlug}-content-${index + 1}-${timestamp}.${imageExt}`;
+            const imageBlob = await put(`blog/${imageName}`, imageBuffer, {
+              access: 'public',
+              contentType: file.type,
+            });
+            imageUrls[index] = imageBlob.url;
+          }
         }
-      } catch (parseError: any) {
-        console.error('Content parsing error:', parseError);
-        console.error('Error stack:', parseError.stack);
-        return NextResponse.json(
-          { error: `Content parsing failed: ${parseError.message}` },
-          { status: 500 }
-        );
       }
 
-      const contentDir = path.join(process.cwd(), 'src/app/blog/[slug]/content');
-      const contentFilePath = path.join(contentDir, `${slug}.tsx`);
-      const componentContent = generateBlogComponent(title, blogContent);
-      await fs.writeFile(contentFilePath, componentContent, 'utf-8');
-    } else if (contentType === 'manual' && manualContent) {
-      const contentDir = path.join(process.cwd(), 'src/app/blog/[slug]/content');
-      const contentFilePath = path.join(contentDir, `${slug}.tsx`);
+      // Process content and map image placeholders
+      let processedContent = manualContent;
+      const imagePlaceholderRegex = /\[IMAGE:\s*(img_\d+)\]/g;
+      const placeholderMatches = [...manualContent.matchAll(imagePlaceholderRegex)];
+      const imageIdToIndex: { [id: string]: number } = {};
 
-      // Use the enhanced content parser
-      const componentContent = generateBlogComponent(title, manualContent);
-      await fs.writeFile(contentFilePath, componentContent, 'utf-8');
+      placeholderMatches.forEach((match, index) => {
+        imageIdToIndex[match[1]] = index;
+      });
+
+      processedContent = processedContent.replace(imagePlaceholderRegex, (match, id) => {
+        const index = imageIdToIndex[id];
+        return `[IMAGE_${index}]`;
+      });
+
+      const componentContent = isHTMLContent
+        ? generateBlogComponentFromHTML(processedContent, imageUrls, title)
+        : generateBlogComponentFromHTML(processedContent, imageUrls, title);
+
+      const contentPath = `src/app/blog/[slug]/content/${slug}.tsx`;
+
+      // Check if file exists to get SHA
+      let existingSha: string | undefined;
+      try {
+        const { data: existingFile } = await octokit.rest.repos.getContent({
+          owner,
+          repo,
+          path: contentPath,
+          ref: branch,
+        });
+        if ('sha' in existingFile) {
+          existingSha = existingFile.sha;
+        }
+      } catch (e) {
+        // File doesn't exist
+      }
+
+      await octokit.rest.repos.createOrUpdateFileContents({
+        owner,
+        repo,
+        path: contentPath,
+        message: `Update blog content: ${title}`,
+        content: Buffer.from(componentContent).toString('base64'),
+        branch,
+        ...(existingSha && { sha: existingSha }),
+      });
     }
 
-    // If slug changed, rename directory
+    // If slug changed, we need to update page.tsx and handle the old content file
     if (originalSlug !== slug) {
-      const oldDir = path.join(process.cwd(), 'src/app/blog', originalSlug);
-      const newDir = path.join(process.cwd(), 'src/app/blog', slug);
-
+      // Delete old content file
+      const oldContentPath = `src/app/blog/[slug]/content/${originalSlug}.tsx`;
       try {
-        await fs.rename(oldDir, newDir);
-      } catch (error) {
-        console.error('Error renaming directory:', error);
+        const { data: oldContentFile } = await octokit.rest.repos.getContent({
+          owner,
+          repo,
+          path: oldContentPath,
+          ref: branch,
+        });
+
+        if ('sha' in oldContentFile) {
+          await octokit.rest.repos.deleteFile({
+            owner,
+            repo,
+            path: oldContentPath,
+            message: `Delete old content file: ${originalSlug}`,
+            sha: oldContentFile.sha,
+            branch,
+          });
+        }
+      } catch (e) {
+        // Old file doesn't exist, that's fine
+      }
+
+      // Update page.tsx - remove old import/render case and add new one
+      const pagePath = 'src/app/blog/[slug]/page.tsx';
+      try {
+        const { data: pageFile } = await octokit.rest.repos.getContent({
+          owner,
+          repo,
+          path: pagePath,
+          ref: branch,
+        });
+
+        if ('content' in pageFile) {
+          let pageContent = Buffer.from(pageFile.content, 'base64').toString('utf-8');
+
+          // Remove old dynamic import
+          const oldDynamicImportPattern = new RegExp(
+            `const\\s+\\w+Content\\s*=\\s*dynamic\\s*\\(\\s*\\(\\s*\\)\\s*=>\\s*import\\s*\\(\\s*['"]\\.\\/content\\/${originalSlug}['"]\\)[^;]*;\\s*\\n?`,
+            'g'
+          );
+          pageContent = pageContent.replace(oldDynamicImportPattern, '');
+
+          // Remove old static import
+          const oldStaticImportPattern = new RegExp(
+            `import\\s+\\w+Content\\s+from\\s+['"]\\.\\/content\\/${originalSlug}['"];?\\s*\\n?`,
+            'g'
+          );
+          pageContent = pageContent.replace(oldStaticImportPattern, '');
+
+          // Remove old render case
+          const oldRenderCasePattern = new RegExp(
+            `\\s*if\\s*\\(post\\.slug\\s*===\\s*['"]${originalSlug}['"]\\)\\s*\\{[\\s\\S]*?return\\s*<\\w+Content\\s*\\/?>\\s*;?\\s*\\}\\s*`,
+            'g'
+          );
+          pageContent = pageContent.replace(oldRenderCasePattern, '\n    ');
+
+          // Add new import and render case
+          let newComponentName = slug
+            .split('-')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join('');
+
+          if (/^\d/.test(newComponentName)) {
+            const numberWords: { [key: string]: string } = {
+              '0': 'Zero_', '1': 'One_', '2': 'Two_', '3': 'Three_', '4': 'Four_',
+              '5': 'Five_', '6': 'Six_', '7': 'Seven_', '8': 'Eight_', '9': 'Nine_', '10': 'Ten_'
+            };
+            const match = newComponentName.match(/^(\d+)/);
+            if (match) {
+              const num = match[1];
+              const prefix = numberWords[num] || `N${num}_`;
+              newComponentName = prefix + newComponentName.slice(num.length);
+            }
+          }
+
+          const newImportStatement = `const ${newComponentName}Content = dynamic(() => import('./content/${slug}').catch(() => () => null), { ssr: true });`;
+
+          // Add new import after last dynamic import
+          const dynamicImportMatch = pageContent.match(/const \w+Content = dynamic\([^;]+\);/g);
+          if (dynamicImportMatch && dynamicImportMatch.length > 0) {
+            const lastDynamicImport = dynamicImportMatch[dynamicImportMatch.length - 1];
+            const lastIndex = pageContent.lastIndexOf(lastDynamicImport);
+            pageContent = pageContent.slice(0, lastIndex + lastDynamicImport.length) + '\n' + newImportStatement + pageContent.slice(lastIndex + lastDynamicImport.length);
+          }
+
+          // Add new render case
+          const newRenderCase = `    if (post.slug === '${slug}') {
+      return <${newComponentName}Content />;
+    }
+`;
+          const returnNullIndex = pageContent.indexOf('return null;');
+          if (returnNullIndex !== -1) {
+            pageContent = pageContent.slice(0, returnNullIndex) + newRenderCase + '    ' + pageContent.slice(returnNullIndex);
+          }
+
+          // Clean up
+          pageContent = pageContent.replace(/\n{3,}/g, '\n\n');
+          pageContent = pageContent.replace(/\n\s+\n\s*return null;/g, '\n    return null;');
+
+          await octokit.rest.repos.createOrUpdateFileContents({
+            owner,
+            repo,
+            path: pagePath,
+            message: `Update page.tsx for slug change: ${originalSlug} -> ${slug}`,
+            content: Buffer.from(pageContent).toString('base64'),
+            branch,
+            sha: pageFile.sha,
+          });
+        }
+      } catch (pageError: any) {
+        console.error('Error updating page.tsx:', pageError.message);
       }
     }
 
     return NextResponse.json({
       success: true,
-      message: 'Blog updated successfully',
-      slug: slug,
+      message: 'Blog updated successfully. Vercel will redeploy automatically.',
+      slug,
+      originalSlug: originalSlug !== slug ? originalSlug : undefined,
     });
-
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error updating blog:', error);
     return NextResponse.json(
-      { error: 'Failed to update blog', details: error instanceof Error ? error.message : 'Unknown error' },
+      { error: error.message || 'Failed to update blog' },
       { status: 500 }
     );
   }

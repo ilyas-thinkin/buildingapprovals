@@ -28,59 +28,9 @@ export async function DELETE(
     const repo = githubRepo;
     const branch = githubBranch;
 
-    // 1. Update blogData.ts - remove the blog entry
-    const blogDataPath = 'src/app/blog/blogData.ts';
-    const { data: blogDataFile } = await octokit.rest.repos.getContent({
-      owner,
-      repo,
-      path: blogDataPath,
-      ref: branch,
-    });
+    const deletionResults: string[] = [];
 
-    if (!('content' in blogDataFile)) {
-      return NextResponse.json({ error: 'Could not read blogData.ts' }, { status: 500 });
-    }
-
-    const blogDataContent = Buffer.from(blogDataFile.content, 'base64').toString('utf-8');
-
-    // Find and remove the blog entry with matching slug
-    const blogArrayMatch = blogDataContent.match(/export const blogPosts: BlogPost\[\] = \[([\s\S]*?)\];/);
-    if (!blogArrayMatch) {
-      return NextResponse.json({ error: 'Could not parse blog data' }, { status: 500 });
-    }
-
-    // Check if blog exists
-    if (!blogDataContent.includes(`slug: '${slug}'`)) {
-      return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
-    }
-
-    // Remove ALL blog entries with matching slug (handles duplicates)
-    // Match the entire blog object including the trailing comma - handles multi-line objects
-    const blogEntryRegex = new RegExp(
-      `\\s*\\{[\\s\\S]*?slug:\\s*['"]${slug}['"][\\s\\S]*?\\},?`,
-      'g'
-    );
-    let newBlogDataContent = blogDataContent.replace(blogEntryRegex, '');
-
-    // Clean up any double commas or trailing commas before ]
-    newBlogDataContent = newBlogDataContent.replace(/,(\s*,)+/g, ',');
-    newBlogDataContent = newBlogDataContent.replace(/,(\s*)\]/g, '$1]');
-    newBlogDataContent = newBlogDataContent.replace(/\[\s*,/g, '[');
-    // Clean up excessive blank lines
-    newBlogDataContent = newBlogDataContent.replace(/\n{3,}/g, '\n\n');
-
-    // Update blogData.ts via GitHub API
-    await octokit.rest.repos.createOrUpdateFileContents({
-      owner,
-      repo,
-      path: blogDataPath,
-      message: `Remove blog: ${slug}`,
-      content: Buffer.from(newBlogDataContent).toString('base64'),
-      branch,
-      sha: blogDataFile.sha,
-    });
-
-    // 2. Delete the blog content file
+    // 1. Delete the blog content file FIRST (before modifying page.tsx)
     const contentPath = `src/app/blog/[slug]/content/${slug}.tsx`;
     try {
       const { data: contentFile } = await octokit.rest.repos.getContent({
@@ -99,15 +49,116 @@ export async function DELETE(
           sha: contentFile.sha,
           branch,
         });
+        deletionResults.push(`Deleted content file: ${contentPath}`);
       }
     } catch (contentError: any) {
-      // File might not exist, that's okay
-      console.log('Blog content file not found or already deleted:', contentPath);
+      if (contentError.status !== 404) {
+        console.error('Error deleting content file:', contentError.message);
+      }
+      deletionResults.push(`Content file not found or already deleted: ${contentPath}`);
+    }
+
+    // 2. Update blogData.ts - remove the blog entry
+    const blogDataPath = 'src/app/blog/blogData.ts';
+    try {
+      const { data: blogDataFile } = await octokit.rest.repos.getContent({
+        owner,
+        repo,
+        path: blogDataPath,
+        ref: branch,
+      });
+
+      if (!('content' in blogDataFile)) {
+        return NextResponse.json({ error: 'Could not read blogData.ts' }, { status: 500 });
+      }
+
+      const blogDataContent = Buffer.from(blogDataFile.content, 'base64').toString('utf-8');
+
+      // Check if blog exists (check both single and double quotes)
+      const slugExists = blogDataContent.includes(`slug: '${slug}'`) || blogDataContent.includes(`slug: "${slug}"`);
+      if (!slugExists) {
+        return NextResponse.json({ error: 'Blog not found in blogData.ts' }, { status: 404 });
+      }
+
+      // Parse the blog array more carefully
+      // Find all blog objects and filter out the one with matching slug
+      const interfaceMatch = blogDataContent.match(/(export interface BlogPost[\s\S]*?}\n)/);
+      const arrayStartMatch = blogDataContent.match(/export const blogPosts: BlogPost\[\] = \[/);
+
+      if (!arrayStartMatch) {
+        return NextResponse.json({ error: 'Could not find blogPosts array' }, { status: 500 });
+      }
+
+      // Extract the array content between [ and ];
+      const arrayStartIndex = blogDataContent.indexOf('export const blogPosts: BlogPost[] = [') + 'export const blogPosts: BlogPost[] = ['.length;
+      const arrayEndIndex = blogDataContent.lastIndexOf('];');
+      const arrayContent = blogDataContent.substring(arrayStartIndex, arrayEndIndex);
+
+      // Split into individual blog objects - match each { ... } block
+      const blogObjects: string[] = [];
+      let depth = 0;
+      let currentObject = '';
+      let inObject = false;
+
+      for (let i = 0; i < arrayContent.length; i++) {
+        const char = arrayContent[i];
+
+        if (char === '{') {
+          if (depth === 0) {
+            inObject = true;
+            currentObject = '{';
+          } else {
+            currentObject += char;
+          }
+          depth++;
+        } else if (char === '}') {
+          depth--;
+          currentObject += char;
+          if (depth === 0 && inObject) {
+            blogObjects.push(currentObject.trim());
+            currentObject = '';
+            inObject = false;
+          }
+        } else if (inObject) {
+          currentObject += char;
+        }
+      }
+
+      // Filter out objects with matching slug
+      const filteredObjects = blogObjects.filter(obj => {
+        return !obj.includes(`slug: '${slug}'`) && !obj.includes(`slug: "${slug}"`);
+      });
+
+      // Rebuild the file
+      const interfacePart = interfaceMatch ? interfaceMatch[1] : '';
+      const newArrayContent = filteredObjects.length > 0
+        ? '\n' + filteredObjects.map(obj => '  ' + obj).join(',\n\n') + '\n'
+        : '\n';
+
+      const newBlogDataContent = `${interfacePart}
+export const blogPosts: BlogPost[] = [${newArrayContent}];
+`;
+
+      // Update blogData.ts via GitHub API
+      await octokit.rest.repos.createOrUpdateFileContents({
+        owner,
+        repo,
+        path: blogDataPath,
+        message: `Remove blog entry: ${slug}`,
+        content: Buffer.from(newBlogDataContent).toString('base64'),
+        branch,
+        sha: blogDataFile.sha,
+      });
+      deletionResults.push('Removed blog entry from blogData.ts');
+    } catch (blogDataError: any) {
+      console.error('Error updating blogData.ts:', blogDataError.message);
+      return NextResponse.json({ error: `Failed to update blogData.ts: ${blogDataError.message}` }, { status: 500 });
     }
 
     // 3. Update page.tsx - remove import and render case
     const pagePath = 'src/app/blog/[slug]/page.tsx';
     try {
+      // Get fresh copy of page.tsx
       const { data: pageFile } = await octokit.rest.repos.getContent({
         owner,
         repo,
@@ -117,94 +168,87 @@ export async function DELETE(
 
       if ('content' in pageFile) {
         let pageContent = Buffer.from(pageFile.content, 'base64').toString('utf-8');
+        const originalContent = pageContent;
 
-        // Create component name from slug (handle numbers at start)
-        let componentName = slug
+        // Generate all possible component name variations
+        const componentNames: string[] = [];
+
+        // Standard component name from slug
+        let stdName = slug
           .split('-')
           .map(word => word.charAt(0).toUpperCase() + word.slice(1))
           .join('');
 
-        // If component name starts with a number, prefix with number word
-        if (/^\d/.test(componentName)) {
+        // Handle numbers at start
+        if (/^\d/.test(stdName)) {
           const numberWords: { [key: string]: string } = {
             '0': 'Zero_', '1': 'One_', '2': 'Two_', '3': 'Three_', '4': 'Four_',
             '5': 'Five_', '6': 'Six_', '7': 'Seven_', '8': 'Eight_', '9': 'Nine_', '10': 'Ten_'
           };
-          const match = componentName.match(/^(\d+)/);
+          const match = stdName.match(/^(\d+)/);
           if (match) {
             const num = match[1];
             const prefix = numberWords[num] || `N${num}_`;
-            componentName = prefix + componentName.slice(num.length);
+            stdName = prefix + stdName.slice(num.length);
           }
         }
+        componentNames.push(stdName);
 
-        // Remove dynamic import statement (multiple formats)
-        // Format 1: const XContent = dynamic(() => import('./content/x').catch(() => () => null), { ssr: true });
-        const dynamicImportRegex1 = new RegExp(
-          `const\\s+${componentName}Content\\s*=\\s*dynamic\\([^;]+\\);?\\s*\\n?`,
+        // Remove any dynamic import that references this slug
+        // Pattern: const XContent = dynamic(() => import('./content/SLUG')...);
+        const dynamicImportPattern = new RegExp(
+          `const\\s+\\w+Content\\s*=\\s*dynamic\\s*\\(\\s*\\(\\s*\\)\\s*=>\\s*import\\s*\\(\\s*['"]\\.\\/content\\/${slug}['"]\\)[^;]*;\\s*\\n?`,
           'g'
         );
-        pageContent = pageContent.replace(dynamicImportRegex1, '');
+        pageContent = pageContent.replace(dynamicImportPattern, '');
 
-        // Format 2: More relaxed dynamic import pattern
-        const dynamicImportRegex2 = new RegExp(
-          `const\\s+\\w*${slug.replace(/-/g, '')}\\w*Content\\s*=\\s*dynamic\\([^;]+['"]${slug}['"][^;]*\\);?\\s*\\n?`,
-          'gi'
-        );
-        pageContent = pageContent.replace(dynamicImportRegex2, '');
-
-        // Remove static import statement (old format)
-        // Format: import XContent from './content/x';
-        const staticImportRegex = new RegExp(
-          `import\\s+${componentName}Content\\s+from\\s+['"]\\.\\/content\\/${slug}['"];?\\s*\\n?`,
-          'g'
-        );
-        pageContent = pageContent.replace(staticImportRegex, '');
-
-        // Also try with any component name that imports from this slug
-        const anyStaticImportRegex = new RegExp(
+        // Remove static import that references this slug
+        const staticImportPattern = new RegExp(
           `import\\s+\\w+Content\\s+from\\s+['"]\\.\\/content\\/${slug}['"];?\\s*\\n?`,
           'g'
         );
-        pageContent = pageContent.replace(anyStaticImportRegex, '');
+        pageContent = pageContent.replace(staticImportPattern, '');
 
-        // Remove the if statement from renderContent (multiple formats)
-        // Format 1: if (post.slug === 'x') { return <XContent />; }
-        const caseRegex1 = new RegExp(
-          `\\s*if\\s*\\(post\\.slug\\s*===\\s*['"]${slug}['"]\\)\\s*\\{[\\s\\S]*?return\\s*<\\w+Content\\s*\\/>;?\\s*\\}\\s*\\n?`,
+        // Remove the render case for this slug
+        // Pattern: if (post.slug === 'SLUG') { return <XContent />; }
+        const renderCasePattern = new RegExp(
+          `\\s*if\\s*\\(post\\.slug\\s*===\\s*['"]${slug}['"]\\)\\s*\\{[\\s\\S]*?return\\s*<\\w+Content\\s*\\/?>\\s*;?\\s*\\}\\s*`,
           'g'
         );
-        pageContent = pageContent.replace(caseRegex1, '');
+        pageContent = pageContent.replace(renderCasePattern, '\n    ');
 
-        // Format 2: More compact version without newlines
-        const caseRegex2 = new RegExp(
-          `if\\s*\\(post\\.slug\\s*===\\s*['"]${slug}['"]\\)\\s*\\{\\s*return\\s*<\\w+Content\\s*\\/>;?\\s*\\}`,
-          'g'
-        );
-        pageContent = pageContent.replace(caseRegex2, '');
-
-        // Clean up any double newlines that may have been left
+        // Clean up multiple blank lines
         pageContent = pageContent.replace(/\n{3,}/g, '\n\n');
 
-        // Update page.tsx via GitHub API
-        await octokit.rest.repos.createOrUpdateFileContents({
-          owner,
-          repo,
-          path: pagePath,
-          message: `Remove import and render case for: ${slug}`,
-          content: Buffer.from(pageContent).toString('base64'),
-          branch,
-          sha: pageFile.sha,
-        });
+        // Clean up spaces before return null
+        pageContent = pageContent.replace(/\n\s+\n\s*return null;/g, '\n    return null;');
+
+        // Only update if content changed
+        if (pageContent !== originalContent) {
+          await octokit.rest.repos.createOrUpdateFileContents({
+            owner,
+            repo,
+            path: pagePath,
+            message: `Remove import and render case for: ${slug}`,
+            content: Buffer.from(pageContent).toString('base64'),
+            branch,
+            sha: pageFile.sha,
+          });
+          deletionResults.push('Removed import and render case from page.tsx');
+        } else {
+          deletionResults.push('No changes needed in page.tsx (import/render case not found)');
+        }
       }
     } catch (pageError: any) {
       console.error('Error updating page.tsx:', pageError.message);
+      deletionResults.push(`Warning: Could not update page.tsx: ${pageError.message}`);
     }
 
     return NextResponse.json({
       success: true,
       message: 'Blog deleted successfully. Vercel will redeploy automatically.',
       slug,
+      deletionResults,
       note: 'Images stored in Vercel Blob are not automatically deleted. You can manage them in Vercel dashboard.',
     });
   } catch (error: any) {
@@ -256,30 +300,42 @@ export async function GET(
 
     const blogDataContent = Buffer.from(blogDataFile.content, 'base64').toString('utf-8');
 
-    // Find the blog with matching slug
-    const blogArrayMatch = blogDataContent.match(/export const blogPosts: BlogPost\[\] = \[([\s\S]*?)\];/);
-    if (!blogArrayMatch) {
-      return NextResponse.json({ error: 'Could not parse blog data' }, { status: 500 });
-    }
+    // Find the blog with matching slug - handle both single and double quotes
+    const slugPatternSingle = `slug:\\s*'${slug}'`;
+    const slugPatternDouble = `slug:\\s*"${slug}"`;
 
-    // Extract blog data
-    const blogsText = blogArrayMatch[1];
-    const blogMatch = blogsText.match(new RegExp(`\\{[^}]*slug:\\s*['"]${slug}['"][^}]*\\}`, 's'));
+    // Find the blog object containing this slug
+    let blogMatch = null;
+    const blogObjectPattern = /\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}/g;
+    let match;
+
+    while ((match = blogObjectPattern.exec(blogDataContent)) !== null) {
+      if (match[0].includes(`slug: '${slug}'`) || match[0].includes(`slug: "${slug}"`)) {
+        blogMatch = match[0];
+        break;
+      }
+    }
 
     if (!blogMatch) {
       return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
     }
 
     // Parse the blog object
-    const blogStr = blogMatch[0];
     const blog: any = {};
-
     const fields = ['id', 'title', 'excerpt', 'date', 'author', 'category', 'image', 'coverImage', 'slug', 'metaTitle', 'metaDescription'];
+
     fields.forEach(field => {
-      const regex = new RegExp(`${field}:\\s*['"]([^'"]*?)['"]`);
-      const match = blogStr.match(regex);
-      if (match) {
-        blog[field] = match[1];
+      // Match both single and double quoted values, including multi-line
+      const singleQuoteRegex = new RegExp(`${field}:\\s*'([^']*)'`);
+      const doubleQuoteRegex = new RegExp(`${field}:\\s*"([^"]*)"`);
+
+      let fieldMatch = blogMatch.match(singleQuoteRegex);
+      if (!fieldMatch) {
+        fieldMatch = blogMatch.match(doubleQuoteRegex);
+      }
+
+      if (fieldMatch) {
+        blog[field] = fieldMatch[1];
       }
     });
 
