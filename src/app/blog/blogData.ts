@@ -16,22 +16,6 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
-    id: '1768906027058',
-    title: 'Dubai Municipality Services Categories & Approvals 2026',
-    slug: 'dubai-municipality-services-categories',
-    category: 'Dubai Municipality',
-    author: 'Building Approvals Dubai',
-    date: '2026-01-20',
-    excerpt: 'Explore all Dubai Municipality services categories, approvals, and processes in Dubai. A clear guide for owners, developers & businesses.',
-    image: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-list-1768906020276.jpg',
-    coverImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-cover-1768906020276.jpg',
-    metaTitle: 'Dubai Municipality Services Categories & Approvals 2026 | Building Approvals Dubai',
-    metaDescription: 'Explore all Dubai Municipality services categories, approvals, and processes in Dubai. A clear guide for owners, developers & businesses.',
-    keywords: ['Dubai', 'Municipality', 'Services', 'Categories', 'Approvals', '2026'],
-    ogImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-cover-1768906020276.jpg',
-  },
-
-  {
     id: '1768552874848',
     title: '10 Common Fit-Out Approval Mistakes That Delay Projects in Dubai - 2026',
     slug: '10-common-fit-out-approval-mistakes-that-delay-projects-in-dubai-2026',
@@ -110,6 +94,7 @@ export const blogPosts: BlogPost[] = [
     keywords: ['fit-out approval Dubai', 'Dubai fit-out permit', 'interior approval Dubai', 'building approvals Dubai', 'Dubai Municipality fit-out', 'DCD fit-out approval', 'fit-out consultant Dubai'],
     ogImage: '/images/blog/building-approvals-dubai-fit-out-cover.jpg',
   },
+
   {
     id: '1',
     title: 'Dubai Municipality Approval Process 2026 – Complete Guide to get Building Approvals in Dubai',
@@ -125,6 +110,7 @@ export const blogPosts: BlogPost[] = [
     keywords: ['Dubai Municipality approval', 'building approvals Dubai', 'Dubai building permit', 'construction approval Dubai', 'Dubai Municipality 2026', 'building permit process Dubai'],
     ogImage: '/images/blog/building-approvals-dubai-municipality-cover.jpg',
   },
+
   {
     id: '2',
     title: 'Dubai Municipality Approvals 2026: Updated Rules & Digital Innovations',
@@ -140,6 +126,7 @@ export const blogPosts: BlogPost[] = [
     keywords: ['Dubai Municipality 2026', 'building approvals Dubai', 'Dubai digital twin', 'AI compliance Dubai', 'smart city Dubai', 'Dubai building regulations 2026', 'green building Dubai'],
     ogImage: '/images/blog/building-approvals-dubai-municipality-update-cover.webp',
   },
+
   {
     id: '3',
     title: 'Dubai Civil Defence Approval (DCD) – Complete Guide for 2026',
