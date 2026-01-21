@@ -718,55 +718,50 @@ export async function POST(request: NextRequest) {
       ? generateBlogComponentFromHTML(blogContent, imageUrls, title)
       : generateBlogComponentFromMarkdown(blogContent, imageUrls, title);
 
-    // Create blog component file via GitHub API
+    // Prepare all file changes for a single commit
     const componentPath = `src/app/blog/[slug]/content/${slug}.tsx`;
-
-    await octokit.rest.repos.createOrUpdateFileContents({
-      owner,
-      repo,
-      path: componentPath,
-      message: `Add blog content component for: ${title}`,
-      content: Buffer.from(componentContent).toString('base64'),
-      branch,
-    });
-
-    // Update blogData.ts
     const blogDataPath = 'src/app/blog/blogData.ts';
-    const { data: blogDataFile } = await octokit.rest.repos.getContent({
-      owner,
-      repo,
-      path: blogDataPath,
-      ref: branch,
-    });
+    const pagePath = 'src/app/blog/[slug]/page.tsx';
 
-    if ('content' in blogDataFile) {
-      const blogDataContent = Buffer.from(blogDataFile.content, 'base64').toString('utf-8');
+    // Get current files from GitHub
+    const [blogDataFile, pageFile] = await Promise.all([
+      octokit.rest.repos.getContent({ owner, repo, path: blogDataPath, ref: branch }),
+      octokit.rest.repos.getContent({ owner, repo, path: pagePath, ref: branch }),
+    ]);
 
-      // Helper to clean text for strings - escape single quotes and use double quotes if needed
-      const cleanForString = (text: string): string => {
-        let cleaned = text
-          .replace(/[\r\n]+/g, ' ')
-          .replace(/\s+/g, ' ')
-          .trim();
+    if (!('content' in blogDataFile.data) || !('content' in pageFile.data)) {
+      throw new Error('Could not read required files');
+    }
 
-        // If text contains single quotes, use double quotes
-        if (cleaned.includes("'")) {
-          cleaned = cleaned.replace(/"/g, '\\"');
-          return `"${cleaned}"`;
-        }
-        return `'${cleaned}'`;
-      };
+    const blogDataContent = Buffer.from(blogDataFile.data.content, 'base64').toString('utf-8');
+    const pageContent = Buffer.from(pageFile.data.content, 'base64').toString('utf-8');
 
-      // Simpler version that just escapes quotes for inside strings
-      const escapeForSingleQuote = (text: string): string => {
-        return text
-          .replace(/[\r\n]+/g, ' ')
-          .replace(/\s+/g, ' ')
-          .replace(/'/g, "\\'")
-          .trim();
-      };
+    // Helper to clean text for strings - escape single quotes and use double quotes if needed
+    const cleanForString = (text: string): string => {
+      let cleaned = text
+        .replace(/[\r\n]+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
 
-      const newBlogEntry = `  {
+      // If text contains single quotes, use double quotes
+      if (cleaned.includes("'")) {
+        cleaned = cleaned.replace(/"/g, '\\"');
+        return `"${cleaned}"`;
+      }
+      return `'${cleaned}'`;
+    };
+
+    // Simpler version that just escapes quotes for inside strings
+    const escapeForSingleQuote = (text: string): string => {
+      return text
+        .replace(/[\r\n]+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .replace(/'/g, "\\'")
+        .trim();
+    };
+
+    // 1. Prepare blogData.ts update
+    const newBlogEntry = `  {
     id: '${timestamp}',
     title: ${cleanForString(title)},
     slug: '${slug}',
@@ -782,100 +777,149 @@ export async function POST(request: NextRequest) {
     ogImage: '${coverImageBlob.url}',
   },`;
 
-      const arrayMatch = blogDataContent.match(/export const blogPosts: BlogPost\[\] = \[([\s\S]*?)\];/);
-      if (!arrayMatch) {
-        throw new Error('Could not find blogPosts array');
-      }
-
-      const replacement = `export const blogPosts: BlogPost[] = [\n${newBlogEntry}\n${arrayMatch[1]}];`;
-      const updatedContent = blogDataContent.replace(/export const blogPosts: BlogPost\[\] = \[([\s\S]*?)\];/, replacement);
-
-      await octokit.rest.repos.createOrUpdateFileContents({
-        owner,
-        repo,
-        path: blogDataPath,
-        message: `Add blog data for: ${title}`,
-        content: Buffer.from(updatedContent).toString('base64'),
-        branch,
-        sha: blogDataFile.sha,
-      });
+    const arrayMatch = blogDataContent.match(/export const blogPosts: BlogPost\[\] = \[([\s\S]*?)\];/);
+    if (!arrayMatch) {
+      throw new Error('Could not find blogPosts array');
     }
 
-    // Update page.tsx to import and render the new blog
-    const pagePath = 'src/app/blog/[slug]/page.tsx';
-    const { data: pageFile } = await octokit.rest.repos.getContent({
-      owner,
-      repo,
-      path: pagePath,
-      ref: branch,
-    });
+    const replacement = `export const blogPosts: BlogPost[] = [\n${newBlogEntry}\n${arrayMatch[1]}];`;
+    const updatedBlogDataContent = blogDataContent.replace(/export const blogPosts: BlogPost\[\] = \[([\s\S]*?)\];/, replacement);
 
-    if ('content' in pageFile) {
-      const pageContent = Buffer.from(pageFile.content, 'base64').toString('utf-8');
+    // 2. Prepare page.tsx update
+    let componentName = slug
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join('');
 
-      // Generate component name from slug
-      let componentName = slug
-        .split('-')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join('');
-
-      // Handle names starting with numbers
-      if (/^\d/.test(componentName)) {
-        const numberWords: { [key: string]: string } = {
-          '0': 'Zero_', '1': 'One_', '2': 'Two_', '3': 'Three_', '4': 'Four_',
-          '5': 'Five_', '6': 'Six_', '7': 'Seven_', '8': 'Eight_', '9': 'Nine_', '10': 'Ten_'
-        };
-        const match = componentName.match(/^(\d+)/);
-        if (match) {
-          const num = match[1];
-          const prefix = numberWords[num] || `N${num}_`;
-          componentName = prefix + componentName.slice(num.length);
-        }
+    // Handle names starting with numbers
+    if (/^\d/.test(componentName)) {
+      const numberWords: { [key: string]: string } = {
+        '0': 'Zero_', '1': 'One_', '2': 'Two_', '3': 'Three_', '4': 'Four_',
+        '5': 'Five_', '6': 'Six_', '7': 'Seven_', '8': 'Eight_', '9': 'Nine_', '10': 'Ten_'
+      };
+      const match = componentName.match(/^(\d+)/);
+      if (match) {
+        const num = match[1];
+        const prefix = numberWords[num] || `N${num}_`;
+        componentName = prefix + componentName.slice(num.length);
       }
+    }
 
-      // Use dynamic import with error handling for resilience
-      const importStatement = `const ${componentName}Content = dynamic(() => import('./content/${slug}').catch(() => () => null), { ssr: true });`;
-      let updatedPageContent = pageContent;
+    // Use dynamic import with error handling for resilience
+    const importStatement = `const ${componentName}Content = dynamic(() => import('./content/${slug}').catch(() => () => null), { ssr: true });`;
+    let updatedPageContent = pageContent;
 
-      // Check if import already exists
-      if (!updatedPageContent.includes(`'./content/${slug}'`) && !updatedPageContent.includes(`"./content/${slug}"`)) {
-        // Find the last dynamic import line and add after it
-        const dynamicImportMatch = updatedPageContent.match(/const \w+Content = dynamic\([^;]+\);/g);
-        if (dynamicImportMatch && dynamicImportMatch.length > 0) {
-          const lastDynamicImport = dynamicImportMatch[dynamicImportMatch.length - 1];
-          const lastIndex = updatedPageContent.lastIndexOf(lastDynamicImport);
-          updatedPageContent = updatedPageContent.slice(0, lastIndex + lastDynamicImport.length) + '\n' + importStatement + updatedPageContent.slice(lastIndex + lastDynamicImport.length);
-        } else {
-          // Fallback: add after last import statement
-          const lastImportIndex = updatedPageContent.lastIndexOf('import ');
-          const nextLineIndex = updatedPageContent.indexOf('\n', lastImportIndex) + 1;
-          updatedPageContent = updatedPageContent.slice(0, nextLineIndex) + importStatement + '\n' + updatedPageContent.slice(nextLineIndex);
-        }
+    // Check if import already exists
+    if (!updatedPageContent.includes(`'./content/${slug}'`) && !updatedPageContent.includes(`"./content/${slug}"`)) {
+      // Find the last dynamic import line and add after it
+      const dynamicImportMatch = updatedPageContent.match(/const \w+Content = dynamic\([^;]+\);/g);
+      if (dynamicImportMatch && dynamicImportMatch.length > 0) {
+        const lastDynamicImport = dynamicImportMatch[dynamicImportMatch.length - 1];
+        const lastIndex = updatedPageContent.lastIndexOf(lastDynamicImport);
+        updatedPageContent = updatedPageContent.slice(0, lastIndex + lastDynamicImport.length) + '\n' + importStatement + updatedPageContent.slice(lastIndex + lastDynamicImport.length);
+      } else {
+        // Fallback: add after last import statement
+        const lastImportIndex = updatedPageContent.lastIndexOf('import ');
+        const nextLineIndex = updatedPageContent.indexOf('\n', lastImportIndex) + 1;
+        updatedPageContent = updatedPageContent.slice(0, nextLineIndex) + importStatement + '\n' + updatedPageContent.slice(nextLineIndex);
       }
+    }
 
-      // Add render case
-      const renderCase = `    if (post.slug === '${slug}') {
+    // Add render case
+    const renderCase = `    if (post.slug === '${slug}') {
       return <${componentName}Content />;
     }
 `;
 
-      if (!updatedPageContent.includes(`if (post.slug === '${slug}')`)) {
-        const returnNullIndex = updatedPageContent.indexOf('return null;');
-        if (returnNullIndex !== -1) {
-          updatedPageContent = updatedPageContent.slice(0, returnNullIndex) + renderCase + '    ' + updatedPageContent.slice(returnNullIndex);
-        }
+    if (!updatedPageContent.includes(`if (post.slug === '${slug}')`)) {
+      const returnNullIndex = updatedPageContent.indexOf('return null;');
+      if (returnNullIndex !== -1) {
+        updatedPageContent = updatedPageContent.slice(0, returnNullIndex) + renderCase + '    ' + updatedPageContent.slice(returnNullIndex);
       }
+    }
 
-      await octokit.rest.repos.createOrUpdateFileContents({
+    // 3. Create a single commit with all file changes using Git Data API
+    // Get the current commit SHA for the branch
+    const { data: refData } = await octokit.rest.git.getRef({
+      owner,
+      repo,
+      ref: `heads/${branch}`,
+    });
+    const currentCommitSha = refData.object.sha;
+
+    // Get the current tree
+    const { data: commitData } = await octokit.rest.git.getCommit({
+      owner,
+      repo,
+      commit_sha: currentCommitSha,
+    });
+    const baseTreeSha = commitData.tree.sha;
+
+    // Create blobs for all files
+    const [componentBlob, blogDataBlob, pageBlob] = await Promise.all([
+      octokit.rest.git.createBlob({
         owner,
         repo,
-        path: pagePath,
-        message: `Update page.tsx to render blog: ${title}`,
+        content: Buffer.from(componentContent).toString('base64'),
+        encoding: 'base64',
+      }),
+      octokit.rest.git.createBlob({
+        owner,
+        repo,
+        content: Buffer.from(updatedBlogDataContent).toString('base64'),
+        encoding: 'base64',
+      }),
+      octokit.rest.git.createBlob({
+        owner,
+        repo,
         content: Buffer.from(updatedPageContent).toString('base64'),
-        branch,
-        sha: pageFile.sha,
-      });
-    }
+        encoding: 'base64',
+      }),
+    ]);
+
+    // Create a new tree with all file changes
+    const { data: newTree } = await octokit.rest.git.createTree({
+      owner,
+      repo,
+      base_tree: baseTreeSha,
+      tree: [
+        {
+          path: componentPath,
+          mode: '100644',
+          type: 'blob',
+          sha: componentBlob.data.sha,
+        },
+        {
+          path: blogDataPath,
+          mode: '100644',
+          type: 'blob',
+          sha: blogDataBlob.data.sha,
+        },
+        {
+          path: pagePath,
+          mode: '100644',
+          type: 'blob',
+          sha: pageBlob.data.sha,
+        },
+      ],
+    });
+
+    // Create a new commit
+    const { data: newCommit } = await octokit.rest.git.createCommit({
+      owner,
+      repo,
+      message: `Add blog: ${title}`,
+      tree: newTree.sha,
+      parents: [currentCommitSha],
+    });
+
+    // Update the branch reference
+    await octokit.rest.git.updateRef({
+      owner,
+      repo,
+      ref: `heads/${branch}`,
+      sha: newCommit.sha,
+    });
 
     return NextResponse.json({
       success: true,

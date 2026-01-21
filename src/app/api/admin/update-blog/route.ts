@@ -295,20 +295,42 @@ export async function POST(request: NextRequest) {
       coverImagePath = coverImageBlob.url;
     }
 
-    // Read current blogData.ts from GitHub
+    // File paths
     const blogDataPath = 'src/app/blog/blogData.ts';
-    const { data: blogDataFile } = await octokit.rest.repos.getContent({
-      owner,
-      repo,
-      path: blogDataPath,
-      ref: branch,
-    });
+    const pagePath = 'src/app/blog/[slug]/page.tsx';
+    const contentPath = `src/app/blog/[slug]/content/${slug}.tsx`;
+    const oldContentPath = originalSlug !== slug ? `src/app/blog/[slug]/content/${originalSlug}.tsx` : null;
 
-    if (!('content' in blogDataFile)) {
-      return NextResponse.json({ error: 'Could not read blogData.ts' }, { status: 500 });
+    // Get all required files in parallel
+    const filePromises: Promise<any>[] = [
+      octokit.rest.repos.getContent({ owner, repo, path: blogDataPath, ref: branch }),
+      octokit.rest.repos.getContent({ owner, repo, path: pagePath, ref: branch }),
+    ];
+
+    // If updating content, try to get existing content file
+    if (contentType === 'manual' && manualContent) {
+      filePromises.push(
+        octokit.rest.repos.getContent({ owner, repo, path: contentPath, ref: branch }).catch(() => null)
+      );
     }
 
-    const blogDataContent = Buffer.from(blogDataFile.content, 'base64').toString('utf-8');
+    // If slug changed, try to get old content file for deletion
+    if (oldContentPath) {
+      filePromises.push(
+        octokit.rest.repos.getContent({ owner, repo, path: oldContentPath, ref: branch }).catch(() => null)
+      );
+    }
+
+    const fileResults = await Promise.all(filePromises);
+    const blogDataResult = fileResults[0];
+    const pageResult = fileResults[1];
+
+    if (!('content' in blogDataResult.data) || !('content' in pageResult.data)) {
+      return NextResponse.json({ error: 'Could not read required files' }, { status: 500 });
+    }
+
+    const blogDataContent = Buffer.from(blogDataResult.data.content, 'base64').toString('utf-8');
+    let pageContent = Buffer.from(pageResult.data.content, 'base64').toString('utf-8');
 
     // Check if blog exists
     const slugExists = blogDataContent.includes(`slug: '${originalSlug}'`) || blogDataContent.includes(`slug: "${originalSlug}"`);
@@ -316,13 +338,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: `Blog not found with slug: ${originalSlug}` }, { status: 404 });
     }
 
-    // Parse blog objects
+    // Parse blog objects from blogData.ts
     const interfaceMatch = blogDataContent.match(/(export interface BlogPost[\s\S]*?}\n)/);
     const arrayStartIndex = blogDataContent.indexOf('export const blogPosts: BlogPost[] = [') + 'export const blogPosts: BlogPost[] = ['.length;
     const arrayEndIndex = blogDataContent.lastIndexOf('];');
     const arrayContent = blogDataContent.substring(arrayStartIndex, arrayEndIndex);
 
-    // Parse individual blog objects
     const blogObjects: string[] = [];
     let depth = 0;
     let currentObject = '';
@@ -351,7 +372,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Find and extract the original blog data
+    // Find the blog to update
     const blogIndex = blogObjects.findIndex(obj =>
       obj.includes(`slug: '${originalSlug}'`) || obj.includes(`slug: "${originalSlug}"`)
     );
@@ -399,28 +420,17 @@ export async function POST(request: NextRequest) {
     ogImage: '${coverImagePath}',
   }`;
 
-    // Replace the blog entry
     blogObjects[blogIndex] = updatedBlog;
 
-    // Rebuild the file
+    // Rebuild blogData.ts
     const interfacePart = interfaceMatch ? interfaceMatch[1] : '';
     const newArrayContent = '\n' + blogObjects.map(obj => '  ' + obj).join(',\n\n') + '\n';
     const newBlogDataContent = `${interfacePart}
 export const blogPosts: BlogPost[] = [${newArrayContent}];
 `;
 
-    // Update blogData.ts via GitHub API
-    await octokit.rest.repos.createOrUpdateFileContents({
-      owner,
-      repo,
-      path: blogDataPath,
-      message: `Update blog: ${title}`,
-      content: Buffer.from(newBlogDataContent).toString('base64'),
-      branch,
-      sha: blogDataFile.sha,
-    });
-
-    // Update content file if manual content changed
+    // Prepare content file if manual content changed
+    let componentContent: string | null = null;
     if (contentType === 'manual' && manualContent) {
       const isHTMLContent = /<[a-z][\s\S]*>/i.test(manualContent);
       const imageUrls: { [key: number]: string } = {};
@@ -460,156 +470,200 @@ export const blogPosts: BlogPost[] = [${newArrayContent}];
         return `[IMAGE_${index}]`;
       });
 
-      const componentContent = isHTMLContent
-        ? generateBlogComponentFromHTML(processedContent, imageUrls, title)
-        : generateBlogComponentFromHTML(processedContent, imageUrls, title);
-
-      const contentPath = `src/app/blog/[slug]/content/${slug}.tsx`;
-
-      // Check if file exists to get SHA
-      let existingSha: string | undefined;
-      try {
-        const { data: existingFile } = await octokit.rest.repos.getContent({
-          owner,
-          repo,
-          path: contentPath,
-          ref: branch,
-        });
-        if ('sha' in existingFile) {
-          existingSha = existingFile.sha;
-        }
-      } catch (e) {
-        // File doesn't exist
-      }
-
-      await octokit.rest.repos.createOrUpdateFileContents({
-        owner,
-        repo,
-        path: contentPath,
-        message: `Update blog content: ${title}`,
-        content: Buffer.from(componentContent).toString('base64'),
-        branch,
-        ...(existingSha && { sha: existingSha }),
-      });
+      componentContent = generateBlogComponentFromHTML(processedContent, imageUrls, title);
     }
 
-    // If slug changed, we need to update page.tsx and handle the old content file
+    // Update page.tsx if slug changed
+    const originalPageContent = pageContent;
     if (originalSlug !== slug) {
-      // Delete old content file
-      const oldContentPath = `src/app/blog/[slug]/content/${originalSlug}.tsx`;
-      try {
-        const { data: oldContentFile } = await octokit.rest.repos.getContent({
-          owner,
-          repo,
-          path: oldContentPath,
-          ref: branch,
-        });
+      // Remove old dynamic import
+      const oldDynamicImportPattern = new RegExp(
+        `const\\s+\\w+Content\\s*=\\s*dynamic\\s*\\(\\s*\\(\\s*\\)\\s*=>\\s*import\\s*\\(\\s*['"]\\.\\/content\\/${originalSlug}['"]\\)[^;]*;\\s*\\n?`,
+        'g'
+      );
+      pageContent = pageContent.replace(oldDynamicImportPattern, '');
 
-        if ('sha' in oldContentFile) {
-          await octokit.rest.repos.deleteFile({
-            owner,
-            repo,
-            path: oldContentPath,
-            message: `Delete old content file: ${originalSlug}`,
-            sha: oldContentFile.sha,
-            branch,
-          });
+      // Remove old static import
+      const oldStaticImportPattern = new RegExp(
+        `import\\s+\\w+Content\\s+from\\s+['"]\\.\\/content\\/${originalSlug}['"];?\\s*\\n?`,
+        'g'
+      );
+      pageContent = pageContent.replace(oldStaticImportPattern, '');
+
+      // Remove old render case
+      const oldRenderCasePattern = new RegExp(
+        `\\s*if\\s*\\(post\\.slug\\s*===\\s*['"]${originalSlug}['"]\\)\\s*\\{[\\s\\S]*?return\\s*<\\w+Content\\s*\\/?>\\s*;?\\s*\\}\\s*`,
+        'g'
+      );
+      pageContent = pageContent.replace(oldRenderCasePattern, '\n    ');
+
+      // Add new import and render case
+      let newComponentName = slug
+        .split('-')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join('');
+
+      if (/^\d/.test(newComponentName)) {
+        const numberWords: { [key: string]: string } = {
+          '0': 'Zero_', '1': 'One_', '2': 'Two_', '3': 'Three_', '4': 'Four_',
+          '5': 'Five_', '6': 'Six_', '7': 'Seven_', '8': 'Eight_', '9': 'Nine_', '10': 'Ten_'
+        };
+        const match = newComponentName.match(/^(\d+)/);
+        if (match) {
+          const num = match[1];
+          const prefix = numberWords[num] || `N${num}_`;
+          newComponentName = prefix + newComponentName.slice(num.length);
         }
-      } catch (e) {
-        // Old file doesn't exist, that's fine
       }
 
-      // Update page.tsx - remove old import/render case and add new one
-      const pagePath = 'src/app/blog/[slug]/page.tsx';
-      try {
-        const { data: pageFile } = await octokit.rest.repos.getContent({
-          owner,
-          repo,
-          path: pagePath,
-          ref: branch,
-        });
+      const newImportStatement = `const ${newComponentName}Content = dynamic(() => import('./content/${slug}').catch(() => () => null), { ssr: true });`;
 
-        if ('content' in pageFile) {
-          let pageContent = Buffer.from(pageFile.content, 'base64').toString('utf-8');
+      // Add new import after last dynamic import
+      const dynamicImportMatch = pageContent.match(/const \w+Content = dynamic\([^;]+\);/g);
+      if (dynamicImportMatch && dynamicImportMatch.length > 0) {
+        const lastDynamicImport = dynamicImportMatch[dynamicImportMatch.length - 1];
+        const lastIndex = pageContent.lastIndexOf(lastDynamicImport);
+        pageContent = pageContent.slice(0, lastIndex + lastDynamicImport.length) + '\n' + newImportStatement + pageContent.slice(lastIndex + lastDynamicImport.length);
+      }
 
-          // Remove old dynamic import
-          const oldDynamicImportPattern = new RegExp(
-            `const\\s+\\w+Content\\s*=\\s*dynamic\\s*\\(\\s*\\(\\s*\\)\\s*=>\\s*import\\s*\\(\\s*['"]\\.\\/content\\/${originalSlug}['"]\\)[^;]*;\\s*\\n?`,
-            'g'
-          );
-          pageContent = pageContent.replace(oldDynamicImportPattern, '');
-
-          // Remove old static import
-          const oldStaticImportPattern = new RegExp(
-            `import\\s+\\w+Content\\s+from\\s+['"]\\.\\/content\\/${originalSlug}['"];?\\s*\\n?`,
-            'g'
-          );
-          pageContent = pageContent.replace(oldStaticImportPattern, '');
-
-          // Remove old render case
-          const oldRenderCasePattern = new RegExp(
-            `\\s*if\\s*\\(post\\.slug\\s*===\\s*['"]${originalSlug}['"]\\)\\s*\\{[\\s\\S]*?return\\s*<\\w+Content\\s*\\/?>\\s*;?\\s*\\}\\s*`,
-            'g'
-          );
-          pageContent = pageContent.replace(oldRenderCasePattern, '\n    ');
-
-          // Add new import and render case
-          let newComponentName = slug
-            .split('-')
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-            .join('');
-
-          if (/^\d/.test(newComponentName)) {
-            const numberWords: { [key: string]: string } = {
-              '0': 'Zero_', '1': 'One_', '2': 'Two_', '3': 'Three_', '4': 'Four_',
-              '5': 'Five_', '6': 'Six_', '7': 'Seven_', '8': 'Eight_', '9': 'Nine_', '10': 'Ten_'
-            };
-            const match = newComponentName.match(/^(\d+)/);
-            if (match) {
-              const num = match[1];
-              const prefix = numberWords[num] || `N${num}_`;
-              newComponentName = prefix + newComponentName.slice(num.length);
-            }
-          }
-
-          const newImportStatement = `const ${newComponentName}Content = dynamic(() => import('./content/${slug}').catch(() => () => null), { ssr: true });`;
-
-          // Add new import after last dynamic import
-          const dynamicImportMatch = pageContent.match(/const \w+Content = dynamic\([^;]+\);/g);
-          if (dynamicImportMatch && dynamicImportMatch.length > 0) {
-            const lastDynamicImport = dynamicImportMatch[dynamicImportMatch.length - 1];
-            const lastIndex = pageContent.lastIndexOf(lastDynamicImport);
-            pageContent = pageContent.slice(0, lastIndex + lastDynamicImport.length) + '\n' + newImportStatement + pageContent.slice(lastIndex + lastDynamicImport.length);
-          }
-
-          // Add new render case
-          const newRenderCase = `    if (post.slug === '${slug}') {
+      // Add new render case
+      const newRenderCase = `    if (post.slug === '${slug}') {
       return <${newComponentName}Content />;
     }
 `;
-          const returnNullIndex = pageContent.indexOf('return null;');
-          if (returnNullIndex !== -1) {
-            pageContent = pageContent.slice(0, returnNullIndex) + newRenderCase + '    ' + pageContent.slice(returnNullIndex);
-          }
-
-          // Clean up
-          pageContent = pageContent.replace(/\n{3,}/g, '\n\n');
-          pageContent = pageContent.replace(/\n\s+\n\s*return null;/g, '\n    return null;');
-
-          await octokit.rest.repos.createOrUpdateFileContents({
-            owner,
-            repo,
-            path: pagePath,
-            message: `Update page.tsx for slug change: ${originalSlug} -> ${slug}`,
-            content: Buffer.from(pageContent).toString('base64'),
-            branch,
-            sha: pageFile.sha,
-          });
-        }
-      } catch (pageError: any) {
-        console.error('Error updating page.tsx:', pageError.message);
+      const returnNullIndex = pageContent.indexOf('return null;');
+      if (returnNullIndex !== -1) {
+        pageContent = pageContent.slice(0, returnNullIndex) + newRenderCase + '    ' + pageContent.slice(returnNullIndex);
       }
+
+      // Clean up
+      pageContent = pageContent.replace(/\n{3,}/g, '\n\n');
+      pageContent = pageContent.replace(/\n\s+\n\s*return null;/g, '\n    return null;');
     }
+
+    // Create a single commit with all changes using Git Data API
+    const { data: refData } = await octokit.rest.git.getRef({
+      owner,
+      repo,
+      ref: `heads/${branch}`,
+    });
+    const currentCommitSha = refData.object.sha;
+
+    const { data: commitData } = await octokit.rest.git.getCommit({
+      owner,
+      repo,
+      commit_sha: currentCommitSha,
+    });
+    const baseTreeSha = commitData.tree.sha;
+
+    // Create blobs for all files to update
+    const blobPromises: Promise<any>[] = [
+      octokit.rest.git.createBlob({
+        owner,
+        repo,
+        content: Buffer.from(newBlogDataContent).toString('base64'),
+        encoding: 'base64',
+      }),
+    ];
+
+    // Only create page blob if content changed
+    const pageChanged = pageContent !== originalPageContent;
+    if (pageChanged) {
+      blobPromises.push(
+        octokit.rest.git.createBlob({
+          owner,
+          repo,
+          content: Buffer.from(pageContent).toString('base64'),
+          encoding: 'base64',
+        })
+      );
+    }
+
+    // Create content blob if we have content
+    if (componentContent) {
+      blobPromises.push(
+        octokit.rest.git.createBlob({
+          owner,
+          repo,
+          content: Buffer.from(componentContent).toString('base64'),
+          encoding: 'base64',
+        })
+      );
+    }
+
+    const blobResults = await Promise.all(blobPromises);
+    const blogDataBlob = blobResults[0];
+    let blobIndex = 1;
+    const pageBlob = pageChanged ? blobResults[blobIndex++] : null;
+    const contentBlob = componentContent ? blobResults[blobIndex++] : null;
+
+    // Build tree entries
+    const treeEntries: Array<{
+      path: string;
+      mode: '100644';
+      type: 'blob';
+      sha: string | null;
+    }> = [
+      {
+        path: blogDataPath,
+        mode: '100644',
+        type: 'blob',
+        sha: blogDataBlob.data.sha,
+      },
+    ];
+
+    if (pageBlob) {
+      treeEntries.push({
+        path: pagePath,
+        mode: '100644',
+        type: 'blob',
+        sha: pageBlob.data.sha,
+      });
+    }
+
+    if (contentBlob) {
+      treeEntries.push({
+        path: contentPath,
+        mode: '100644',
+        type: 'blob',
+        sha: contentBlob.data.sha,
+      });
+    }
+
+    // Delete old content file if slug changed
+    if (oldContentPath && fileResults.length > 3 && fileResults[3]) {
+      treeEntries.push({
+        path: oldContentPath,
+        mode: '100644',
+        type: 'blob',
+        sha: null,
+      });
+    }
+
+    // Create new tree
+    const { data: newTree } = await octokit.rest.git.createTree({
+      owner,
+      repo,
+      base_tree: baseTreeSha,
+      tree: treeEntries,
+    });
+
+    // Create commit
+    const { data: newCommit } = await octokit.rest.git.createCommit({
+      owner,
+      repo,
+      message: `Update blog: ${title}`,
+      tree: newTree.sha,
+      parents: [currentCommitSha],
+    });
+
+    // Update branch reference
+    await octokit.rest.git.updateRef({
+      owner,
+      repo,
+      ref: `heads/${branch}`,
+      sha: newCommit.sha,
+    });
 
     return NextResponse.json({
       success: true,
