@@ -508,14 +508,17 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
         data.append('isEditing', 'true');
       }
 
-      // Get clean content from the visual editor
-      const cleanContent = getCleanContent();
+      // For new blogs: convert HTML to markdown for the API to process
+      // For editing blogs: send HTML directly since the API will wrap it without re-processing
+      const contentToSend = editingBlog
+        ? (editorRef.current?.innerHTML || formData.manualContent)
+        : getCleanContent();
 
       Object.entries(formData).forEach(([key, value]) => {
         if (value !== null && typeof value !== 'object') {
-          // Use the clean content instead of raw HTML
+          // Use the appropriate content format
           if (key === 'manualContent') {
-            data.append(key, cleanContent);
+            data.append(key, contentToSend);
           } else {
             data.append(key, value.toString());
           }

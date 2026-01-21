@@ -475,7 +475,6 @@ export const blogPosts: BlogPost[] = [${newArrayContent}];
     // Prepare content file if manual content changed
     let componentContent: string | null = null;
     if (contentType === 'manual' && manualContent) {
-      const isHTMLContent = /<[a-z][\s\S]*>/i.test(manualContent);
       const imageUrls: { [key: number]: string } = {};
 
       // Handle content images
@@ -498,8 +497,12 @@ export const blogPosts: BlogPost[] = [${newArrayContent}];
         }
       }
 
-      // Process content and map image placeholders
-      let processedContent = manualContent;
+      // For updates, wrap the HTML content directly without re-processing
+      // The content from the editor is already valid HTML/JSX that was extracted from the component
+      // Re-processing it corrupts the formatting (converts <h2> to ## etc.)
+      let contentToWrap = manualContent;
+
+      // Handle any image placeholders in the content
       const imagePlaceholderRegex = /\[IMAGE:\s*(img_\d+)\]/g;
       const placeholderMatches = [...manualContent.matchAll(imagePlaceholderRegex)];
       const imageIdToIndex: { [id: string]: number } = {};
@@ -508,12 +511,37 @@ export const blogPosts: BlogPost[] = [${newArrayContent}];
         imageIdToIndex[match[1]] = index;
       });
 
-      processedContent = processedContent.replace(imagePlaceholderRegex, (match, id) => {
+      // Replace image placeholders with actual image components if we have new images
+      contentToWrap = contentToWrap.replace(imagePlaceholderRegex, (match, id) => {
         const index = imageIdToIndex[id];
-        return `[IMAGE_${index}]`;
+        const imageUrl = imageUrls[index];
+        if (imageUrl) {
+          return `<div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
+        <img
+          src="${imageUrl}"
+          alt="Building Approvals Dubai - ${escapeForJSX(title)}"
+          style={{ width: '100%', height: 'auto', display: 'block' }}
+        />
+      </div>`;
+        }
+        return match;
       });
 
-      componentContent = generateBlogComponentFromHTML(processedContent, imageUrls, title);
+      // Wrap the content directly in the JSX component structure
+      componentContent = `export default function BlogContent() {
+  return (
+    <div className="blog-content-wrapper">
+      ${contentToWrap}
+
+      <div className="cta-box">
+        <h3>Need Help with Building Approvals?</h3>
+        <p>Our expert team is ready to assist you with all your Dubai building approval needs.</p>
+        <a href="/contact" className="cta-button">Get in Touch</a>
+      </div>
+    </div>
+  );
+}
+`;
     }
 
     // Update page.tsx if slug changed
