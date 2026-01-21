@@ -1,5 +1,20 @@
-export interface BlogPost
+export interface BlogPost {
+  id: string;
+  title: string;
+  excerpt: string;
+  date: string;
+  author: string;
+  category: string;
+  image: string;
+  coverImage?: string;
+  slug: string;
+  metaTitle?: string;
+  metaDescription?: string;
+  keywords?: string[];
+  ogImage?: string;
+}
 
+export const blogPosts: BlogPost[] = [
   {
     id: '1768906027058',
     title: 'Dubai Municipality Services Categories & Approvals 2026',
@@ -14,22 +29,6 @@ export interface BlogPost
     metaDescription: 'Explore all Dubai Municipality services categories, approvals, and processes in Dubai. A clear guide for owners, developers & businesses.',
     keywords: ['Dubai', 'Municipality', 'Services', 'Categories', 'Approvals', '2026'],
     ogImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-cover-1768906020276.jpg',
-  },
-
-  {
-    id: '1768903103411',
-    title: 'Dubai Municipality Services Categories & Approvals 2026',
-    slug: 'dubai-municipality-services-categories',
-    category: 'Dubai Municipality',
-    author: 'Building Approvals Dubai',
-    date: '2026-01-20',
-    excerpt: 'Explore all Dubai Municipality services categories, approvals, and processes in Dubai. A clear guide for owners, developers & businesses.',
-    image: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-list-1768903096521.jpg',
-    coverImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-cover-1768903096521.jpg',
-    metaTitle: 'Dubai Municipality Services Categories & Approvals 2026 | Building Approvals Dubai',
-    metaDescription: 'Explore all Dubai Municipality services categories, approvals, and processes in Dubai. A clear guide for owners, developers & businesses.',
-    keywords: ['Dubai', 'Municipality', 'Services', 'Categories', 'Approvals', '2026'],
-    ogImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-cover-1768903096521.jpg',
   },
 
   {
@@ -87,11 +86,11 @@ export interface BlogPost
     category: 'DEWA Approvals',
     author: 'Building Approvals Dubai',
     date: '2026-01-13',
-    excerpt: 'This guide explains how DEWA fits into Dubai’s building approvals system, the step-by-step DEWA approval process, and a complete list of documents required to avoid delays.',
+    excerpt: "This guide explains how DEWA fits into Dubai's building approvals system, the step-by-step DEWA approval process, and a complete list of documents required to avoid delays.",
     image: '/images/blog/building-approvals-dubai-dewa-approval-list.jpg',
     coverImage: '/images/blog/building-approvals-dubai-dewa-approval-cover.jpg',
     metaTitle: 'How to Get DEWA Approvals in Dubai: Step-by-Step Process & Checklist | Building Approvals Dubai',
-    metaDescription: 'This guide explains how DEWA fits into Dubai’s building approvals system, the step-by-step DEWA approval process, and a complete list of documents required to avoid delays.',
+    metaDescription: "This guide explains how DEWA fits into Dubai's building approvals system, the step-by-step DEWA approval process, and a complete list of documents required to avoid delays.",
     keywords: ['DEWA', 'Approvals', 'Dubai:', 'Step-by-Step', 'Process', 'Checklist'],
     ogImage: '/images/blog/building-approvals-dubai-dewa-approval-cover.jpg',
   },
@@ -156,5 +155,4 @@ export interface BlogPost
     keywords: ['Dubai Civil Defence approval', 'DCD approval Dubai', 'fire safety Dubai', 'building approvals Dubai', 'UAE Fire and Life Safety Code', 'DCD certification', 'fire protection systems Dubai'],
     ogImage: '/images/blog/building-approvals-dubai-civil-defence-approval-card.jpg',
   }
-
 ];
