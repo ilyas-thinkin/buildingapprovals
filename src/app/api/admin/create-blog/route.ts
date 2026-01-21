@@ -338,8 +338,37 @@ function cleanInlineHTML(html: string): string {
   text = text.replace(/&#x27;/g, "'");
   text = text.replace(/&#(\d+);/g, (_, code) => String.fromCharCode(parseInt(code, 10)));
 
-  // Remove all HTML tags
+  // Preserve inline formatting tags by protecting them
+  const inlineTagPlaceholders: string[] = [];
+
+  // Protect <a> tags with all attributes
+  text = text.replace(/<a\s+[^>]*>[\s\S]*?<\/a>/gi, (match) => {
+    const placeholder = `__INLINE_TAG_${inlineTagPlaceholders.length}__`;
+    inlineTagPlaceholders.push(match);
+    return placeholder;
+  });
+
+  // Protect <strong> and <b> tags
+  text = text.replace(/<(strong|b)[^>]*>([\s\S]*?)<\/\1>/gi, (match) => {
+    const placeholder = `__INLINE_TAG_${inlineTagPlaceholders.length}__`;
+    inlineTagPlaceholders.push(match);
+    return placeholder;
+  });
+
+  // Protect <em> and <i> tags
+  text = text.replace(/<(em|i)[^>]*>([\s\S]*?)<\/\1>/gi, (match) => {
+    const placeholder = `__INLINE_TAG_${inlineTagPlaceholders.length}__`;
+    inlineTagPlaceholders.push(match);
+    return placeholder;
+  });
+
+  // Now remove all other HTML tags
   text = text.replace(/<[^>]+>/g, '');
+
+  // Restore inline tags
+  inlineTagPlaceholders.forEach((tag, i) => {
+    text = text.replace(`__INLINE_TAG_${i}__`, tag);
+  });
 
   // Clean up whitespace
   text = text.replace(/\s+/g, ' ').trim();

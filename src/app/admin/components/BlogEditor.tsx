@@ -81,20 +81,38 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
 
   const extractContentFromComponent = (componentStr: string): string => {
     let content = componentStr;
+
+    // Remove component wrapper
     content = content.replace(/import.*?;\n/g, '');
     content = content.replace(/export default function.*?\(\)\s*\{/g, '');
     content = content.replace(/return\s*\(/g, '');
     content = content.replace(/<>|<\/>/g, '');
     content = content.replace(/\s*\}\s*$/g, '');
-    content = content.replace(/<h2[^>]*>(.*?)<\/h2>/g, '\n## $1\n');
-    content = content.replace(/<h3[^>]*>(.*?)<\/h3>/g, '\n### $1\n');
-    content = content.replace(/<p[^>]*>(.*?)<\/p>/g, (match, text) => '\n' + text + '\n');
-    content = content.replace(/<ul[^>]*>(.*?)<\/ul>/g, (match, items) => items);
-    content = content.replace(/<li[^>]*>(.*?)<\/li>/g, '- $1\n');
-    content = content.replace(/<strong[^>]*>(.*?)<\/strong>/g, '**$1**');
-    content = content.replace(/<[^>]*>/g, '');
+
+    // Remove the wrapper div and CTA box
+    content = content.replace(/<div className="blog-content-wrapper">/g, '');
+    content = content.replace(/<div className="cta-box">[\s\S]*?<\/div>/g, '');
+    content = content.replace(/<div className="key-takeaways-box">[\s\S]*?<\/div>/g, '');
+
+    // Convert JSX style objects to regular style strings for the editor
+    // e.g., style={{ margin: '40px 0' }} -> style="margin: 40px 0"
+    content = content.replace(/style=\{\{([^}]+)\}\}/g, (match, styleObj) => {
+      // Parse the JSX style object
+      const styleStr = styleObj
+        .replace(/'/g, '')
+        .replace(/,\s*/g, '; ')
+        .replace(/:\s+/g, ': ')
+        .trim();
+      return `style="${styleStr}"`;
+    });
+
+    // Keep HTML tags intact for the rich text editor
+    // Just clean up the closing div and extra whitespace
+    content = content.replace(/<\/div>\s*\)\s*;?\s*$/g, '');
+    content = content.replace(/^\s+/gm, '');
     content = content.replace(/\n{3,}/g, '\n\n');
     content = content.trim();
+
     return content;
   };
 

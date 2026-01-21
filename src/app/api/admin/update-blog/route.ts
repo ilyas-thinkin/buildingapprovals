@@ -42,9 +42,11 @@ function escapeForJSX(text: string): string {
   return escaped;
 }
 
-// Clean inline HTML - remove tags but preserve text
+// Clean inline HTML - preserve inline formatting tags (a, strong, em, b, i) but remove block tags
 function cleanInlineHTML(html: string): string {
   let text = html;
+
+  // Decode HTML entities
   text = text.replace(/&nbsp;/g, ' ');
   text = text.replace(/&amp;/g, '&');
   text = text.replace(/&lt;/g, '<');
@@ -53,17 +55,58 @@ function cleanInlineHTML(html: string): string {
   text = text.replace(/&#39;/g, "'");
   text = text.replace(/&#x27;/g, "'");
   text = text.replace(/&#(\d+);/g, (_, code) => String.fromCharCode(parseInt(code, 10)));
+
+  // Preserve inline formatting tags by protecting them
+  const inlineTagPlaceholders: string[] = [];
+
+  // Protect <a> tags with all attributes
+  text = text.replace(/<a\s+[^>]*>[\s\S]*?<\/a>/gi, (match) => {
+    const placeholder = `__INLINE_TAG_${inlineTagPlaceholders.length}__`;
+    inlineTagPlaceholders.push(match);
+    return placeholder;
+  });
+
+  // Protect <strong> and <b> tags
+  text = text.replace(/<(strong|b)[^>]*>([\s\S]*?)<\/\1>/gi, (match) => {
+    const placeholder = `__INLINE_TAG_${inlineTagPlaceholders.length}__`;
+    inlineTagPlaceholders.push(match);
+    return placeholder;
+  });
+
+  // Protect <em> and <i> tags
+  text = text.replace(/<(em|i)[^>]*>([\s\S]*?)<\/\1>/gi, (match) => {
+    const placeholder = `__INLINE_TAG_${inlineTagPlaceholders.length}__`;
+    inlineTagPlaceholders.push(match);
+    return placeholder;
+  });
+
+  // Now remove all other HTML tags
   text = text.replace(/<[^>]+>/g, '');
+
+  // Restore inline tags
+  inlineTagPlaceholders.forEach((tag, i) => {
+    text = text.replace(`__INLINE_TAG_${i}__`, tag);
+  });
+
+  // Clean up whitespace
   text = text.replace(/\s+/g, ' ').trim();
+
   return text;
 }
 
-// Process inline formatting
+// Process inline formatting - convert markdown to HTML if present
 function processInlineFormatting(text: string): string {
   let processed = text;
+
+  // Convert markdown bold to HTML (only if not already HTML)
   processed = processed.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+
+  // Convert markdown italic to HTML (only if not already HTML)
   processed = processed.replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em>$1</em>');
+
+  // Convert markdown links to HTML (only if not already HTML)
   processed = processed.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+
   return processed;
 }
 
