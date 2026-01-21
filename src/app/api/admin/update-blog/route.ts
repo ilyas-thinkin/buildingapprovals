@@ -502,6 +502,21 @@ export const blogPosts: BlogPost[] = [${newArrayContent}];
       // Re-processing it corrupts the formatting (converts <h2> to ## etc.)
       let contentToWrap = manualContent;
 
+      // Convert HTML style="..." attributes to JSX style={{...}} objects
+      // The editor converts JSX style objects to HTML strings, so we need to convert back
+      contentToWrap = contentToWrap.replace(/style="([^"]*)"/g, (match, styleStr) => {
+        // Parse CSS string into JSX object format
+        const styles = styleStr.split(';').filter((s: string) => s.trim());
+        const jsxStyles = styles.map((style: string) => {
+          const [property, value] = style.split(':').map((s: string) => s.trim());
+          if (!property || !value) return null;
+          // Convert kebab-case to camelCase
+          const camelProperty = property.replace(/-([a-z])/g, (g: string) => g[1].toUpperCase());
+          return `${camelProperty}: '${value}'`;
+        }).filter(Boolean);
+        return `style={{ ${jsxStyles.join(', ')} }}`;
+      });
+
       // Handle any image placeholders in the content
       const imagePlaceholderRegex = /\[IMAGE:\s*(img_\d+)\]/g;
       const placeholderMatches = [...manualContent.matchAll(imagePlaceholderRegex)];
@@ -526,6 +541,17 @@ export const blogPosts: BlogPost[] = [${newArrayContent}];
         }
         return match;
       });
+
+      // Clean up any artifacts from the editor extraction
+      // Remove any duplicate CTA boxes that might have been in the original content
+      contentToWrap = contentToWrap.replace(/<div className="cta-box">[\s\S]*?<\/div>/g, '');
+      // Remove stray JSX artifacts like ); at the end
+      contentToWrap = contentToWrap.replace(/\);\s*(<\/?\w|$)/g, '$1');
+      // Clean up empty paragraphs
+      contentToWrap = contentToWrap.replace(/<p>\s*<\/p>/g, '');
+      // Clean up multiple newlines
+      contentToWrap = contentToWrap.replace(/\n{3,}/g, '\n\n');
+      contentToWrap = contentToWrap.trim();
 
       // Wrap the content directly in the JSX component structure
       componentContent = `export default function BlogContent() {
