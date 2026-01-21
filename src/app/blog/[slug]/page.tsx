@@ -12,7 +12,6 @@ const HowToGetDewaApprovalsInDubaiStepByStepProcessChecklistContent = dynamic(()
 const HowToSecureANakheelNocInDubai2026Content = dynamic(() => import('./content/how-to-secure-a-nakheel-noc-in-dubai-2026').catch(() => () => null), { ssr: true });
 const DubaiMunicipalityApproval2026CompleteGuideForConstructionFitOutEngineeringProjectsInDubaiContent = dynamic(() => import('./content/dubai-municipality-approval-2026-complete-guide-for-construction-fit-out-engineering-projects-in-dubai').catch(() => () => null), { ssr: true });
 const Ten_CommonFitOutApprovalMistakesThatDelayProjectsInDubai2026Content = dynamic(() => import('./content/10-common-fit-out-approval-mistakes-that-delay-projects-in-dubai-2026').catch(() => () => null), { ssr: true });
-const DubaiMunicipalityServicesCategoriesCompleteGuideForApprovalsComplianceInDubai2026Content = dynamic(() => import('./content/dubai-municipality-services-categories-complete-guide-for-approvals-compliance-in-dubai-2026').catch(() => () => null), { ssr: true });
 interface BlogPostPageProps {
   params: Promise<{
     slug: string;
@@ -131,9 +130,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     }
     if (post.slug === '10-common-fit-out-approval-mistakes-that-delay-projects-in-dubai-2026') {
       return <Ten_CommonFitOutApprovalMistakesThatDelayProjectsInDubai2026Content />;
-    }
-        if (post.slug === 'dubai-municipality-services-categories-complete-guide-for-approvals-compliance-in-dubai-2026') {
-      return <DubaiMunicipalityServicesCategoriesCompleteGuideForApprovalsComplianceInDubai2026Content />;
     }
     return null;
   };
