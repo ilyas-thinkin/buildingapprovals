@@ -65,7 +65,13 @@ export default function BlogContent() {
 <p>Required for restaurants, kitchens, cafeterias, and food processing units.</p>
 <h2>Step-by-Step Process to Obtain Dubai Municipality Approval</h2>
 <div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0' }}>
-<img src="https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-approval-content-1768411782338.jpeg" alt="Building Approvals Dubai - Dubai Municipality Approval 2026 – Complete Guide for Construction, Fit-Out &amp; Engineering Projects in Dubai" style={{ width: '100%', height: 'auto', display: 'block' }} />
+<p><div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
+        <img
+          src="https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-content-1-1769065838329.jpeg"
+          alt="Building Approvals Dubai - Dubai Municipality Approval 2026 – Complete Guide for Construction, Fit-Out & Engineering Projects in Dubai"
+          style={{ width: '100%', height: 'auto', display: 'block' }}
+        />
+      </div></p>
 </div>
 <h2>Step 1 – Appoint a Registered Consultant</h2>
 <p>Dubai Municipality accepts submissions only from licensed engineering consultants registered with DM. The consultant prepares drawings and ensures compliance before submission.</p>
