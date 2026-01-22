@@ -51,7 +51,7 @@ export const blogPosts: BlogPost[] = [
     id: '1768976989112',
     title: 'Dubai Municipality Services Categories: Complete Guide for Approvals & Compliance in Dubai (2026)',
     slug: 'dubai-municipality-services-categories-complete-guide-for-approvals-compliance-in-dubai-2026',
-    category: 'Dubai Municipality Services Categories',
+    category: 'Dubai Municipality',
     author: 'Building Approvals Dubai',
     date: '2026-01-21',
     excerpt: 'This guide on Dubai Municipality Services Categories breaks everything down—clearly and practically—so business owners, homeowners, and developers know exactly which approvals apply, how the local approval process works, and how to avoid costly delays in Dubai.',
