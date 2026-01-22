@@ -59,9 +59,13 @@ export default function BlogContent() {
 <p>Address all comments precisely—partial fixes often cause repeat comments.</p>
 <h3>Step 6: Approval Issued</h3>
 <p>Once cleared, you'll receive official DDA Approval to proceed.</p>
-<div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0' }}>
-<img src="https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dda-approval-content-1-1768990426786.jpeg" alt="Building Approvals Dubai - How to get Dubai Development Authority (DDA) Approval in Dubai 2026" style={{ width: '100%', height: 'auto', display: 'block' }}>
-</div>
+<div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
+        <img
+          src="https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dda-approval-content-1-1768990426786.jpeg"
+          alt="Building Approvals Dubai - How to get Dubai Development Authority (DDA) Approval in Dubai 2026"
+          style={{ width: '100%', height: 'auto', display: 'block' }}
+        />
+      </div>
 <h2>How Long Does DDA Approval Take?</h2>
 <ul>
 <li>Simple fit-outs: 7–15 working days</li>

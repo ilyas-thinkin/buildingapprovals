@@ -506,9 +506,14 @@ export const blogPosts: BlogPost[] = [${newArrayContent}];
       // The editor converts JSX style objects to HTML strings, so we need to convert back
       contentToWrap = contentToWrap.replace(/style="([^"]*)"/g, (match, styleStr) => {
         // Parse CSS string into JSX object format
+        // Split by semicolons but handle values that might contain semicolons (rare but possible)
         const styles = styleStr.split(';').filter((s: string) => s.trim());
         const jsxStyles = styles.map((style: string) => {
-          const [property, value] = style.split(':').map((s: string) => s.trim());
+          // Split only on the first colon to preserve values like rgba(0, 0, 0, 0.1)
+          const colonIndex = style.indexOf(':');
+          if (colonIndex === -1) return null;
+          const property = style.substring(0, colonIndex).trim();
+          const value = style.substring(colonIndex + 1).trim();
           if (!property || !value) return null;
           // Convert kebab-case to camelCase
           const camelProperty = property.replace(/-([a-z])/g, (g: string) => g[1].toUpperCase());
@@ -516,6 +521,9 @@ export const blogPosts: BlogPost[] = [${newArrayContent}];
         }).filter(Boolean);
         return `style={{ ${jsxStyles.join(', ')} }}`;
       });
+
+      // Also fix self-closing img tags - JSX requires /> instead of >
+      contentToWrap = contentToWrap.replace(/<img([^>]*[^/])>/g, '<img$1 />');
 
       // Handle any image placeholders in the content
       const imagePlaceholderRegex = /\[IMAGE:\s*(img_\d+)\]/g;

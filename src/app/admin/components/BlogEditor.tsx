@@ -98,11 +98,12 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
     // e.g., style={{ margin: '40px 0' }} -> style="margin: 40px 0"
     content = content.replace(/style=\{\{([^}]+)\}\}/g, (match, styleObj) => {
       // Parse the JSX style object
-      const styleStr = styleObj
-        .replace(/'/g, '')
-        .replace(/,\s*/g, '; ')
-        .replace(/:\s+/g, ': ')
-        .trim();
+      // Only replace commas that are property separators (not inside parentheses like rgba())
+      let styleStr = styleObj.replace(/'/g, '');
+      // Replace commas that separate properties (followed by a property name and colon)
+      // but not commas inside function calls like rgba(0, 0, 0, 0.1)
+      styleStr = styleStr.replace(/,\s*(?=[a-zA-Z]+\s*:)/g, '; ');
+      styleStr = styleStr.replace(/:\s+/g, ': ').trim();
       return `style="${styleStr}"`;
     });
 
