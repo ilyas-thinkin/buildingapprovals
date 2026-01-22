@@ -83,7 +83,7 @@ export const blogPosts: BlogPost[] = [
     id: '1768411786959',
     title: 'Dubai Municipality Approval 2026 – Complete Guide for Construction, Fit-Out & Engineering Projects in Dubai',
     slug: 'dubai-municipality-approval-2026-complete-guide-for-construction-fit-out-engineering-projects-in-dubai',
-    category: 'Dubai municipality approval',
+    category: 'Dubai municipality',
     author: 'Building Approvals Dubai',
     date: '2026-01-14',
     excerpt: 'Dubai Municipality Approval is the official authorization issued by Dubai Municipality (DM) to ensure that construction, engineering, and fit-out works comply with local building codes, safety regulations, environmental standards, and zoning laws.',
