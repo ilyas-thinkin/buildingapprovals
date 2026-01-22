@@ -14,6 +14,7 @@ const DubaiMunicipalityApproval2026CompleteGuideForConstructionFitOutEngineering
 const Ten_CommonFitOutApprovalMistakesThatDelayProjectsInDubai2026Content = dynamic(() => import('./content/10-common-fit-out-approval-mistakes-that-delay-projects-in-dubai-2026').catch(() => () => null), { ssr: true });
 const DubaiMunicipalityServicesCategoriesCompleteGuideForApprovalsComplianceInDubai2026Content = dynamic(() => import('./content/dubai-municipality-services-categories-complete-guide-for-approvals-compliance-in-dubai-2026').catch(() => () => null), { ssr: true });
 const HowToGetDubaiDevelopmentAuthorityDdaApprovalInDubai2026Content = dynamic(() => import('./content/how-to-get-dubai-development-authority-dda-approval-in-dubai-2026').catch(() => () => null), { ssr: true });
+const WhyHireAConsultantForDubaiCivilDefenceApprovalContent = dynamic(() => import('./content/why-hire-a-consultant-for-dubai-civil-defence-approval').catch(() => () => null), { ssr: true });
 interface BlogPostPageProps {
   params: Promise<{
     slug: string;
@@ -138,6 +139,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     }
         if (post.slug === 'how-to-get-dubai-development-authority-dda-approval-in-dubai-2026') {
       return <HowToGetDubaiDevelopmentAuthorityDdaApprovalInDubai2026Content />;
+    }
+        if (post.slug === 'why-hire-a-consultant-for-dubai-civil-defence-approval') {
+      return <WhyHireAConsultantForDubaiCivilDefenceApprovalContent />;
     }
     return null;
   };

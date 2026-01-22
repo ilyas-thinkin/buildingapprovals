@@ -16,6 +16,22 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    id: '1769065428206',
+    title: 'Why hire a Consultant for Dubai Civil Defence Approval?',
+    slug: 'why-hire-a-consultant-for-dubai-civil-defence-approval',
+    category: 'Dubai Civil Defence',
+    author: 'Building Approvals Dubai',
+    date: '2026-01-22',
+    excerpt: 'Why hire a Consultant for Dubai Civil Defence Approval?',
+    image: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-civil-defence-list-1769065428206.jpg',
+    coverImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-civil-defence-cover-1769065428206.jpg',
+    metaTitle: 'Why hire a Consultant for Dubai Civil Defence Approval? | Building Approvals Dubai',
+    metaDescription: 'Why hire a Consultant for Dubai Civil Defence Approval?',
+    keywords: ['hire', 'Consultant', 'Dubai', 'Civil', 'Defence', 'Approval?'],
+    ogImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-civil-defence-cover-1769065428206.jpg',
+  },
+
+  {
     id: '1768987140126',
     title: 'How to get Dubai Development Authority (DDA) Approval in Dubai 2026',
     slug: 'how-to-get-dubai-development-authority-dda-approval-in-dubai-2026',
