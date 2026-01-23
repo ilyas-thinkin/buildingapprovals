@@ -35,21 +35,21 @@
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background: #ffffff;
+  background: linear-gradient(135deg, #006efe 0%, #0056d6 100%);
   border: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 28px rgba(0, 110, 254, 0.3);
   z-index: 999;
-  transition: background 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
   text-decoration: none;
 }
 
 .call-float:hover {
-  background: linear-gradient(45deg, #006efe, #4da3f5);
-  box-shadow: 0 10px 30px rgba(0, 110, 254, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px rgba(0, 110, 254, 0.4);
 }
 
 .call-float .call-icon {
@@ -59,10 +59,6 @@
 }
 
 .call-float .call-icon path {
-  transition: fill 0.3s ease;
-}
-
-.call-float:hover .call-icon path {
   fill: #ffffff;
 }
 
