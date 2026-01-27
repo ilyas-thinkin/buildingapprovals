@@ -49,7 +49,7 @@ export const blogPosts: BlogPost[] = [
 
   {
     id: '1768976989112',
-    title: 'Dubai Municipality Services Categories: Complete Guide for Approvals & Compliance in Dubai (2026)',
+    title: 'Dubai Municipality (DM) Services Categories: Complete Guide for Approvals & Compliance in Dubai (2026)',
     slug: 'dubai-municipality-services-categories-complete-guide-for-approvals-compliance-in-dubai-2026',
     category: 'Dubai Municipality',
     author: 'Building Approvals Dubai',
@@ -57,9 +57,9 @@ export const blogPosts: BlogPost[] = [
     excerpt: 'This guide on Dubai Municipality Services Categories breaks everything down—clearly and practically—so business owners, homeowners, and developers know exactly which approvals apply, how the local approval process works, and how to avoid costly delays in Dubai.',
     image: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-services-ca-list-1768976989112.jpg',
     coverImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-services-ca-cover-1768976989112.jpg',
-    metaTitle: 'Dubai Municipality Services Categories: Complete Guide for Approvals & Compliance in Dubai (2026) | Building Approvals Dubai',
+    metaTitle: 'Dubai Municipality (DM) Services Categories: Complete Guide for Approvals & Compliance in Dubai (2026) | Building Approvals Dubai',
     metaDescription: 'This guide on Dubai Municipality Services Categories breaks everything down—clearly and practically—so business owners, homeowners, and developers know exactly which approvals apply, how the local approval process works, and how to avoid costly delays in Dubai.',
-    keywords: ['Dubai', 'Municipality', 'Services', 'Categories:', 'Complete', 'Guide', 'Approvals', 'Compliance', 'Dubai', '(2026)'],
+    keywords: ['Dubai', 'Municipality', '(DM)', 'Services', 'Categories:', 'Complete', 'Guide', 'Approvals', 'Compliance', 'Dubai', '(2026)'],
     ogImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-services-ca-cover-1768976989112.jpg',
   },
 
