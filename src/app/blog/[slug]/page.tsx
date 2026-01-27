@@ -5,7 +5,6 @@ import { blogPosts } from '../blogData';
 import './blog-post.css';
 // Dynamic imports with error handling - prevents build failures if content file is missing
 const DubaiMunicipalityApprovalContent = dynamic(() => import('./content/dubai-municipality-approval-process-2026').catch(() => () => null), { ssr: true });
-const DubaiMunicipalityUpdatedRulesContent = dynamic(() => import('./content/dubai-municipality-approvals-2026-updated-rules').catch(() => () => null), { ssr: true });
 const DubaiCivilDefenceApprovalDcdCompleteGuideFor2026Content = dynamic(() => import('./content/dubai-civil-defence-approval-dcd-complete-guide-for-2026').catch(() => () => null), { ssr: true });
 const FitOutApprovalDubaiSimplePracticalGuide2026Content = dynamic(() => import('./content/fit-out-approval-dubai-simple-practical-guide-2026').catch(() => () => null), { ssr: true });
 const HowToGetDewaApprovalsInDubaiStepByStepProcessChecklistContent = dynamic(() => import('./content/how-to-get-dewa-approvals-in-dubai-step-by-step-process-checklist').catch(() => () => null), { ssr: true });
@@ -15,6 +14,7 @@ const Ten_CommonFitOutApprovalMistakesThatDelayProjectsInDubai2026Content = dyna
 const DubaiMunicipalityServicesCategoriesCompleteGuideForApprovalsComplianceInDubai2026Content = dynamic(() => import('./content/dubai-municipality-services-categories-complete-guide-for-approvals-compliance-in-dubai-2026').catch(() => () => null), { ssr: true });
 const HowToGetDubaiDevelopmentAuthorityDdaApprovalInDubai2026Content = dynamic(() => import('./content/how-to-get-dubai-development-authority-dda-approval-in-dubai-2026').catch(() => () => null), { ssr: true });
 const WhyHireAConsultantForDubaiCivilDefenceApprovalContent = dynamic(() => import('./content/why-hire-a-consultant-for-dubai-civil-defence-approval').catch(() => () => null), { ssr: true });
+const DubaiMunicipalityApprovals(DM)2026UpdatedRulesContent = dynamic(() => import('./content/dubai-municipality-approvals-(DM)-2026-updated-rules').catch(() => () => null), { ssr: true });
 interface BlogPostPageProps {
   params: Promise<{
     slug: string;
@@ -108,11 +108,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     if (post.slug === 'dubai-municipality-approval-process-2026') {
       return <DubaiMunicipalityApprovalContent />;
     }
-
-    if (post.slug === 'dubai-municipality-approvals-2026-updated-rules') {
-      return <DubaiMunicipalityUpdatedRulesContent />;
-    }
-
     if (post.slug === 'dubai-civil-defence-approval-dcd-complete-guide-for-2026') {
       return <DubaiCivilDefenceApprovalDcdCompleteGuideFor2026Content />;
     }
@@ -142,6 +137,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     }
         if (post.slug === 'why-hire-a-consultant-for-dubai-civil-defence-approval') {
       return <WhyHireAConsultantForDubaiCivilDefenceApprovalContent />;
+    }
+        if (post.slug === 'dubai-municipality-approvals-(DM)-2026-updated-rules') {
+      return <DubaiMunicipalityApprovals(DM)2026UpdatedRulesContent />;
     }
     return null;
   };
