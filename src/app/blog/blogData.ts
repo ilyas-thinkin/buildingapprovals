@@ -81,17 +81,17 @@ export const blogPosts: BlogPost[] = [
 
   {
     id: '1768411786959',
-    title: 'Dubai Municipality Approval 2026 – Complete Guide for Construction, Fit-Out & Engineering Projects in Dubai',
-    slug: 'dubai-municipality-approval-2026-complete-guide-for-construction-fit-out-engineering-projects-in-dubai',
+    title: 'Dubai Municipality Approval (DM) 2026 – Complete Guide for Construction, Fit-Out & Engineering Projects in Dubai',
+    slug: 'dubai-municipality-approval-(DM)-2026-complete-guide-for-construction-fit-out-engineering-projects-in-dubai',
     category: 'Dubai municipality',
     author: 'Building Approvals Dubai',
     date: '2026-01-14',
     excerpt: 'Dubai Municipality Approval is the official authorization issued by Dubai Municipality (DM) to ensure that construction, engineering, and fit-out works comply with local building codes, safety regulations, environmental standards, and zoning laws.',
     image: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-list-1769065838329.jpg',
     coverImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-cover-1769065838329.jpg',
-    metaTitle: 'Dubai Municipality Approval 2026 – Complete Guide for Construction, Fit-Out & Engineering Projects in Dubai | Building Approvals Dubai',
+    metaTitle: 'Dubai Municipality Approval (DM) 2026 – Complete Guide for Construction, Fit-Out & Engineering Projects in Dubai | Building Approvals Dubai',
     metaDescription: 'Dubai Municipality Approval is the official authorization issued by Dubai Municipality (DM) to ensure that construction, engineering, and fit-out works comply with local building codes, safety regulations, environmental standards, and zoning laws.',
-    keywords: ['Dubai', 'Municipality', 'Approval', '2026', 'Complete', 'Guide', 'Construction,', 'Fit-Out', 'Engineering', 'Projects', 'Dubai'],
+    keywords: ['Dubai', 'Municipality', 'Approval', '(DM)', '2026', 'Complete', 'Guide', 'Construction,', 'Fit-Out', 'Engineering', 'Projects', 'Dubai'],
     ogImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-cover-1769065838329.jpg',
   },
 

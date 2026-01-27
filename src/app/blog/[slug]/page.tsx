@@ -8,12 +8,12 @@ const DubaiMunicipalityApprovalContent = dynamic(() => import('./content/dubai-m
 const DubaiCivilDefenceApprovalDcdCompleteGuideFor2026Content = dynamic(() => import('./content/dubai-civil-defence-approval-dcd-complete-guide-for-2026').catch(() => () => null), { ssr: true });
 const FitOutApprovalDubaiSimplePracticalGuide2026Content = dynamic(() => import('./content/fit-out-approval-dubai-simple-practical-guide-2026').catch(() => () => null), { ssr: true });
 const HowToSecureANakheelNocInDubai2026Content = dynamic(() => import('./content/how-to-secure-a-nakheel-noc-in-dubai-2026').catch(() => () => null), { ssr: true });
-const DubaiMunicipalityApproval2026CompleteGuideForConstructionFitOutEngineeringProjectsInDubaiContent = dynamic(() => import('./content/dubai-municipality-approval-2026-complete-guide-for-construction-fit-out-engineering-projects-in-dubai').catch(() => () => null), { ssr: true });
 const Ten_CommonFitOutApprovalMistakesThatDelayProjectsInDubai2026Content = dynamic(() => import('./content/10-common-fit-out-approval-mistakes-that-delay-projects-in-dubai-2026').catch(() => () => null), { ssr: true });
 const DubaiMunicipalityServicesCategoriesCompleteGuideForApprovalsComplianceInDubai2026Content = dynamic(() => import('./content/dubai-municipality-services-categories-complete-guide-for-approvals-compliance-in-dubai-2026').catch(() => () => null), { ssr: true });
 const HowToGetDubaiDevelopmentAuthorityDdaApprovalInDubai2026Content = dynamic(() => import('./content/how-to-get-dubai-development-authority-dda-approval-in-dubai-2026').catch(() => () => null), { ssr: true });
 const WhyHireAConsultantForDubaiCivilDefenceApprovalContent = dynamic(() => import('./content/why-hire-a-consultant-for-dubai-civil-defence-approval').catch(() => () => null), { ssr: true });
 const HowToGetDewaApprovalsInDubai2026StepByStepProcessChecklistContent = dynamic(() => import('./content/how-to-get-dewa-approvals--in-dubai-2026-step-by-step-process-checklist').catch(() => () => null), { ssr: true });
+const DubaiMunicipalityApproval(DM)2026CompleteGuideForConstructionFitOutEngineeringProjectsInDubaiContent = dynamic(() => import('./content/dubai-municipality-approval-(DM)-2026-complete-guide-for-construction-fit-out-engineering-projects-in-dubai').catch(() => () => null), { ssr: true });
 const DubaiMunicipalityApprovals(DM)2026UpdatedRulesContent = dynamic(() => import('./content/dubai-municipality-approvals-(DM)-2026-updated-rules').catch(() => () => null), { ssr: true });
 interface BlogPostPageProps {
   params: Promise<{
@@ -118,10 +118,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     if (post.slug === 'how-to-secure-a-nakheel-noc-in-dubai-2026') {
       return <HowToSecureANakheelNocInDubai2026Content />;
     }
-
-        if (post.slug === 'dubai-municipality-approval-2026-complete-guide-for-construction-fit-out-engineering-projects-in-dubai') {
-      return <DubaiMunicipalityApproval2026CompleteGuideForConstructionFitOutEngineeringProjectsInDubaiContent />;
-    }
     if (post.slug === '10-common-fit-out-approval-mistakes-that-delay-projects-in-dubai-2026') {
       return <Ten_CommonFitOutApprovalMistakesThatDelayProjectsInDubai2026Content />;
     }
@@ -139,6 +135,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     }
         if (post.slug === 'how-to-get-dewa-approvals--in-dubai-2026-step-by-step-process-checklist') {
       return <HowToGetDewaApprovalsInDubai2026StepByStepProcessChecklistContent />;
+    }
+        if (post.slug === 'dubai-municipality-approval-(DM)-2026-complete-guide-for-construction-fit-out-engineering-projects-in-dubai') {
+      return <DubaiMunicipalityApproval(DM)2026CompleteGuideForConstructionFitOutEngineeringProjectsInDubaiContent />;
     }
     return null;
   };
