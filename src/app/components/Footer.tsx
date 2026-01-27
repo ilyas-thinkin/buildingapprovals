@@ -57,7 +57,7 @@ const Footer: React.FC = () => {
             <ul className="footer-links">
               <li><a href="/services/civil-defense">Civil Defense Approvals</a></li>
               <li><a href="/services/dewa">DEWA Approval</a></li>
-              <li><a href="/services/municipality">Dubai Municipality</a></li>
+              <li><a href="/services/dubai-municipality">Dubai Municipality</a></li>
               <li><a href="/services/emaar">Emaar Approval</a></li>
               <li><a href="/services/nakheel">Nakheel Approval</a></li>
             </ul>
