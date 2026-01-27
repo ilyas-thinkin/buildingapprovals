@@ -1,7 +1,7 @@
 export default function BlogContent() {
   return (
     <div className="blog-content-wrapper">
-      <h2>If you’re planning a construction, renovation, fit-out, or business setup in Dubai, navigating approvals can feel overwhelming. Common challenges include:</h2>
+      <h2><span style={{ fontWeight: 'normal' }}>If you’re planning a construction, renovation, fit-out, or business setup in Dubai, navigating approvals can feel overwhelming. Common challenges include:</span></h2>
 <ul>
 <li>Unclear which department handles what</li>
 <li>Delays due to wrong category selection</li>
