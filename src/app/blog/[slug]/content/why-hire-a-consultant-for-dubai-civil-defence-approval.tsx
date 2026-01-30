@@ -27,7 +27,7 @@ export default function BlogContent() {
 <li>Reduced risk of legal penalties and shutdowns</li>
 </ul>
 <p><strong>Important:</strong> Operating a space without valid <a href="https://www.buildingapprovals.ae/services/civil-defense" target="_blank" rel="noopener noreferrer">DCD approval</a> can lead to fines, closure notices, or rejection from other authorities like <a href="https://www.buildingapprovals.ae/services/dubai-municipality" target="_blank" rel="noopener noreferrer">Dubai Municipality.</a></p>
-<p>Why Hire a Consultant for Dubai Civil Defence Approval in Dubai?</p>
+<p>Why Hire a Consultant for <a href="https://www.dcd.gov.ae/portal/">Dubai Civil Defence</a> Approval in Dubai?</p>
 <p>This is where most projects succeed — or fail.</p>
 <h3>1. Deep Knowledge of Local DCD Regulations</h3>
 <p>Fire codes in Dubai are technical and frequently updated. A consultant understands:</p>
@@ -122,7 +122,7 @@ export default function BlogContent() {
 <ul>
 <li>Involve a consultant before final design finalization</li>
 <li>Use only DCD-approved materials</li>
-<li>Follow latest UAE Fire &amp; Life Safety Code</li>
+<li>Follow the latest UAE Fire &amp; Life Safety Code</li>
 <li>Ensure coordination with fit-out contractors</li>
 <li>Respond quickly and professionally to DCD comments</li>
 </ul>
@@ -132,23 +132,23 @@ export default function BlogContent() {
 <li>Developers handling multiple projects</li>
 <li>Homeowners doing villa renovations</li>
 <li>Contractors managing fit-out works</li>
-<li>Investors avoiding operational delays</li>
+<li>Investors are avoiding operational delays</li>
 </ul>
 <p>If your project involves people, electricity, or enclosed spaces, you need expert guidance.</p>
 <h2>Frequently Asked Questions (FAQs)</h2>
 <h3>1. Is DCD approval mandatory for all fit-out projects in Dubai?</h3>
-<p>Yes. Any project involving interior works, electrical systems, or occupancy changes requires DCD approval in Dubai.</p>
+<p>Yes. Any project involving interior works, electrical systems, or occupancy changes requires <a href="https://www.dcd.gov.ae/portal/">DCD approval</a> in Dubai.</p>
 <h3>2. How long does Dubai Civil Defence approval take?</h3>
 <p>With a consultant, approvals typically take 7–15 working days, depending on project complexity.</p>
 <h3>3. Can I apply for DCD approval myself?</h3>
 <p>Technically, yes, but most self-submissions face rejection due to technical errors and a lack of authority knowledge.</p>
 <h3>4. What happens if my DCD approval is rejected?</h3>
-<p>You must revise drawings, resubmit documents, and repay certain fees — causing delays and extra costs.</p>
+<p>You must revise the drawings, resubmit the documents, and repay certain fees, causing delays and additional costs.</p>
 <h3>5. Does DCD approval expire?</h3>
 <p>Yes. Approvals are project-specific and may expire if construction timelines are exceeded.</p>
 <h3>Key Takeaways: Why a Consultant Is Essential</h3>
 <ul>
-<li>DCD approval is legally mandatory in Dubai</li>
+<li><a href="https://www.dcd.gov.ae/portal/">DCD approval</a> is legally mandatory in Dubai</li>
 <li>Errors lead to costly delays and rejections</li>
 <li>Consultants ensure faster, smoother approvals</li>
 <li>Expert handling saves time, money, and stress</li>
