@@ -16,6 +16,22 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    id: '1770010466361',
+    title: 'DSO Approval / DIEZ Approval in Dubai 2026: A Complete Guide',
+    slug: 'dso-approval-diez-approval-dubai-2026',
+    category: 'DSO / DIEZ Approval',
+    author: 'Building Approvals Dubai',
+    date: '2026-02-02',
+    excerpt: 'Learn how DSO approval works in Dubai, the DIEZ process for fit-out projects, and why hiring a consultant avoids delays and rejections.',
+    image: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dso-diez-approval-list-1770010466361.jpg',
+    coverImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dso-diez-approval-cover-1770010466361.jpg',
+    metaTitle: 'DSO Approval / DIEZ Approval in Dubai 2026: A Complete Guide | Building Approvals Dubai',
+    metaDescription: 'Learn how DSO approval works in Dubai, the DIEZ process for fit-out projects, and why hiring a consultant avoids delays and rejections.',
+    keywords: ['Approval', 'DIEZ', 'Approval', 'Dubai', '2026:', 'Complete', 'Guide'],
+    ogImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dso-diez-approval-cover-1770010466361.jpg',
+  },
+
+  {
     id: '1769065428206',
     title: 'Why hire a Consultant for Dubai Civil Defence Approval? 2026',
     slug: 'why-hire-a-consultant-for-dubai-civil-defence-approval',

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { blogPosts } from '../blogData';
 import BlogContent from './BlogContent';
 import './blog-post.css';
+const DsoApprovalDiezApprovalDubai2026Content = dynamic(() => import('./content/dso-approval-diez-approval-dubai-2026').catch(() => () => null), { ssr: true });
 
 interface BlogPostPageProps {
   params: Promise<{
