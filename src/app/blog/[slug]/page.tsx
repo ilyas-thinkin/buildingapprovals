@@ -3,8 +3,10 @@ import { notFound } from 'next/navigation';
 import { blogPosts } from '../blogData';
 import BlogContent from './BlogContent';
 import './blog-post.css';
-const DsoApprovalDiezApprovalDubai2026Content = dynamic(() => import('./content/dso-approval-diez-approval-dubai-2026').catch(() => () => null), { ssr: true });
-const DsoApprovalDiezApprovalInDubai2026ACompleteGuideContent = dynamic(() => import('./content/dso-approval-diez-approval-in-dubai-2026-a-complete-guide').catch(() => () => null), { ssr: true });
+
+// NOTE: Do NOT add hardcoded dynamic imports here!
+// The BlogContent component automatically loads content based on the slug.
+// Just add blog posts to blogData.ts and create the content file in ./content/
 
 interface BlogPostPageProps {
   params: Promise<{

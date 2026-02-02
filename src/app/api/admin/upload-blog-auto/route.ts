@@ -545,63 +545,9 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Update page.tsx to import and render the new blog
-    const pagePath = 'src/app/blog/[slug]/page.tsx';
-    const { data: pageFile } = await octokit.rest.repos.getContent({
-      owner,
-      repo,
-      path: pagePath,
-      ref: branch,
-    });
-
-    if ('content' in pageFile) {
-      const pageContent = Buffer.from(pageFile.content, 'base64').toString('utf-8');
-
-      // Generate component name from slug
-      const componentName = slug
-        .split('-')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join('');
-
-      // Add import statement
-      const importStatement = `import ${componentName}Content from './content/${slug}';`;
-
-      let updatedPageContent = pageContent;
-
-      // Check if import doesn't exist
-      if (!updatedPageContent.includes(importStatement)) {
-        // Find the last import and add after it
-        const lastImportIndex = updatedPageContent.lastIndexOf('import ');
-        const nextLineIndex = updatedPageContent.indexOf('\n', lastImportIndex) + 1;
-        updatedPageContent = updatedPageContent.slice(0, nextLineIndex) + importStatement + '\n' + updatedPageContent.slice(nextLineIndex);
-      }
-
-      // Add render case
-      const renderCase = `    if (post.slug === '${slug}') {
-      return <${componentName}Content />;
-    }
-
-    `;
-
-      // Check if render case doesn't exist
-      if (!updatedPageContent.includes(`if (post.slug === '${slug}')`)) {
-        // Find "return null;" in renderContent function and add before it
-        const returnNullIndex = updatedPageContent.indexOf('return null;');
-        if (returnNullIndex !== -1) {
-          updatedPageContent = updatedPageContent.slice(0, returnNullIndex) + renderCase + updatedPageContent.slice(returnNullIndex);
-        }
-      }
-
-      await octokit.rest.repos.createOrUpdateFileContents({
-        owner,
-        repo,
-        path: pagePath,
-        message: `Update page.tsx to render blog: ${title}`,
-        content: Buffer.from(updatedPageContent).toString('base64'),
-        branch,
-        sha: pageFile.sha,
-      });
-    }
+    // NOTE: page.tsx does NOT need to be modified!
+    // The BlogContent component automatically loads content based on the slug.
+    // Only blogData.ts and the content file need to be created/updated.
 
     return NextResponse.json({
       success: true,
@@ -612,7 +558,6 @@ export async function POST(request: NextRequest) {
       filesCreated: [
         `src/app/blog/[slug]/content/${slug}.tsx`,
         'src/app/blog/blogData.ts (updated)',
-        'src/app/blog/[slug]/page.tsx (updated)',
       ],
     });
   } catch (error: any) {

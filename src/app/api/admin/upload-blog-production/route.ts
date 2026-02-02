@@ -266,8 +266,7 @@ export async function POST(request: NextRequest) {
       instructions: {
         step1: 'Add the blogData object to src/app/blog/blogData.ts',
         step2: `Create a new file: src/app/blog/[slug]/content/${slug}.tsx with the blog content`,
-        step3: `Update src/app/blog/[slug]/page.tsx to import and render the new blog`,
-        step4: 'Commit and push the changes to deploy',
+        step3: 'Commit and push the changes to deploy (page.tsx auto-loads content by slug)',
       }
     });
   } catch (error: any) {

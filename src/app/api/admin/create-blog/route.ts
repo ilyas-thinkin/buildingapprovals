@@ -748,22 +748,19 @@ export async function POST(request: NextRequest) {
       : generateBlogComponentFromMarkdown(blogContent, imageUrls, title);
 
     // Prepare all file changes for a single commit
+    // NOTE: page.tsx does NOT need to be modified!
+    // The BlogContent component automatically loads content based on the slug.
     const componentPath = `src/app/blog/[slug]/content/${slug}.tsx`;
     const blogDataPath = 'src/app/blog/blogData.ts';
-    const pagePath = 'src/app/blog/[slug]/page.tsx';
 
-    // Get current files from GitHub
-    const [blogDataFile, pageFile] = await Promise.all([
-      octokit.rest.repos.getContent({ owner, repo, path: blogDataPath, ref: branch }),
-      octokit.rest.repos.getContent({ owner, repo, path: pagePath, ref: branch }),
-    ]);
+    // Get current blogData.ts from GitHub
+    const blogDataFile = await octokit.rest.repos.getContent({ owner, repo, path: blogDataPath, ref: branch });
 
-    if (!('content' in blogDataFile.data) || !('content' in pageFile.data)) {
-      throw new Error('Could not read required files');
+    if (!('content' in blogDataFile.data)) {
+      throw new Error('Could not read blogData.ts');
     }
 
     const blogDataContent = Buffer.from(blogDataFile.data.content, 'base64').toString('utf-8');
-    const pageContent = Buffer.from(pageFile.data.content, 'base64').toString('utf-8');
 
     // Helper to clean text for strings - escape single quotes and use double quotes if needed
     const cleanForString = (text: string): string => {
@@ -814,60 +811,7 @@ export async function POST(request: NextRequest) {
     const replacement = `export const blogPosts: BlogPost[] = [\n${newBlogEntry}\n${arrayMatch[1]}];`;
     const updatedBlogDataContent = blogDataContent.replace(/export const blogPosts: BlogPost\[\] = \[([\s\S]*?)\];/, replacement);
 
-    // 2. Prepare page.tsx update
-    let componentName = slug
-      .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join('');
-
-    // Handle names starting with numbers
-    if (/^\d/.test(componentName)) {
-      const numberWords: { [key: string]: string } = {
-        '0': 'Zero_', '1': 'One_', '2': 'Two_', '3': 'Three_', '4': 'Four_',
-        '5': 'Five_', '6': 'Six_', '7': 'Seven_', '8': 'Eight_', '9': 'Nine_', '10': 'Ten_'
-      };
-      const match = componentName.match(/^(\d+)/);
-      if (match) {
-        const num = match[1];
-        const prefix = numberWords[num] || `N${num}_`;
-        componentName = prefix + componentName.slice(num.length);
-      }
-    }
-
-    // Use dynamic import with error handling for resilience
-    const importStatement = `const ${componentName}Content = dynamic(() => import('./content/${slug}').catch(() => () => null), { ssr: true });`;
-    let updatedPageContent = pageContent;
-
-    // Check if import already exists
-    if (!updatedPageContent.includes(`'./content/${slug}'`) && !updatedPageContent.includes(`"./content/${slug}"`)) {
-      // Find the last dynamic import line and add after it
-      const dynamicImportMatch = updatedPageContent.match(/const \w+Content = dynamic\([^;]+\);/g);
-      if (dynamicImportMatch && dynamicImportMatch.length > 0) {
-        const lastDynamicImport = dynamicImportMatch[dynamicImportMatch.length - 1];
-        const lastIndex = updatedPageContent.lastIndexOf(lastDynamicImport);
-        updatedPageContent = updatedPageContent.slice(0, lastIndex + lastDynamicImport.length) + '\n' + importStatement + updatedPageContent.slice(lastIndex + lastDynamicImport.length);
-      } else {
-        // Fallback: add after last import statement
-        const lastImportIndex = updatedPageContent.lastIndexOf('import ');
-        const nextLineIndex = updatedPageContent.indexOf('\n', lastImportIndex) + 1;
-        updatedPageContent = updatedPageContent.slice(0, nextLineIndex) + importStatement + '\n' + updatedPageContent.slice(nextLineIndex);
-      }
-    }
-
-    // Add render case
-    const renderCase = `    if (post.slug === '${slug}') {
-      return <${componentName}Content />;
-    }
-`;
-
-    if (!updatedPageContent.includes(`if (post.slug === '${slug}')`)) {
-      const returnNullIndex = updatedPageContent.indexOf('return null;');
-      if (returnNullIndex !== -1) {
-        updatedPageContent = updatedPageContent.slice(0, returnNullIndex) + renderCase + '    ' + updatedPageContent.slice(returnNullIndex);
-      }
-    }
-
-    // 3. Create a single commit with all file changes using Git Data API
+    // 2. Create a single commit with all file changes using Git Data API
     // Get the current commit SHA for the branch
     const { data: refData } = await octokit.rest.git.getRef({
       owner,
@@ -885,7 +829,7 @@ export async function POST(request: NextRequest) {
     const baseTreeSha = commitData.tree.sha;
 
     // Create blobs for all files
-    const [componentBlob, blogDataBlob, pageBlob] = await Promise.all([
+    const [componentBlob, blogDataBlob] = await Promise.all([
       octokit.rest.git.createBlob({
         owner,
         repo,
@@ -896,12 +840,6 @@ export async function POST(request: NextRequest) {
         owner,
         repo,
         content: Buffer.from(updatedBlogDataContent).toString('base64'),
-        encoding: 'base64',
-      }),
-      octokit.rest.git.createBlob({
-        owner,
-        repo,
-        content: Buffer.from(updatedPageContent).toString('base64'),
         encoding: 'base64',
       }),
     ]);
@@ -923,12 +861,6 @@ export async function POST(request: NextRequest) {
           mode: '100644',
           type: 'blob',
           sha: blogDataBlob.data.sha,
-        },
-        {
-          path: pagePath,
-          mode: '100644',
-          type: 'blob',
-          sha: pageBlob.data.sha,
         },
       ],
     });
@@ -963,7 +895,6 @@ export async function POST(request: NextRequest) {
       filesCreated: [
         `src/app/blog/[slug]/content/${slug}.tsx`,
         'src/app/blog/blogData.ts (updated)',
-        'src/app/blog/[slug]/page.tsx (updated)',
       ],
     });
   } catch (error: any) {
