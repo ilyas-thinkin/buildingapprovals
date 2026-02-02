@@ -27,7 +27,13 @@ export default function BlogContent() {
 <li>Engineering compliance standards</li>
 <li>Approved contractor requirements</li>
 </ul>
-<p>This means DM approval experience alone is not enough. DSO follows zone-specific technical rules that catch even experienced contractors off guard.</p>
+<p>This means DM approval experience alone is not enough. DSO follows zone-specific technical rules that catch even experienced contractors off guard.</p><p><div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
+        <img
+          src="https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dso-diez-approval-content-1-1770022939589.jpeg"
+          alt="Building Approvals Dubai - DSO Approval / DIEZ Approval in Dubai 2026: A Complete Guide"
+          style={{ width: '100%', height: 'auto', display: 'block' }}
+        />
+      </div></p>
 <h3>DSO / DIEZ Approval Process for Fit-Out &amp; Construction Projects</h3>
 <p>Below is the actual step-by-step approval flow, not the simplified version most people expect.</p>
 <h3>Step 1: Project Classification &amp; Scope Review</h3>
