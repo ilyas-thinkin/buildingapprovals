@@ -1,11 +1,11 @@
 export default function BlogContent() {
   return (
     <div className="blog-content-wrapper">
-      <p>You submit drawings, wait for review… and then the same message hits again:&nbsp;</p><p><b>“Rejected / Revise &amp; Resubmit.”</b> In Dubai, fit-out delays often don’t happen because the design is “bad”; they happen because the submission doesn’t match <a href="https://www.dm.gov.ae/">Dubai Municipality (DM)</a> requirements, the MEP coordination is off, or the site execution doesn’t follow the approved set.</p>
+      <p>You submit drawings, wait for review… and then the same message hits again:&nbsp;</p><blockquote>“Rejected / Revise &amp; Resubmit.”&nbsp;</blockquote><p>In Dubai, fit-out delays often don’t happen because the design is “bad”; they happen because the submission doesn’t match <a href="https://www.dm.gov.ae/">Dubai Municipality (DM)</a> requirements, the MEP coordination is off, or the site execution doesn’t follow the approved set.</p>
 <p>This guide covers the most common <a href="https://www.buildingapprovals.ae/blog/dubai-municipality-approval-process-2026">DM Approval</a> violations during the <a href="https://www.buildingapprovals.ae/blog/fit-out-approval-dubai-simple-practical-guide-2026">fit-out approval</a> process in Dubai, UAE, why they happen, and the practical steps you can take to avoid rejections, fines, and stop-work situations.</p>
 <p><a href="https://www.buildingapprovals.ae/blog/dubai-municipality-approval-process-2026">Dubai Municipality’s</a> building permit framework includes technical checks and inspections as part of the wider approval journey.</p>
 <h2>Why DM Approval Rejections Happen in Fit-Out Projects</h2>
-<p>Fit-out approvals in Dubai are rarely “one-department only.” Even when DM is the main authority, your application may depend on:</p>
+<p><a href="https://www.buildingapprovals.ae/blog/fit-out-approval-dubai-simple-practical-guide-2026">Fit-out approvals</a> in Dubai are rarely “one-department only.” Even when DM is the main authority, your application may depend on:</p>
 <ul>
 <ul><li>Building management/landlord requirements (NOCs, access, rules)</li>
 <li><a href="https://www.buildingapprovals.ae/blog/fit-out-approval-dubai-simple-practical-guide-2026">Fitout Approvals</a> coordination (Architectural + MEP + method statements)</li>
@@ -122,28 +122,39 @@ export default function BlogContent() {
 <li>Assign one person to quality-check the entire submission before uploading</li>
 </ul></ul>
 <h3>How to Avoid DM Violations (Practical Checklist)</h3>
-<p>Use this as a “pre-submission” gate to reduce rejections.</p>
+<p>Use this as a “pre-submission” gate to reduce rejections.</p><p><div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
+        <img
+          src="https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-content-1-1770282014471.jpeg"
+          alt="Building Approvals Dubai - Municipality Approval in Dubai: The Most Common Fit-Out Approval Violations"
+          style={{ width: '100%', height: 'auto', display: 'block' }}
+        />
+      </div></p>
 <h2>Step-by-step (works for most fit-out approvals in Dubai)</h2>
-<ul>
-<ul><li><strong>Confirm authority + location rules</strong></li>
+<h3><strong>1. Confirm authority + location rules</strong></h3><ul><ul>
 <li>Is it DM-only, or a free zone/master developer authority?</li>
 <li>This decides formats, portals, and required NOCs.</li>
-<li><strong>Freeze the base plan</strong></li>
+</ul></ul><h3><strong>2. Freeze the base plan</strong></h3><ul><ul>
 <li>Verify dimensions and existing services on site.</li>
 <li>Lock unit boundaries and fixed elements.</li>
-<li><strong>Coordinate Architectural + MEP</strong></li>
+</ul></ul><h3><strong>3. Coordinate Architectural + MEP</strong></h3><ul><ul>
 <li>Resolve ceiling clashes, access panels, and equipment clearances.</li>
 <li>Ensure plans, legends, and revisions match across all disciplines.</li>
-<li><strong>Add the missing “reviewer-friendly” pages</strong></li>
+</ul></ul><h3><strong>4. Add the missing “reviewer-friendly” pages</strong></h3><ul><ul>
 <li>Key notes, schedules, typical details, and sections at congested zones.</li>
 <li>Clear scope definition: “what stays” vs “what changes.”</li>
-<li><strong>Validate compliance-sensitive areas</strong></li>
+</ul></ul><h3><strong>5. Validate compliance-sensitive areas</strong></h3><ul><ul>
 <li>Toilets, kitchens/pantries, high occupancy areas, exhaust routes, drainage tie-ins.</li>
-<li><strong>Prepare for inspection from day one</strong></li>
+</ul></ul><h3><strong>6. Prepare for inspection from day one</strong></h3><ul><ul>
 <li>Site execution must match approved drawings.</li>
 <li>Keep the approved IFC set on site + revision control log.</li>
 </ul></ul>
-<p><strong>Pro tip (EEAT): </strong>Most delays are not “big violations”; they’resmall inconsistencies: one drawing shows a door swing, another doesn’t; diffuser count differs from the schedule; the DB location shifts without updating sections. A consultant-led QA pass before submission often saves multiple resubmissions.</p>
+<p><strong>Pro tip (EEAT): </strong>Most delays are not “big violations”; they’resmall inconsistencies: one drawing shows a door swing, another doesn’t; diffuser count differs from the schedule; the DB location shifts without updating sections. A consultant-led QA pass before submission often saves multiple resubmissions.</p><p><div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
+        <img
+          src="https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-content-2-1770282014471.png"
+          alt="Building Approvals Dubai - Municipality Approval in Dubai: The Most Common Fit-Out Approval Violations"
+          style={{ width: '100%', height: 'auto', display: 'block' }}
+        />
+      </div></p>
 <h3>Quick Red Flags That Usually Trigger Rejection</h3>
 <ul>
 <ul><li>“Proposed” drawings without an existing base reference</li>
@@ -166,8 +177,8 @@ export default function BlogContent() {
 <p>Depending on the project scope and building requirements, green building regulations can affect the MEP approach and documentation.</p>
 <h2>Key Takeaways (Summary)</h2>
 <ul>
-<ul><li>DM Approval delays usually come from coordination errors, unclear ventilation/drainage, or incomplete submission sets.</li>
-<li>Freeze yourbase plan, then coordinateArchitectural + MEP before uploading.</li>
+<ul><li><a href="https://www.buildingapprovals.ae/services/dubai-municipality">DM Approval</a> delays usually come from coordination errors, unclear ventilation/drainage, or incomplete submission sets.</li>
+<li>Freeze yourbase plan, then coordinate Architectural + MEP before uploading.</li>
 <li>Add reviewer-friendly details: schedules, notes, sections, and typical details.</li>
 <li>Treat approvals like inspection prep: build exactly as approved and maintain revision control.</li>
 <li>For faster outcomes, run a QA check on drawings + documents before submission.</li>
