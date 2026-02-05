@@ -155,7 +155,7 @@ export default function BlogContent() {
 <li>Compliance protects lives and your investment</li>
 </ul>
 <p>If you’re planning a project and want stress-free <a href="https://www.dcd.gov.ae/portal/#" target="_blank" rel="noopener noreferrer">DCD approval</a> in Dubai, it’s worth speaking to specialists who understand the system inside out.</p>
-<p>You can learn more or consult experienced professionals to ensure your project moves forward without delays.</p>
+<p>You can learn more or consult experienced professionals to ensure your project moves forward without delays.<br><br></p><h2>Ready to apply? If yes</h2><p><strong> </strong></p><ul><ul><li>Official portal for DCD approval, <a>https://www.dcd.gov.ae/portal/</a></li><li>For expert assistance and guidance,<a>https://www.buildingapprovals.ae/contact</a></li><li>Get in touch with us 📞 <strong><a>+971 589575610</a> </strong> to get specialist guidance now</li></ul></ul>
 
       <div className="cta-box">
         <h3>Need Help with Building Approvals?</h3>
