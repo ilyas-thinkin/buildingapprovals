@@ -1,19 +1,19 @@
 export default function BlogContent() {
   return (
     <div className="blog-content-wrapper">
-      <p>You submit drawings, wait for review… and then the same message hits again: “Rejected / Revise &amp; Resubmit.” In Dubai, fit-out delays often don’t happen because the design is “bad”; they happen because the submission doesn’t match Dubai Municipality (DM) requirements, the MEP coordination is off, or the site execution doesn’t follow the approved set.</p>
-<p>This guide covers the most common DM Approval violations during the fit-out approval process in Dubai, UAE, why they happen, and the practical steps you can take to avoid rejections, fines, and stop-work situations.</p>
-<p>Dubai Municipality’s building permit framework includes technical checks and inspections as part of the wider approval journey.</p>
+      <p>You submit drawings, wait for review… and then the same message hits again:&nbsp;</p><p><b>“Rejected / Revise &amp; Resubmit.”</b> In Dubai, fit-out delays often don’t happen because the design is “bad”; they happen because the submission doesn’t match <a href="https://www.dm.gov.ae/">Dubai Municipality (DM)</a> requirements, the MEP coordination is off, or the site execution doesn’t follow the approved set.</p>
+<p>This guide covers the most common <a href="https://www.buildingapprovals.ae/blog/dubai-municipality-approval-process-2026">DM Approval</a> violations during the <a href="https://www.buildingapprovals.ae/blog/fit-out-approval-dubai-simple-practical-guide-2026">fit-out approval</a> process in Dubai, UAE, why they happen, and the practical steps you can take to avoid rejections, fines, and stop-work situations.</p>
+<p><a href="https://www.buildingapprovals.ae/blog/dubai-municipality-approval-process-2026">Dubai Municipality’s</a> building permit framework includes technical checks and inspections as part of the wider approval journey.</p>
 <h2>Why DM Approval Rejections Happen in Fit-Out Projects</h2>
 <p>Fit-out approvals in Dubai are rarely “one-department only.” Even when DM is the main authority, your application may depend on:</p>
 <ul>
 <ul><li>Building management/landlord requirements (NOCs, access, rules)</li>
-<li>Fitout Approvals coordination (Architectural + MEP + method statements)</li>
-<li>Interfaces with other authorities (commonlyDCDfor fire &amp; life safety, and DEWA for power/load topics)</li>
+<li><a href="https://www.buildingapprovals.ae/blog/fit-out-approval-dubai-simple-practical-guide-2026">Fitout Approvals</a> coordination (Architectural + MEP + method statements)</li>
+<li>Interfaces with other authorities (commonlyDCDfor fire &amp; life safety, and <a href="https://www.buildingapprovals.ae/services/dewa">DEWA</a> for power/load topics)</li>
 </ul></ul>
 <p>When submissions are incomplete or inconsistent, authorities can reject or request revisions. Dubai’s permit regulations also require that rejection decisions be reasoned and follow set procedures.</p>
 <h2>Common DM Approval Violations During the Fit-Out Approval Process</h2>
-<p>Below are the issues that most often trigger DM Approval objections, resubmissions, or inspection failures.</p>
+<p>Below are the issues that most often trigger <a href="https://www.buildingapprovals.ae/blog/dubai-municipality-approval-process-2026">DM Approval</a> objections, resubmissions, or inspection failures.</p>
 <h3>1) Drawings Don’t Match the Actual Site Condition</h3>
 <h2>What it looks like</h2>
 <ul>
@@ -22,7 +22,7 @@ export default function BlogContent() {
 <li>Unit boundary lines don’t match lease drawings</li>
 <li>“As-built” base plan not verified</li>
 </ul></ul>
-<p>Why does it get flagged?DM reviewers expect your proposed works to align with real constraints and existing approvals. Mismatches create risk during the inspection and completion stages.</p>
+<p>Why does it get flagged? DM reviewers expect your proposed works to align with real constraints and existing approvals. Mismatches create risk during the inspection and completion stages.</p>
 <h2>Fix</h2>
 <ul>
 <ul><li>Start from a verified base plan (landlord + site measure)</li>
@@ -97,10 +97,10 @@ export default function BlogContent() {
 <li>Include typical details for partitions, ceiling, waterproofing zones, and floor build-ups</li>
 </ul></ul>
 <h2>7) Green Building / Sustainability Gaps (When Applicable)</h2>
-<p>Dubai Municipality issuesGreen Building Regulations &amp; Specificationsthat affect how buildings and services are designed and commissioned in Dubai.</p>
+<p>Dubai Municipality issues Green Building Regulations &amp; Specificationsthat affect how buildings and services are designed and commissioned in Dubai.</p>
 <h2>Common pitfalls</h2>
 <ul>
-<ul><li>Missing commissioning/technical notes for building services (where required)</li>
+<ul><li>Missing commissioning/technical notes for <a href="https://www.buildingapprovals.ae/services">building services</a> (where required)</li>
 <li>Not aligning the MEP approach with the sustainability requirements for the project scope</li>
 </ul></ul>
 <h2>Fix</h2>
@@ -167,18 +167,18 @@ export default function BlogContent() {
 <h2>Key Takeaways (Summary)</h2>
 <ul>
 <ul><li>DM Approval delays usually come from coordination errors, unclear ventilation/drainage, or incomplete submission sets.</li>
-<li>Freeze yourbase plan, then coordinateArchitectural + MEPbefore uploading.</li>
+<li>Freeze yourbase plan, then coordinateArchitectural + MEP before uploading.</li>
 <li>Add reviewer-friendly details: schedules, notes, sections, and typical details.</li>
-<li>Treat approvals like inspection prep: build exactly as approvedand maintain revision control.</li>
+<li>Treat approvals like inspection prep: build exactly as approved and maintain revision control.</li>
 <li>For faster outcomes, run a QA check on drawings + documents before submission.</li>
 </ul></ul>
 <h2>Soft Call-To-Action (Non-Salesy)</h2>
-<p>If you want a smoother DM Approval journey in Dubai, especially for time-sensitive fit-outs, you can review your submission set against a checklist and get a second pair of eyes on coordination gaps. You can also explore practical approval guidance and resources at buildingapprovals.ae.</p>
+<p>If you want a smoother <a href="https://www.buildingapprovals.ae/blog/dubai-municipality-approval-process-2026">DM Approval</a> journey in Dubai, especially for time-sensitive fit-outs, you can review your submission set against a checklist and get a second pair of eyes on coordination gaps. You can also explore practical approval guidance and resources at <a href="https://www.buildingapprovals.ae/">buildingapprovals.ae.</a></p>
 <h2>Ready to apply? If yes</h2>
 <ul>
-<ul><li>Official portal for DM approval,&nbsp;https://www.dm.gov.ae/</li>
-<li>For expert assistance and guidance, https://www.buildingapprovals.ae/contact</li>
-<li>Get in touch with us 📞 +971 589575610  to get specialist guidance now</li></ul></ul>
+<ul><li>Official portal for DM approval,&nbsp;<a href="https://www.dm.gov.ae/">https://www.dm.gov.ae/</a></li>
+<li>For expert assistance and guidance, <a href="https://www.buildingapprovals.ae/contact">https://www.buildingapprovals.ae/contact</a></li>
+<li>Get in touch with us 📞&nbsp; <strong> <a>+971 589575610</a>&nbsp;&nbsp;</strong>&nbsp;to get specialist guidance now</li></ul></ul>
 
       <div className="cta-box">
         <h3>Need Help with Building Approvals?</h3>
