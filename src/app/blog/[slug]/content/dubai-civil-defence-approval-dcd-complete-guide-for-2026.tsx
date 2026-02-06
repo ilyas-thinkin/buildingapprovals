@@ -203,13 +203,14 @@ export default function BlogContent() {
 <ul>
 <li>Approval is time-bound</li>
 <li>Renewal is required for repeated events</li>
-</ul><div><p><div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
-        <img
-          src="https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-civil-defence-content-1-1770375576779.png"
-          alt="Building Approvals Dubai - Dubai Civil Defence Approval (DCD) – Complete Guide for 2026"
-          style={{ width: '100%', height: 'auto', display: 'block' }}
-        />
-      </div></p></div>
+</ul>
+<div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
+  <img
+    src="https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-civil-defence-content-1-1770375576779.png"
+    alt="Building Approvals Dubai - Dubai Civil Defence Approval (DCD) – Complete Guide for 2026"
+    style={{ width: '100%', height: 'auto', display: 'block' }}
+  />
+</div>
 <h2>Common Reasons for DCD Approval Delays</h2>
 <ul>
 <li>Non-compliant fire drawings</li>

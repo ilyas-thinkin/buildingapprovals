@@ -157,7 +157,10 @@ export default function BlogContent() {
 </ul>
 <h3>Ready to Get Started?</h3>
 <p>If you're planning a fit-out or construction project in <a href="https://www.dso.ae/" target="_blank" rel="noopener noreferrer">Dubai Silicon Oasis</a> and want clarity before committing, it helps to speak with professionals who handle <a href="https://www.buildingapprovals.ae/services/dso" target="_blank" rel="noopener noreferrer">DSO approvals</a> daily.</p>
-<p><strong> </strong></p><ul><li>Official portal for DM approval,&nbsp;<a href="https://www.dso.ae/">https://www.dso.ae/</a></li><li>Get in touch with us 📞 <strong><a>+971 589575610</a> </strong> to get specialist guidance now&nbsp;<a href="https://www.buildingapprovals.ae/">https://www.buildingapprovals.ae/</a></li></ul><p><br></p>
+<ul>
+  <li>Official portal for DSO: <a href="https://www.dso.ae/">https://www.dso.ae/</a></li>
+  <li>Get in touch with us: <strong>+971 589575610</strong> to get specialist guidance now - <a href="https://www.buildingapprovals.ae/">https://www.buildingapprovals.ae/</a></li>
+</ul>
 
       <div className="cta-box">
         <h3>Need Help with Building Approvals?</h3>
