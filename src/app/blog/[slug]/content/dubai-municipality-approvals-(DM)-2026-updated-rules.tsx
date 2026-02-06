@@ -1,7 +1,7 @@
 export default function BlogContent() {
   return (
     <div className="blog-content-wrapper">
-      <p className="blog-intro">
+      <p classname="blog-intro">
 Dubai Municipality has introduced groundbreaking changes in 2026, leveraging artificial intelligence, digital twin technology, and enhanced online platforms to revolutionize <strong>building approvals in Dubai</strong>. These innovations streamline processes, improve compliance accuracy, and align with Dubai's smart city vision.
 </p>
 <p>
@@ -33,7 +33,7 @@ Artificial Intelligence plays a transformative role in <strong>Dubai Municipalit
 <li>Increased first-submission approval success rates</li>
 <li>Consistent application of regulations across all projects</li>
 </ul>
-<div className="pro-tip">
+<div classname="pro-tip">
 <strong>Pro Tip:</strong> Use AI pre-checks to validate your drawings before submission to significantly reduce revision cycles and approval times.
 </div>
 <h2>3. Digital Twin &amp; Smart City Integration</h2>
@@ -79,7 +79,7 @@ Dubai Municipality regularly updates building regulations to reflect internation
 <li><strong>Accessibility standards:</strong> Comprehensive requirements for universal access</li>
 <li><strong>MEP coordination:</strong> Better integration between architectural, structural, and MEP designs</li>
 </ul>
-<div className="tip">
+<div classname="tip">
 <strong>Tip:</strong> Stay updated on the latest code changes to ensure your projects meet all current requirements from the start.
 </div>
 <p>
@@ -114,7 +114,13 @@ One of the most significant improvements in the 2026 approval process is seamles
 </ul>
 <p>
 This streamlined coordination ensures faster, more efficient <strong>building approvals in Dubai</strong> with better communication across all stakeholders.
-</p>
+</p><p><div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
+        <img
+          src="https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-content-1-1770374721579.jpeg"
+          alt="Building Approvals Dubai - Dubai Municipality Approvals (DM) 2026: Updated Rules & Digital Innovations"
+          style={{ width: '100%', height: 'auto', display: 'block' }}
+        />
+      </div></p>
 <h2>What These Changes Mean for Building Approvals in Dubai</h2>
 <p>
 The 2026 updates to Dubai Municipality approval systems represent a fundamental shift toward:
@@ -128,7 +134,7 @@ The 2026 updates to Dubai Municipality approval systems represent a fundamental 
 <li><strong>Efficiency:</strong> Streamlined coordination reducing delays and confusion</li>
 </ul>
 <h2>Key Takeaways</h2>
-<ul className="key-takeaways">
+<ul classname="key-takeaways">
 <li><strong>Dubai Municipality approval 2026</strong> leverages AI, digital twins, and enhanced online platforms for faster, smarter processing</li>
 <li>Real-time tracking and transparency give applicants unprecedented visibility into their approval status</li>
 <li>Sustainability and green building requirements are now mandatory components of all building approvals in Dubai</li>
