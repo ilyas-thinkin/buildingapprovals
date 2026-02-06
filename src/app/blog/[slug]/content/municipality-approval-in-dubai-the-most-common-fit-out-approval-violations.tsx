@@ -122,13 +122,9 @@ export default function BlogContent() {
 <li>Assign one person to quality-check the entire submission before uploading</li>
 </ul></ul>
 <h3>How to Avoid DM Violations (Practical Checklist)</h3>
-<p>Use this as a “pre-submission” gate to reduce rejections.</p><p><div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
-        <img
-          src="https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-content-1-1770282014471.jpeg"
-          alt="Building Approvals Dubai - Municipality Approval in Dubai: The Most Common Fit-Out Approval Violations"
-          style={{ width: '100%', height: 'auto', display: 'block' }}
-        />
-      </div></p>
+<p>Use this as a “pre-submission” gate to reduce rejections.</p><div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
+<img src="https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-content-1-1770282014471.jpeg" alt="Building Approvals Dubai - Municipality Approval in Dubai: The Most Common Fit-Out Approval Violations" style={{ width: '100%', height: 'auto', display: 'block' }} />
+</div>
 <h2>Step-by-step (works for most fit-out approvals in Dubai)</h2>
 <h3><strong>1. Confirm authority + location rules</strong></h3><ul><ul>
 <li>Is it DM-only, or a free zone/master developer authority?</li>
@@ -148,13 +144,9 @@ export default function BlogContent() {
 <li>Site execution must match approved drawings.</li>
 <li>Keep the approved IFC set on site + revision control log.</li>
 </ul></ul>
-<p><strong>Pro tip (EEAT): </strong>Most delays are not “big violations”; they’resmall inconsistencies: one drawing shows a door swing, another doesn’t; diffuser count differs from the schedule; the DB location shifts without updating sections. A consultant-led QA pass before submission often saves multiple resubmissions.</p><p><div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
-        <img
-          src="https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-content-2-1770282014471.png"
-          alt="Building Approvals Dubai - Municipality Approval in Dubai: The Most Common Fit-Out Approval Violations"
-          style={{ width: '100%', height: 'auto', display: 'block' }}
-        />
-      </div></p>
+<p><strong>Pro tip (EEAT): </strong>Most delays are not “big violations”; they’resmall inconsistencies: one drawing shows a door swing, another doesn’t; diffuser count differs from the schedule; the DB location shifts without updating sections. A consultant-led QA pass before submission often saves multiple resubmissions.</p><div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
+<img src="https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-content-2-1770282014471.png" alt="Building Approvals Dubai - Municipality Approval in Dubai: The Most Common Fit-Out Approval Violations" style={{ width: '100%', height: 'auto', display: 'block' }} />
+</div>
 <h3>Quick Red Flags That Usually Trigger Rejection</h3>
 <ul>
 <ul><li>“Proposed” drawings without an existing base reference</li>
@@ -188,8 +180,7 @@ export default function BlogContent() {
 <h2>Ready to apply? If yes</h2>
 <ul>
 <ul><li>Official portal for DM approval,&nbsp;<a href="https://www.dm.gov.ae/">https://www.dm.gov.ae/</a></li>
-<li>For expert assistance and guidance, <a href="https://www.buildingapprovals.ae/contact">https://www.buildingapprovals.ae/contact</a></li>
-<li>Get in touch with us 📞&nbsp; <strong> <a>+971 589575610</a>&nbsp;&nbsp;</strong>&nbsp;to get specialist guidance now</li></ul></ul>
+<li>Get in touch with us 📞<strong><a>+971 589575610</a>&nbsp;&nbsp;</strong>&nbsp;to get specialist guidance now&nbsp; <font color="#0a66c2"><b><u>https://www.buildingapprovals.ae/contact</u></b></font></li></ul></ul>
 
       <div className="cta-box">
         <h3>Need Help with Building Approvals?</h3>
