@@ -210,16 +210,16 @@ export const blogPosts: BlogPost[] = [
   {
     id: '3',
     title: 'Dubai Civil Defence Approval (DCD) – Complete Guide for 2026',
-    excerpt: 'Fire and life safety are non-negotiable in Dubai\'s construction ecosystem. This comprehensive guide explains what DCD is, how to obtain approval step by step, and the specific requirements for different project categories.',
-    date: '2026-01-08',
-    author: 'Building Approvals Dubai',
+    slug: 'dubai-civil-defence-approval-dcd-complete-guide-for-2026',
     category: 'Dubai Civil Defence',
+    author: 'Building Approvals Dubai',
+    date: '2026-01-08',
+    excerpt: "Fire and life safety are non-negotiable in Dubai's construction ecosystem. This comprehensive guide explains what DCD is, how to obtain approval step by step, and the specific requirements for different project categories.",
     image: '/images/blog/building-approvals-dubai-civil-defence-approval-card.jpg',
     coverImage: '/images/blog/building-approvals-dubai-civil-defence-approval-card.jpg',
-    slug: 'dubai-civil-defence-approval-dcd-complete-guide-for-2026',
-    metaTitle: 'Dubai Civil Defence Approval (DCD) Complete Guide 2026 | Fire Safety Requirements',
-    metaDescription: 'Complete guide to Dubai Civil Defence approval process for 2026. Step-by-step instructions, requirements by building category, fire safety compliance, and DCD certification process.',
-    keywords: ['Dubai Civil Defence approval', 'DCD approval Dubai', 'fire safety Dubai', 'building approvals Dubai', 'UAE Fire and Life Safety Code', 'DCD certification', 'fire protection systems Dubai'],
+    metaTitle: 'Dubai Civil Defence Approval (DCD) – Complete Guide for 2026 | Building Approvals Dubai',
+    metaDescription: "Fire and life safety are non-negotiable in Dubai's construction ecosystem. This comprehensive guide explains what DCD is, how to obtain approval step by step, and the specific requirements for different project categories.",
+    keywords: ['Dubai', 'Civil', 'Defence', 'Approval', '(DCD)', 'Complete', 'Guide', '2026'],
     ogImage: '/images/blog/building-approvals-dubai-civil-defence-approval-card.jpg',
   }
 ];
