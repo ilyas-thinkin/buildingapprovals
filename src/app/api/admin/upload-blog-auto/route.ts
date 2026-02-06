@@ -98,6 +98,89 @@ async function extractDocxText(contentBuffer: Buffer): Promise<ExtractedDocxCont
   };
 }
 
+/**
+ * Sanitize JSX content to fix common issues that cause build errors:
+ * - classname -> className (React attribute)
+ * - Invalid nesting (div inside p, ul inside ul, etc.)
+ * - Invalid HTML tags (font, etc.)
+ * - Empty anchor tags
+ * - Unescaped special characters
+ */
+function sanitizeJSXContent(content: string): string {
+  let sanitized = content;
+
+  // 1. Fix classname -> className (case-insensitive)
+  sanitized = sanitized.replace(/\bclassname\s*=/gi, 'className=');
+
+  // 2. Remove invalid HTML tags that aren't valid JSX
+  sanitized = sanitized.replace(/<\/?font[^>]*>/gi, '');
+  sanitized = sanitized.replace(/<\/?center[^>]*>/gi, '');
+  sanitized = sanitized.replace(/<\/?marquee[^>]*>/gi, '');
+  sanitized = sanitized.replace(/<\/?blink[^>]*>/gi, '');
+
+  // 3. Fix empty anchor tags - remove them or add placeholder
+  sanitized = sanitized.replace(/<a[^>]*>\s*<\/a>/gi, '');
+
+  // 4. Escape special characters that break JSX
+  // Escape curly braces outside of JSX expressions
+  sanitized = sanitized.replace(/(?<!style=\{[^}]*)(?<!\{[^}]*)\{(?![^}]*\}[^{]*style)/g, (match, offset) => {
+    // Check if this is part of a style={{ ... }} expression
+    const before = sanitized.substring(Math.max(0, offset - 10), offset);
+    if (before.includes('style={') || before.includes('={{')) {
+      return match;
+    }
+    return '&#123;';
+  });
+
+  // 5. Fix ampersands that aren't HTML entities
+  sanitized = sanitized.replace(/&(?!(amp|lt|gt|quot|nbsp|#\d+|#x[0-9a-fA-F]+);)/g, '&amp;');
+
+  return sanitized;
+}
+
+/**
+ * Sanitize the final generated component content
+ * This runs on the complete TSX output to catch any remaining issues
+ */
+function sanitizeFinalComponent(componentCode: string): string {
+  let sanitized = componentCode;
+
+  // 1. Fix classname -> className in all contexts
+  sanitized = sanitized.replace(/\bclassname\s*=/gi, 'className=');
+
+  // 2. Remove any nested <ul><ul> or <ol><ol> patterns
+  // These create invalid nesting - flatten them
+  sanitized = sanitized.replace(/<ul>\s*<ul>/gi, '<ul>');
+  sanitized = sanitized.replace(/<\/ul>\s*<\/ul>/gi, '</ul>');
+  sanitized = sanitized.replace(/<ol>\s*<ol>/gi, '<ol>');
+  sanitized = sanitized.replace(/<\/ol>\s*<\/ol>/gi, '</ol>');
+
+  // 3. Fix <p> containing block elements (div, ul, ol, h1-h6)
+  // Convert <p><div>...</div></p> to just <div>...</div>
+  sanitized = sanitized.replace(/<p>(\s*<(?:div|ul|ol|h[1-6]|blockquote|table|form|section|article|aside|header|footer|nav|main)[^>]*>[\s\S]*?<\/(?:div|ul|ol|h[1-6]|blockquote|table|form|section|article|aside|header|footer|nav|main)>\s*)<\/p>/gi, '$1');
+
+  // 4. Remove invalid HTML tags
+  sanitized = sanitized.replace(/<\/?font[^>]*>/gi, '');
+  sanitized = sanitized.replace(/<\/?center[^>]*>/gi, '');
+  sanitized = sanitized.replace(/<\/?marquee[^>]*>/gi, '');
+  sanitized = sanitized.replace(/<\/?blink[^>]*>/gi, '');
+
+  // 5. Fix empty anchor tags
+  sanitized = sanitized.replace(/<a[^>]*>\s*<\/a>/gi, '');
+
+  // 6. Fix self-closing tags that should have closing tags
+  sanitized = sanitized.replace(/<(li|p|div|span|strong|em|a)([^>]*)\s*\/>/gi, '<$1$2></$1>');
+
+  // 7. Remove any stray <br> tags inside places they shouldn't be
+  // (like directly inside <ul> or <ol>)
+  sanitized = sanitized.replace(/(<ul[^>]*>)\s*<br\s*\/?>\s*/gi, '$1');
+  sanitized = sanitized.replace(/\s*<br\s*\/?>\s*(<\/ul>)/gi, '$1');
+  sanitized = sanitized.replace(/(<ol[^>]*>)\s*<br\s*\/?>\s*/gi, '$1');
+  sanitized = sanitized.replace(/\s*<br\s*\/?>\s*(<\/ol>)/gi, '$1');
+
+  return sanitized;
+}
+
 function generateBlogComponent(blogContent: string, imageUrls: { [key: number]: string }, title: string): string {
   const lines = blogContent.split('\n').map(line => line.trim()).filter(line => line.length > 0);
   const elements: string[] = [];
@@ -309,7 +392,7 @@ ${takeawayItems}
       </div>`);
   }
 
-  return `export default function BlogContent() {
+  const rawComponent = `export default function BlogContent() {
   return (
     <div className="blog-content-wrapper">
 ${elements.join('\n\n')}
@@ -323,6 +406,9 @@ ${elements.join('\n\n')}
   );
 }
 `;
+
+  // Apply final sanitization to catch any remaining JSX issues
+  return sanitizeFinalComponent(rawComponent);
 }
 
 export async function POST(request: NextRequest) {
