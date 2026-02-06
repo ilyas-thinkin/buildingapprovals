@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   metadataBase: siteUrl,
   // Core titles and description reused across pages.
   title: {
-    default: "Dubai Authority Approvals | Engineering & Fit-Out Consultants",
+    default: "Dubai Municipality Approval | DM | DCD | Trakhees approval",
     template: "%s | Building Approvals Dubai",
   },
   description:
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
     type: "website",
     url: siteUrl,
     siteName: "Building Approvals Dubai",
-    title: "Dubai Authority Approvals | Engineering & Fit-Out Consultants",
+    title: "Dubai Municipality Approval | DM | DCD | Trakhees approval",
     description:
       "Dubai's trusted engineering & fitout approval services. Dubai municipality, DCD, DDA, DSO, DHA, JAFZA, Nakheel, and all other authority approvals. Call Now.",
     images: [
@@ -70,7 +70,7 @@ export const metadata: Metadata = {
   // Twitter card metadata for link sharing.
   twitter: {
     card: "summary_large_image",
-    title: "Dubai Authority Approvals | Engineering & Fit-Out Consultants",
+    title: "Dubai Municipality Approval | DM | DCD | Trakhees approval",
     description:
       "Dubai's trusted engineering & fitout approval services. Dubai municipality, DCD, DDA, DSO, DHA, JAFZA, Nakheel, and all other authority approvals. Call Now.",
     images: ["/images/BA OG Logo_imresizer (1).png?v=2"],
