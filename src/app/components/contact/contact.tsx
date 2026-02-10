@@ -150,7 +150,7 @@ const Contact: React.FC = () => {
           <div className="contact-note">Need it urgent? WhatsApp us directly for priority handling.</div>
           <a
             className="contact-map-link"
-            href="https://www.google.com/maps/search/?api=1&query=Office+No.+302-2,+Al+Babtain+building,+2nd+St+-+Port+Saeed,+Dubai,+UAE"
+            href="https://maps.app.goo.gl/WuitF9PhjnDoV71E6"
             target="_blank"
             rel="noreferrer"
           >
@@ -274,7 +274,7 @@ const Contact: React.FC = () => {
       <div className="contact-map-embed">
         <iframe
           title="Office location"
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3608.7400000000002!2d55.3295!3d25.2525!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjXCsDE1JzA5LjAiTiA1NcKwMTknNDYuMiJF!5e0!3m2!1sen!2sae!4v1234567890"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1804.25!2d55.3099428!3d25.2503628!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xa92d40ccf05344f1%3A0x1f4091fdd509edf7!2sBuilding%20Approvals%20Dubai!5e0!3m2!1sen!2sae!4v1707500000000"
           loading="lazy"
           allowFullScreen
           referrerPolicy="no-referrer-when-downgrade"
