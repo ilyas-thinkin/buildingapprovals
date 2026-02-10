@@ -183,48 +183,173 @@ export default function RootLayout({
             `,
           }}
         />
-        {/* Organization schema markup for rich results */}
+        {/* LocalBusiness schema markup for Google Business Profile & rich results */}
         <Script
-          id="ld-org"
+          id="ld-local-business"
           type="application/ld+json"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "Organization",
+              "@type": "ProfessionalService",
+              "@id": `${siteUrl.href}#business`,
               name: "Building Approvals Dubai",
+              alternateName: "Building Approvals",
               url: siteUrl.href,
+              telephone: "+971589575610",
+              email: "info@buildingapprovals.ae",
               logo: {
                 "@type": "ImageObject",
                 url: `${siteUrl.origin}/images/BA OG Logo_imresizer (1).png?v=2`,
                 width: "1200",
                 height: "1200",
-                caption: "Building Approvals Dubai Logo"
+                caption: "Building Approvals Dubai Logo",
               },
-              image: {
-                "@type": "ImageObject",
-                url: `${siteUrl.origin}/images/BA OG Logo_imresizer (1).png?v=2`,
-                width: "1200",
-                height: "1200",
-                caption: "Building Approvals Dubai"
-              },
-              contactPoint: {
-                "@type": "ContactPoint",
-                telephone: "+971589575610",
-                contactType: "customer service",
-                areaServed: "AE",
-                availableLanguage: ["English"],
-              },
+              image: `${siteUrl.origin}/images/BA OG Logo_imresizer (1).png?v=2`,
+              description:
+                "Dubai's trusted engineering & fitout approval consultancy. We handle Dubai Municipality, Civil Defence, DEWA, Trakhees, Emaar, Nakheel, DHA, DSO, JAFZA, and all other authority approvals and NOCs across Dubai.",
+              priceRange: "$$",
+              currenciesAccepted: "AED",
+              paymentAccepted: "Cash, Credit Card, Bank Transfer",
               address: {
                 "@type": "PostalAddress",
-                streetAddress: "Office No: 302-2, Al Babtain building, 2nd St - Port Saeed",
+                streetAddress:
+                  "Office No: 302-2, Al Babtain building, 2nd St - Port Saeed",
                 addressLocality: "Dubai",
+                addressRegion: "Dubai",
                 postalCode: "00000",
                 addressCountry: "AE",
               },
-              sameAs: [
-                "https://www.buildingapprovals.ae"
+              geo: {
+                "@type": "GeoCoordinates",
+                latitude: 25.2503628,
+                longitude: 55.3099428,
+              },
+              hasMap: "https://maps.app.goo.gl/WuitF9PhjnDoV71E6",
+              openingHoursSpecification: [
+                {
+                  "@type": "OpeningHoursSpecification",
+                  dayOfWeek: [
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Saturday",
+                  ],
+                  opens: "09:00",
+                  closes: "18:00",
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  dayOfWeek: "Sunday",
+                  opens: "09:00",
+                  closes: "14:00",
+                },
               ],
+              contactPoint: [
+                {
+                  "@type": "ContactPoint",
+                  telephone: "+971589575610",
+                  contactType: "customer service",
+                  areaServed: "AE",
+                  availableLanguage: ["English", "Arabic"],
+                },
+                {
+                  "@type": "ContactPoint",
+                  telephone: "+971589575610",
+                  contactType: "sales",
+                  areaServed: "AE",
+                  availableLanguage: ["English", "Arabic"],
+                },
+              ],
+              areaServed: {
+                "@type": "City",
+                name: "Dubai",
+                "@id": "https://www.wikidata.org/wiki/Q612",
+              },
+              aggregateRating: {
+                "@type": "AggregateRating",
+                ratingValue: "4.8",
+                bestRating: "5",
+                worstRating: "1",
+                ratingCount: "11",
+                reviewCount: "11",
+              },
+              sameAs: [
+                "https://www.buildingapprovals.ae",
+                "https://maps.app.goo.gl/WuitF9PhjnDoV71E6",
+              ],
+              hasOfferCatalog: {
+                "@type": "OfferCatalog",
+                name: "Dubai Authority Approval Services",
+                itemListElement: [
+                  {
+                    "@type": "OfferCatalog",
+                    name: "Government Authority Approvals",
+                    itemListElement: [
+                      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Dubai Municipality Approval" } },
+                      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Civil Defence Approval (DCD)" } },
+                      { "@type": "Offer", itemOffered: { "@type": "Service", name: "DEWA Approval" } },
+                      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Trakhees Approval" } },
+                      { "@type": "Offer", itemOffered: { "@type": "Service", name: "RTA Permit and Approval" } },
+                      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Food Control Department Approval" } },
+                    ],
+                  },
+                  {
+                    "@type": "OfferCatalog",
+                    name: "Developer & Free Zone Approvals",
+                    itemListElement: [
+                      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Emaar Approval" } },
+                      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Nakheel Approval" } },
+                      { "@type": "Offer", itemOffered: { "@type": "Service", name: "DHA Approval" } },
+                      { "@type": "Offer", itemOffered: { "@type": "Service", name: "DSO / DIEZ Approval" } },
+                      { "@type": "Offer", itemOffered: { "@type": "Service", name: "JAFZA Approval" } },
+                      { "@type": "Offer", itemOffered: { "@type": "Service", name: "DDA Approval" } },
+                      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Tecom & DCCA Approval" } },
+                    ],
+                  },
+                  {
+                    "@type": "OfferCatalog",
+                    name: "Specialty Approvals",
+                    itemListElement: [
+                      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Signage Approval" } },
+                      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Spa Approval" } },
+                      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Shisha Cafe License" } },
+                      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Smoking Permit" } },
+                      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Swimming Pool Approval" } },
+                      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Solar Approval" } },
+                      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Tent Approval" } },
+                    ],
+                  },
+                ],
+              },
+            }),
+          }}
+        />
+        {/* WebSite schema for sitelinks search box */}
+        <Script
+          id="ld-website"
+          type="application/ld+json"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "@id": `${siteUrl.href}#website`,
+              name: "Building Approvals Dubai",
+              url: siteUrl.href,
+              publisher: {
+                "@id": `${siteUrl.href}#business`,
+              },
+              potentialAction: {
+                "@type": "SearchAction",
+                target: {
+                  "@type": "EntryPoint",
+                  urlTemplate: `${siteUrl.href}blog?q={search_term_string}`,
+                },
+                "query-input": "required name=search_term_string",
+              },
+              inLanguage: "en-AE",
             }),
           }}
         />
