@@ -27,11 +27,11 @@ export const metadata: Metadata = {
   metadataBase: siteUrl,
   // Core titles and description reused across pages.
   title: {
-    default: "Dubai Municipality Approval | DM | DCD | Trakhees approval",
+    default: "Building Approval Dubai | Expert Building Consultants Dubai",
     template: "%s | Building Approvals Dubai",
   },
   description:
-    "Dubai's trusted engineering & fitout approval services. Dubai municipality, DCD, DDA, DSO, DHA, JAFZA, Nakheel, and all other authority approvals. Call Now.",
+    "Dubai's trusted Building Consultant & fitout approval services. Dubai municipality, DCD, DDA, DSO, DHA, JAFZA, and all other authority approvals.",
   // Primary keyword set for search engines.
   keywords: [
     "Dubai authority approvals",
@@ -55,9 +55,9 @@ export const metadata: Metadata = {
     type: "website",
     url: siteUrl,
     siteName: "Building Approvals Dubai",
-    title: "Dubai Municipality Approval | DM | DCD | Trakhees approval",
+    title: "Building Approval Dubai | Expert Building Consultants Dubai",
     description:
-      "Dubai's trusted engineering & fitout approval services. Dubai municipality, DCD, DDA, DSO, DHA, JAFZA, Nakheel, and all other authority approvals. Call Now.",
+      "Dubai's trusted Building Consultant & fitout approval services. Dubai municipality, DCD, DDA, DSO, DHA, JAFZA, and all other authority approvals.",
     images: [
       {
         url: "/images/BA OG Logo_imresizer (1).png?v=2",
@@ -70,9 +70,9 @@ export const metadata: Metadata = {
   // Twitter card metadata for link sharing.
   twitter: {
     card: "summary_large_image",
-    title: "Dubai Municipality Approval | DM | DCD | Trakhees approval",
+    title: "Building Approval Dubai | Expert Building Consultants Dubai",
     description:
-      "Dubai's trusted engineering & fitout approval services. Dubai municipality, DCD, DDA, DSO, DHA, JAFZA, Nakheel, and all other authority approvals. Call Now.",
+      "Dubai's trusted Building Consultant & fitout approval services. Dubai municipality, DCD, DDA, DSO, DHA, JAFZA, and all other authority approvals.",
     images: ["/images/BA OG Logo_imresizer (1).png?v=2"],
   },
   // Canonical URL applied to all routes.
