@@ -214,8 +214,8 @@ export default function RootLayout({
               address: {
                 "@type": "PostalAddress",
                 streetAddress:
-                  "Office No: 302-2, Al Babtain building, 2nd St - Port Saeed",
-                addressLocality: "Dubai",
+                  "Al Babtain Building - Office No: 302 2nd St",
+                addressLocality: "Deira, Dubai",
                 addressRegion: "Dubai",
                 postalCode: "00000",
                 addressCountry: "AE",
@@ -234,16 +234,16 @@ export default function RootLayout({
                     "Tuesday",
                     "Wednesday",
                     "Thursday",
-                    "Saturday",
+                    "Friday",
                   ],
                   opens: "09:00",
                   closes: "18:00",
                 },
                 {
                   "@type": "OpeningHoursSpecification",
-                  dayOfWeek: "Sunday",
-                  opens: "09:00",
-                  closes: "14:00",
+                  dayOfWeek: ["Saturday", "Sunday"],
+                  opens: "00:00",
+                  closes: "00:00",
                 },
               ],
               contactPoint: [

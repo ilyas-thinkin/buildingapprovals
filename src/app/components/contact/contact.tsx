@@ -118,9 +118,9 @@ const Contact: React.FC = () => {
               <div>
                 <p className="contact-list-label">Address</p>
                 <p className="contact-text">
-                  Office No: 302-2, Al Babtain building, 2nd St – Port Saeed, Dubai, UAE
+                  Al Babtain Building - Office No: 302 2nd St - Deira - Dubai
                 </p>
-                <p className="contact-small">Opening hours: Mon - Sat · 9AM - 12PM</p>
+                <p className="contact-small">Opening hours: Mon – Fri · 9AM – 6PM</p>
               </div>
             </div>
             <div className="contact-list-item">
@@ -131,7 +131,7 @@ const Contact: React.FC = () => {
               </div>
               <div>
                 <p className="contact-list-label">Phone / WhatsApp</p>
-                <a href="tel:+971589575610">+971 589575610</a>
+                <a href="tel:+971589575610">058 957 5610</a>
                 <p className="contact-small">Get a free consultation and cost calculation now.</p>
               </div>
             </div>
@@ -268,6 +268,31 @@ const Contact: React.FC = () => {
               Send via WhatsApp
             </button>
           </form>
+        </div>
+      </div>
+
+      <div className="contact-hours-card">
+        <div className="contact-hours-header">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM12.5 7H11V13L16.25 16.15L17 14.92L12.5 12.25V7Z" fill="currentColor"/>
+          </svg>
+          <h3>Working Hours</h3>
+        </div>
+        <div className="contact-hours-grid">
+          {[
+            { day: 'Monday', hours: '9AM – 6PM', open: true },
+            { day: 'Tuesday', hours: '9AM – 6PM', open: true },
+            { day: 'Wednesday', hours: '9AM – 6PM', open: true },
+            { day: 'Thursday', hours: '9AM – 6PM', open: true },
+            { day: 'Friday', hours: '9AM – 6PM', open: true },
+            { day: 'Saturday', hours: 'Closed', open: false },
+            { day: 'Sunday', hours: 'Closed', open: false },
+          ].map(({ day, hours, open }) => (
+            <div key={day} className="contact-hours-row">
+              <span className="contact-hours-day">{day}</span>
+              <span className={`contact-hours-time ${open ? '' : 'contact-hours-closed'}`}>{hours}</span>
+            </div>
+          ))}
         </div>
       </div>
 

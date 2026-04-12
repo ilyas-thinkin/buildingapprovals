@@ -2570,8 +2570,8 @@ export default function ServiceDetailPage({ params }: { params: Promise<{ servic
       telephone: '+971589575610',
       address: {
         '@type': 'PostalAddress',
-        streetAddress: 'Office No: 302-2, Al Babtain building, 2nd St - Port Saeed',
-        addressLocality: 'Dubai',
+        streetAddress: 'Al Babtain Building - Office No: 302 2nd St',
+        addressLocality: 'Deira, Dubai',
         addressCountry: 'AE',
       },
     },
