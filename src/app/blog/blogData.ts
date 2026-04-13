@@ -16,6 +16,22 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    id: '1776065501699',
+    title: 'Top 10 Interior Fitout Companies Dubai 2026',
+    slug: 'top-10-interior-fitout-companies-dubai-2026',
+    category: 'Interior Fitout',
+    author: 'Building Approvals Dubai',
+    date: '2026-04-13',
+    excerpt: 'Discover the top 10 interior fitout companies in Dubai for offices, villas, restaurants, and renovations, with practical tips to choose the right partner.',
+    image: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-interior-fitout-list-1776065501699.jpg',
+    coverImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-interior-fitout-cover-1776065501699.jpg',
+    metaTitle: 'Top 10 Interior Fitout Companies Dubai 2026 | Building Approvals Dubai',
+    metaDescription: 'Discover the top 10 interior fitout companies in Dubai for offices, villas, restaurants, and renovations, with practical tips to choose the right partner.',
+    keywords: ['Interior', 'Fitout', 'Companies', 'Dubai', '2026'],
+    ogImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-interior-fitout-cover-1776065501699.jpg',
+  },
+
+  {
     id: '1770279885245',
     title: 'Municipality Approval in Dubai: The Most Common Fit-Out Approval Violations',
     slug: 'municipality-approval-in-dubai-the-most-common-fit-out-approval-violations',
