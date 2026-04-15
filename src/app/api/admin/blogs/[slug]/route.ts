@@ -1,14 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Octokit } from 'octokit';
+import { verifyAdminRequest } from '@/lib/admin-auth';
+
+function getErrMsg(e: unknown): string {
+  return e instanceof Error ? e.message : String(e);
+}
 
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
 ) {
+  if (!verifyAdminRequest(request)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const { slug } = await params;
 
-    // Check for required environment variables
     const githubToken = process.env.GITHUB_TOKEN;
     const githubOwner = process.env.GITHUB_OWNER;
     const githubRepo = process.env.GITHUB_REPO;
@@ -16,9 +24,7 @@ export async function DELETE(
 
     if (!githubToken || !githubOwner || !githubRepo) {
       return NextResponse.json(
-        {
-          error: 'GitHub API not configured. Please add GITHUB_TOKEN, GITHUB_OWNER, and GITHUB_REPO to environment variables.',
-        },
+        { error: 'GitHub API not configured. Please add GITHUB_TOKEN, GITHUB_OWNER, and GITHUB_REPO to environment variables.' },
         { status: 500 }
       );
     }
@@ -30,38 +36,31 @@ export async function DELETE(
 
     const deletionResults: string[] = [];
 
-    // File paths
     const contentPath = `src/app/blog/[slug]/content/${slug}.tsx`;
     const blogDataPath = 'src/app/blog/blogData.ts';
-    const pagePath = 'src/app/blog/[slug]/page.tsx';
 
-    // Get all required files in parallel
-    const [blogDataResult, pageResult, contentResult] = await Promise.all([
+    const [blogDataResult, contentResult] = await Promise.all([
       octokit.rest.repos.getContent({ owner, repo, path: blogDataPath, ref: branch }),
-      octokit.rest.repos.getContent({ owner, repo, path: pagePath, ref: branch }),
       octokit.rest.repos.getContent({ owner, repo, path: contentPath, ref: branch }).catch(() => null),
     ]);
 
-    if (!('content' in blogDataResult.data) || !('content' in pageResult.data)) {
+    if (!('content' in blogDataResult.data)) {
       return NextResponse.json({ error: 'Could not read required files' }, { status: 500 });
     }
 
     const blogDataContent = Buffer.from(blogDataResult.data.content, 'base64').toString('utf-8');
-    let pageContent = Buffer.from(pageResult.data.content, 'base64').toString('utf-8');
 
-    // Check if blog exists
     const slugExists = blogDataContent.includes(`slug: '${slug}'`) || blogDataContent.includes(`slug: "${slug}"`);
     if (!slugExists) {
       return NextResponse.json({ error: 'Blog not found in blogData.ts' }, { status: 404 });
     }
 
-    // 1. Prepare updated blogData.ts
+    // Parse and filter out the blog entry
     const interfaceMatch = blogDataContent.match(/(export interface BlogPost[\s\S]*?}\n)/);
     const arrayStartIndex = blogDataContent.indexOf('export const blogPosts: BlogPost[] = [') + 'export const blogPosts: BlogPost[] = ['.length;
     const arrayEndIndex = blogDataContent.lastIndexOf('];');
     const arrayContent = blogDataContent.substring(arrayStartIndex, arrayEndIndex);
 
-    // Parse blog objects
     const blogObjects: string[] = [];
     let depth = 0;
     let currentObject = '';
@@ -70,12 +69,8 @@ export async function DELETE(
     for (let i = 0; i < arrayContent.length; i++) {
       const char = arrayContent[i];
       if (char === '{') {
-        if (depth === 0) {
-          inObject = true;
-          currentObject = '{';
-        } else {
-          currentObject += char;
-        }
+        if (depth === 0) { inObject = true; currentObject = '{'; }
+        else { currentObject += char; }
         depth++;
       } else if (char === '}') {
         depth--;
@@ -90,10 +85,9 @@ export async function DELETE(
       }
     }
 
-    // Filter out the blog to delete
-    const filteredObjects = blogObjects.filter(obj => {
-      return !obj.includes(`slug: '${slug}'`) && !obj.includes(`slug: "${slug}"`);
-    });
+    const filteredObjects = blogObjects.filter(obj =>
+      !obj.includes(`slug: '${slug}'`) && !obj.includes(`slug: "${slug}"`)
+    );
 
     const interfacePart = interfaceMatch ? interfaceMatch[1] : '';
     const newArrayContent = filteredObjects.length > 0
@@ -105,141 +99,43 @@ export const blogPosts: BlogPost[] = [${newArrayContent}];
 `;
     deletionResults.push('Removed blog entry from blogData.ts');
 
-    // 2. Prepare updated page.tsx
-    const originalPageContent = pageContent;
-
-    // Remove dynamic import
-    const dynamicImportPattern = new RegExp(
-      `const\\s+\\w+Content\\s*=\\s*dynamic\\s*\\(\\s*\\(\\s*\\)\\s*=>\\s*import\\s*\\(\\s*['"]\\.\\/content\\/${slug}['"]\\)[^;]*;\\s*\\n?`,
-      'g'
-    );
-    pageContent = pageContent.replace(dynamicImportPattern, '');
-
-    // Remove static import
-    const staticImportPattern = new RegExp(
-      `import\\s+\\w+Content\\s+from\\s+['"]\\.\\/content\\/${slug}['"];?\\s*\\n?`,
-      'g'
-    );
-    pageContent = pageContent.replace(staticImportPattern, '');
-
-    // Remove render case
-    const renderCasePattern = new RegExp(
-      `\\s*if\\s*\\(post\\.slug\\s*===\\s*['"]${slug}['"]\\)\\s*\\{[\\s\\S]*?return\\s*<\\w+Content\\s*\\/?>\\s*;?\\s*\\}\\s*`,
-      'g'
-    );
-    pageContent = pageContent.replace(renderCasePattern, '\n    ');
-
-    // Clean up
-    pageContent = pageContent.replace(/\n{3,}/g, '\n\n');
-    pageContent = pageContent.replace(/\n\s+\n\s*return null;/g, '\n    return null;');
-
-    if (pageContent !== originalPageContent) {
-      deletionResults.push('Removed import and render case from page.tsx');
-    }
-
-    // 3. Create a single commit with all changes using Git Data API
-    const { data: refData } = await octokit.rest.git.getRef({
-      owner,
-      repo,
-      ref: `heads/${branch}`,
-    });
+    // Git commit
+    const { data: refData } = await octokit.rest.git.getRef({ owner, repo, ref: `heads/${branch}` });
     const currentCommitSha = refData.object.sha;
-
-    const { data: commitData } = await octokit.rest.git.getCommit({
-      owner,
-      repo,
-      commit_sha: currentCommitSha,
-    });
+    const { data: commitData } = await octokit.rest.git.getCommit({ owner, repo, commit_sha: currentCommitSha });
     const baseTreeSha = commitData.tree.sha;
 
-    // Create blobs for updated files
-    const [blogDataBlob, pageBlob] = await Promise.all([
+    const [blogDataBlob] = await Promise.all([
       octokit.rest.git.createBlob({
-        owner,
-        repo,
+        owner, repo,
         content: Buffer.from(newBlogDataContent).toString('base64'),
-        encoding: 'base64',
-      }),
-      octokit.rest.git.createBlob({
-        owner,
-        repo,
-        content: Buffer.from(pageContent).toString('base64'),
         encoding: 'base64',
       }),
     ]);
 
-    // Build tree entries - include file deletion if content file exists
-    const treeEntries: Array<{
-      path: string;
-      mode: '100644';
-      type: 'blob';
-      sha: string | null;
-    }> = [
-      {
-        path: blogDataPath,
-        mode: '100644',
-        type: 'blob',
-        sha: blogDataBlob.data.sha,
-      },
-      {
-        path: pagePath,
-        mode: '100644',
-        type: 'blob',
-        sha: pageBlob.data.sha,
-      },
+    const treeEntries: Array<{ path: string; mode: '100644'; type: 'blob'; sha: string | null }> = [
+      { path: blogDataPath, mode: '100644', type: 'blob', sha: blogDataBlob.data.sha },
     ];
 
-    // Add content file deletion (sha: null deletes the file)
     if (contentResult) {
-      treeEntries.push({
-        path: contentPath,
-        mode: '100644',
-        type: 'blob',
-        sha: null,
-      });
+      treeEntries.push({ path: contentPath, mode: '100644', type: 'blob', sha: null });
       deletionResults.push(`Deleted content file: ${contentPath}`);
-    } else {
-      deletionResults.push(`Content file not found: ${contentPath}`);
     }
 
-    // Create new tree
-    const { data: newTree } = await octokit.rest.git.createTree({
-      owner,
-      repo,
-      base_tree: baseTreeSha,
-      tree: treeEntries,
-    });
-
-    // Create commit
-    const { data: newCommit } = await octokit.rest.git.createCommit({
-      owner,
-      repo,
-      message: `Delete blog: ${slug}`,
-      tree: newTree.sha,
-      parents: [currentCommitSha],
-    });
-
-    // Update branch reference
-    await octokit.rest.git.updateRef({
-      owner,
-      repo,
-      ref: `heads/${branch}`,
-      sha: newCommit.sha,
-    });
+    const { data: newTree } = await octokit.rest.git.createTree({ owner, repo, base_tree: baseTreeSha, tree: treeEntries });
+    const { data: newCommit } = await octokit.rest.git.createCommit({ owner, repo, message: `Delete blog: ${slug}`, tree: newTree.sha, parents: [currentCommitSha] });
+    await octokit.rest.git.updateRef({ owner, repo, ref: `heads/${branch}`, sha: newCommit.sha });
 
     return NextResponse.json({
       success: true,
-      message: 'Blog deleted successfully. Vercel will redeploy automatically.',
+      message: 'Blog deleted successfully. The site will redeploy automatically.',
       slug,
       deletionResults,
-      note: 'Images stored in Vercel Blob are not automatically deleted. You can manage them in Vercel dashboard.',
+      note: 'Images stored in Netlify Blob are not automatically deleted. You can manage them in the Netlify dashboard.',
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error deleting blog:', error);
-    return NextResponse.json(
-      { error: error.message || 'Failed to delete blog' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: getErrMsg(error) || 'Failed to delete blog' }, { status: 500 });
   }
 }
 
@@ -247,20 +143,20 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
 ) {
+  if (!verifyAdminRequest(request)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const { slug } = await params;
 
-    // Check for required environment variables
     const githubToken = process.env.GITHUB_TOKEN;
     const githubOwner = process.env.GITHUB_OWNER;
     const githubRepo = process.env.GITHUB_REPO;
     const githubBranch = process.env.GITHUB_BRANCH || 'master';
 
     if (!githubToken || !githubOwner || !githubRepo) {
-      return NextResponse.json(
-        { error: 'GitHub API not configured' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'GitHub API not configured' }, { status: 500 });
     }
 
     const octokit = new Octokit({ auth: githubToken });
@@ -268,14 +164,8 @@ export async function GET(
     const repo = githubRepo;
     const branch = githubBranch;
 
-    // Read blogData.ts file
     const blogDataPath = 'src/app/blog/blogData.ts';
-    const { data: blogDataFile } = await octokit.rest.repos.getContent({
-      owner,
-      repo,
-      path: blogDataPath,
-      ref: branch,
-    });
+    const { data: blogDataFile } = await octokit.rest.repos.getContent({ owner, repo, path: blogDataPath, ref: branch });
 
     if (!('content' in blogDataFile)) {
       return NextResponse.json({ error: 'Could not read blogData.ts' }, { status: 500 });
@@ -283,11 +173,6 @@ export async function GET(
 
     const blogDataContent = Buffer.from(blogDataFile.content, 'base64').toString('utf-8');
 
-    // Find the blog with matching slug - handle both single and double quotes
-    const slugPatternSingle = `slug:\\s*'${slug}'`;
-    const slugPatternDouble = `slug:\\s*"${slug}"`;
-
-    // Find the blog object containing this slug
     let blogMatch = null;
     const blogObjectPattern = /\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}/g;
     let match;
@@ -303,48 +188,39 @@ export async function GET(
       return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
     }
 
-    // Parse the blog object
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const blog: any = {};
-    const fields = ['id', 'title', 'excerpt', 'date', 'author', 'category', 'image', 'coverImage', 'slug', 'metaTitle', 'metaDescription'];
+    const fields = ['id', 'title', 'excerpt', 'date', 'dateModified', 'author', 'category', 'image', 'coverImage', 'slug', 'metaTitle', 'metaDescription', 'ogImage'];
 
     fields.forEach(field => {
-      // Match both single and double quoted values, including multi-line
       const singleQuoteRegex = new RegExp(`${field}:\\s*'([^']*)'`);
       const doubleQuoteRegex = new RegExp(`${field}:\\s*"([^"]*)"`);
-
-      let fieldMatch = blogMatch.match(singleQuoteRegex);
-      if (!fieldMatch) {
-        fieldMatch = blogMatch.match(doubleQuoteRegex);
-      }
-
-      if (fieldMatch) {
-        blog[field] = fieldMatch[1];
-      }
+      let fieldMatch = blogMatch!.match(singleQuoteRegex);
+      if (!fieldMatch) fieldMatch = blogMatch!.match(doubleQuoteRegex);
+      if (fieldMatch) blog[field] = fieldMatch[1];
     });
 
-    // Try to read the blog content file
+    const keywordsMatch = blogMatch.match(/keywords:\s*\[([\s\S]*?)\]/);
+    if (keywordsMatch) {
+      const keywordMatches = keywordsMatch[1].match(/'([^']*)'|"([^"]*)"/g) || [];
+      blog.keywords = keywordMatches
+        .map((keyword) => keyword.replace(/^['"]|['"]$/g, '').trim())
+        .filter(Boolean);
+    }
+
     const contentPath = `src/app/blog/[slug]/content/${slug}.tsx`;
     try {
-      const { data: contentFile } = await octokit.rest.repos.getContent({
-        owner,
-        repo,
-        path: contentPath,
-        ref: branch,
-      });
-
+      const { data: contentFile } = await octokit.rest.repos.getContent({ owner, repo, path: contentPath, ref: branch });
       if ('content' in contentFile) {
         blog.contentFile = Buffer.from(contentFile.content, 'base64').toString('utf-8');
       }
-    } catch (error) {
+    } catch {
       console.log('Blog content file not found:', contentPath);
     }
 
     return NextResponse.json({ blog });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching blog:', error);
-    return NextResponse.json(
-      { error: error.message || 'Failed to fetch blog' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: getErrMsg(error) || 'Failed to fetch blog' }, { status: 500 });
   }
 }

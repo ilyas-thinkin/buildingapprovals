@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { BlogPost } from '@/app/blog/blogData';
 
 interface BlogManagerProps {
@@ -11,13 +11,11 @@ export default function BlogManager({ onEdit }: BlogManagerProps) {
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    fetchBlogs();
-  }, []);
-
   const fetchBlogs = async () => {
     try {
-      const response = await fetch('/api/admin/blogs');
+      const response = await fetch('/api/admin/blogs', {
+        headers: getAuthHeader(),
+      });
       const data = await response.json();
       setBlogs(data.blogs || []);
     } catch (error) {
@@ -25,6 +23,17 @@ export default function BlogManager({ onEdit }: BlogManagerProps) {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const fetchBlogsMemo = useCallback(fetchBlogs, []);
+
+  useEffect(() => {
+    fetchBlogsMemo();
+  }, [fetchBlogsMemo]);
+
+  const getAuthHeader = (): Record<string, string> => {
+    const token = sessionStorage.getItem('admin_token');
+    return token ? { Authorization: `Bearer ${token}` } : {};
   };
 
   const handleDelete = async (slug: string) => {
@@ -35,13 +44,14 @@ export default function BlogManager({ onEdit }: BlogManagerProps) {
     try {
       const response = await fetch(`/api/admin/blogs/${slug}`, {
         method: 'DELETE',
+        headers: getAuthHeader(),
       });
 
       const result = await response.json();
 
       if (response.ok) {
         alert('Blog deleted successfully!');
-        fetchBlogs(); // Refresh the list
+        fetchBlogs();
       } else {
         alert(`Error: ${result.error}`);
       }
@@ -58,7 +68,7 @@ export default function BlogManager({ onEdit }: BlogManagerProps) {
   if (blogs.length === 0) {
     return (
       <div className="no-blogs">
-        <p>No blog posts found. Create your first blog post above!</p>
+        <p>No blog posts found. Create your first blog post!</p>
       </div>
     );
   }
@@ -79,18 +89,8 @@ export default function BlogManager({ onEdit }: BlogManagerProps) {
               </p>
               <p className="blog-excerpt">{blog.excerpt}</p>
               <div className="blog-item-actions">
-                <button
-                  onClick={() => onEdit(blog)}
-                  className="edit-btn"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(blog.slug)}
-                  className="delete-btn"
-                >
-                  Delete
-                </button>
+                <button onClick={() => onEdit(blog)} className="edit-btn">Edit</button>
+                <button onClick={() => handleDelete(blog.slug)} className="delete-btn">Delete</button>
               </div>
             </div>
           </div>

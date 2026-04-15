@@ -9,14 +9,28 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@netlify/blobs": "^10.7.4",
+    "@tiptap/extension-image": "^3.22.3",
+    "@tiptap/extension-link": "^3.22.3",
+    "@tiptap/extension-table": "^3.22.3",
+    "@tiptap/extension-table-cell": "^3.22.3",
+    "@tiptap/extension-table-header": "^3.22.3",
+    "@tiptap/extension-table-row": "^3.22.3",
+    "@tiptap/pm": "^3.22.3",
+    "@tiptap/react": "^3.22.3",
+    "@tiptap/starter-kit": "^3.22.3",
+    "@types/pdf-parse": "^1.1.5",
+    "@types/sanitize-html": "^2.16.1",
     "@vercel/blob": "^2.3.3",
+    "html-to-jsx-transform": "^1.2.1",
     "mammoth": "^1.12.0",
     "next": "^16.2.3",
     "nodemailer": "^8.0.5",
     "octokit": "^5.0.5",
     "pdf-parse": "^2.4.5",
     "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "react-dom": "19.2.0",
+    "sanitize-html": "^2.17.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

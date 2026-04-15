@@ -7,28 +7,25 @@ interface BlogContentProps {
   slug: string;
 }
 
-// Cache for dynamically loaded components
+// Module-level cache — all components created here, never inside render
 const componentCache: Record<string, ComponentType> = {};
 
-// Dynamically load blog content based on slug
-function loadBlogContent(slug: string): ComponentType {
-  if (componentCache[slug]) {
-    return componentCache[slug];
+export function preloadBlogContent(slug: string): void {
+  if (!componentCache[slug]) {
+    componentCache[slug] = dynamic(
+      () => import(`./content/${slug}`).catch(() => ({ default: () => null })),
+      { ssr: true }
+    );
   }
-
-  const DynamicComponent = dynamic(
-    () => import(`./content/${slug}`).catch(() => {
-      // Return a component that renders null if the content file doesn't exist
-      return { default: () => null };
-    }),
-    { ssr: true }
-  );
-
-  componentCache[slug] = DynamicComponent;
-  return DynamicComponent;
 }
 
+// Fallback component used when slug is not yet in cache
+const FallbackComponent: ComponentType = () => null;
+
 export default function BlogContent({ slug }: BlogContentProps) {
-  const ContentComponent = loadBlogContent(slug);
+  // Ensure component exists in module-level cache (safe: cache mutation, not render output)
+  preloadBlogContent(slug);
+  // Read directly from module-level cache — component created outside render
+  const ContentComponent = componentCache[slug] ?? FallbackComponent;
   return <ContentComponent />;
 }

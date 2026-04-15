@@ -24,3 +24,131 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.not-found-page {
+  min-height: calc(100vh - 160px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 20px 72px;
+  background:
+    radial-gradient(circle at top, rgba(41, 109, 239, 0.12), transparent 40%),
+    linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%);
+}
+
+.not-found-card {
+  width: 100%;
+  max-width: 760px;
+  padding: 56px 32px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(41, 109, 239, 0.12);
+  box-shadow: 0 24px 60px rgba(19, 69, 155, 0.14);
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.not-found-code {
+  display: inline-block;
+  margin-bottom: 14px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.not-found-title {
+  margin: 0;
+  color: #0f172a;
+  font-size: clamp(2.4rem, 5vw, 4.4rem);
+  line-height: 0.95;
+}
+
+.not-found-text {
+  max-width: 560px;
+  margin: 20px auto 0;
+  color: #475569;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.not-found-actions {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 32px;
+}
+
+.not-found-primary,
+.not-found-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 180px;
+  padding: 14px 24px;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.not-found-primary {
+  background: #296def;
+  color: #ffffff;
+  box-shadow: 0 10px 24px rgba(41, 109, 239, 0.28);
+}
+
+.not-found-primary:hover {
+  transform: translateY(-1px);
+  background: #1f5bd0;
+}
+
+.not-found-secondary {
+  background: #ffffff;
+  color: #296def;
+  border: 1px solid rgba(41, 109, 239, 0.2);
+}
+
+.not-found-secondary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(41, 109, 239, 0.12);
+}
+
+.not-found-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 26px;
+}
+
+.not-found-links a {
+  color: #1d4ed8;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.not-found-links a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .not-found-card {
+    padding: 44px 22px;
+    border-radius: 22px;
+  }
+
+  .not-found-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .not-found-primary,
+  .not-found-secondary {
+    width: 100%;
+  }
+}

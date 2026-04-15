@@ -12,19 +12,14 @@ export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<'create' | 'manage'>('create');
   const [editingBlog, setEditingBlog] = useState<BlogPost | null>(null);
 
-  const handleLogin = (username: string, password: string) => {
-    // Simple authentication - in production, use better security
-    if (username === 'buildingapprovals_admin' && password === 'BuildingApprovals123#') {
-      setIsAuthenticated(true);
-      sessionStorage.setItem('admin_auth', 'true');
-    } else {
-      alert('Invalid credentials');
-    }
+  const handleLogin = (token: string) => {
+    setIsAuthenticated(true);
+    sessionStorage.setItem('admin_token', token);
   };
 
   const handleLogout = () => {
     setIsAuthenticated(false);
-    sessionStorage.removeItem('admin_auth');
+    sessionStorage.removeItem('admin_token');
   };
 
   const handleEdit = (blog: BlogPost) => {
@@ -36,9 +31,11 @@ export default function AdminPage() {
     setEditingBlog(null);
   };
 
-  // Check session on mount
   React.useEffect(() => {
-    if (sessionStorage.getItem('admin_auth') === 'true') {
+    // Restore session across page refreshes.
+    // The token is validated server-side on every write request;
+    // if it's expired the API returns 401 and the user re-logs in.
+    if (sessionStorage.getItem('admin_token')) {
       setIsAuthenticated(true);
     }
   }, []);
@@ -50,7 +47,7 @@ export default function AdminPage() {
   return (
     <div className="admin-container">
       <header className="admin-header">
-        <h1>Blog Admin Panel</h1>
+        <h1>Blog Admin — Building Approvals Dubai</h1>
         <button onClick={handleLogout} className="logout-btn">Logout</button>
       </header>
 
