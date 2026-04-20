@@ -17,6 +17,22 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    id: '1776666807951',
+    title: 'Villa Modification Approval in Dubai: Complete 2026 Guide',
+    slug: 'villa-modification-approval-dubai',
+    category: 'Modification Approval',
+    author: 'Building Approvals Dubai',
+    date: '2026-04-20',
+    excerpt: 'Learn the villa modification approval process in Dubai for 2026. Understand Dubai Municipality permits, key documents, steps, timelines, and delays.',
+    image: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/building-approvals-dubai-modification-approval-list-1776666807951.jpg',
+    coverImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/building-approvals-dubai-modification-approval-cover-1776666807951.jpg',
+    metaTitle: 'Villa Modification Approval in Dubai | 2026 Guide',
+    metaDescription: 'Learn the villa modification approval process in Dubai for 2026. Understand Dubai Municipality permits, key documents, steps, timelines, and delays.',
+    keywords: [],
+    ogImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/building-approvals-dubai-modification-approval-cover-1776666807951.jpg',
+  },
+
+  {
     id: '1776065501699',
     title: 'Top 10 Interior Fitout Companies Dubai 2026',
     slug: 'top-10-interior-fitout-companies-dubai-2026',
