@@ -1,7 +1,7 @@
 export default function BlogContent() {
   return (
     <div className="blog-content-wrapper">
-      <p>If you are planning to extend, renovate, or reconfigure a villa in Dubai, getting the right approval is not optional. In most cases, villa modification approval is required before any structural work, major MEP changes, exterior changes, or area expansion can begin. This process usually involves <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/">Dubai Municipality</a>, and in some cases, the master developer, community management, or other related authorities, depending on the project scope and location.</p>
+      <p>If you are planning to extend, renovate, or reconfigure a villa in Dubai, getting the right approval is not optional. In most cases, <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services">villa modification approval </a>is required before any structural work, major MEP changes, exterior changes, or area expansion can begin. This process usually involves <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/">Dubai Municipality</a>, and in some cases, the master developer, community management, or other related authorities, depending on the project scope and location.</p>
 
       <h2>What is villa modification approval?</h2>
 
