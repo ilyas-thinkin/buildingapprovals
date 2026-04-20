@@ -17,6 +17,22 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    id: '1776666649904',
+    title: 'test',
+    slug: 'test',
+    category: 'Test',
+    author: 'Building Approvals Dubai',
+    date: '2026-04-20',
+    excerpt: 'test',
+    image: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/building-approvals-dubai-test-list-1776666649904.png',
+    coverImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/building-approvals-dubai-test-cover-1776666649904.png',
+    metaTitle: 'test | Building Approvals Dubai',
+    metaDescription: 'test',
+    keywords: ['test'],
+    ogImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/building-approvals-dubai-test-cover-1776666649904.png',
+  },
+
+  {
     id: '1776065501699',
     title: 'Top 10 Interior Fitout Companies Dubai 2026',
     slug: 'top-10-interior-fitout-companies-dubai-2026',
