@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getStore } from '@netlify/blobs';
+import { put } from '@vercel/blob';
 import { Octokit } from 'octokit';
 import sanitizeHtml from 'sanitize-html';
 import { htmlToJsx } from 'html-to-jsx-transform';
@@ -703,24 +703,11 @@ async function findAvailableSlug(
   }
 }
 
-// ─── Netlify Blob upload ─────────────────────────────────────────────────────
+// ─── Vercel Blob upload ───────────────────────────────────────────────────────
 
-async function uploadToNetlifyBlob(data: Buffer, key: string, contentType: string): Promise<string> {
-  const siteId = process.env.NETLIFY_SITE_ID;
-  const token = process.env.NETLIFY_TOKEN;
-
-  if (!siteId || !token) {
-    throw new Error('NETLIFY_SITE_ID and NETLIFY_TOKEN environment variables are required for image uploads');
-  }
-
-  const store = getStore({ name: 'blog-images', siteID: siteId, token });
-
-  // Convert Buffer to ArrayBuffer for @netlify/blobs compatibility
-  const arrayBuffer = data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength) as ArrayBuffer;
-  await store.set(key, arrayBuffer, { metadata: { contentType } });
-
-  // Serve via internal API route (stable URL, works in all environments)
-  return `/api/images/${encodeURIComponent(key)}`;
+async function uploadToVercelBlob(data: Buffer, key: string, contentType: string): Promise<string> {
+  const { url } = await put(key, data, { access: 'public', contentType });
+  return url;
 }
 
 // ─── Allowed image MIME types ─────────────────────────────────────────────────
@@ -849,12 +836,12 @@ export async function POST(request: NextRequest) {
     const cardImageExt = cardImage!.name.split('.').pop()?.toLowerCase() || 'jpg';
     const cardImageKey = `building-approvals-dubai-${categorySlug}-list-${timestamp}.${cardImageExt}`;
     const cardImageBuffer = Buffer.from(await cardImage!.arrayBuffer());
-    const cardImageUrl = await uploadToNetlifyBlob(cardImageBuffer, cardImageKey, cardImage!.type);
+    const cardImageUrl = await uploadToVercelBlob(cardImageBuffer, cardImageKey, cardImage!.type);
 
     const coverImageExt = coverImage!.name.split('.').pop()?.toLowerCase() || 'jpg';
     const coverImageKey = `building-approvals-dubai-${categorySlug}-cover-${timestamp}.${coverImageExt}`;
     const coverImageBuffer = Buffer.from(await coverImage!.arrayBuffer());
-    const coverImageUrl = await uploadToNetlifyBlob(coverImageBuffer, coverImageKey, coverImage!.type);
+    const coverImageUrl = await uploadToVercelBlob(coverImageBuffer, coverImageKey, coverImage!.type);
 
     // ── Parse content ──────────────────────────────────────────────────────────
     let blogContent = '';
@@ -916,7 +903,7 @@ export async function POST(request: NextRequest) {
       const imageBuffer = Buffer.from(await imgFile.arrayBuffer());
       const imageExt = imgFile.name.split('.').pop()?.toLowerCase() || 'jpg';
       const imageKey = `building-approvals-dubai-${categorySlug}-content-${i + 1}-${timestamp}.${imageExt}`;
-      const imageUrl = await uploadToNetlifyBlob(imageBuffer, imageKey, imgFile.type);
+      const imageUrl = await uploadToVercelBlob(imageBuffer, imageKey, imgFile.type);
 
       // Map to the placeholder id at the same position
       const imgId = orderedPlaceholders[i];
@@ -930,7 +917,7 @@ export async function POST(request: NextRequest) {
       const imageExt = img.contentType.split('/')[1]?.toLowerCase() || 'png';
       const imageKey = `building-approvals-dubai-${categorySlug}-content-${img.index + 1}-${timestamp}.${imageExt}`;
       const imageBuffer = Buffer.from(img.data, 'base64');
-      imageUrls[`docx_${img.index}`] = await uploadToNetlifyBlob(imageBuffer, imageKey, img.contentType);
+      imageUrls[`docx_${img.index}`] = await uploadToVercelBlob(imageBuffer, imageKey, img.contentType);
     }
 
     // ── Generate blog component ────────────────────────────────────────────────

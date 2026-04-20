@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getStore } from '@netlify/blobs';
+import { put } from '@vercel/blob';
 import { Octokit } from 'octokit';
 import { verifyAdminRequest } from '@/lib/admin-auth';
 import { generateBlogComponentFromHTML, generateBlogComponentFromMarkdown } from '@/lib/blog-generator';
@@ -74,26 +74,9 @@ async function extractDocxText(contentBuffer: Buffer): Promise<ExtractedDocxCont
   return { text: html, images: extractedImages };
 }
 
-async function uploadToNetlifyBlob(data: Buffer, key: string, contentType: string): Promise<string> {
-  const siteId = process.env.NETLIFY_SITE_ID;
-  const token = process.env.NETLIFY_TOKEN;
-
-  if (!siteId || !token) {
-    throw new Error('NETLIFY_SITE_ID and NETLIFY_TOKEN environment variables are required');
-  }
-
-  const store = getStore({
-    name: 'blog-images',
-    siteID: siteId,
-    token,
-  });
-
-  // Convert Buffer to ArrayBuffer for @netlify/blobs compatibility
-  const arrayBuffer = data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength) as ArrayBuffer;
-  await store.set(key, arrayBuffer, { metadata: { contentType } });
-
-  // Serve via internal API route (stable URL, works in all environments)
-  return `/api/images/${encodeURIComponent(key)}`;
+async function uploadToVercelBlob(data: Buffer, key: string, contentType: string): Promise<string> {
+  const { url } = await put(key, data, { access: 'public', contentType });
+  return url;
 }
 
 export async function POST(request: NextRequest) {
@@ -187,14 +170,14 @@ export async function POST(request: NextRequest) {
       const cardImageExt = cardImage.name.split('.').pop();
       const cardImageName = `building-approvals-dubai-${categorySlug}-list-${timestamp}.${cardImageExt}`;
       const cardImageBuffer = Buffer.from(await cardImage.arrayBuffer());
-      cardImagePath = await uploadToNetlifyBlob(cardImageBuffer, cardImageName, cardImage.type);
+      cardImagePath = await uploadToVercelBlob(cardImageBuffer, cardImageName, cardImage.type);
     }
 
     if (coverImage && coverImage.size > 0) {
       const coverImageExt = coverImage.name.split('.').pop();
       const coverImageName = `building-approvals-dubai-${categorySlug}-cover-${timestamp}.${coverImageExt}`;
       const coverImageBuffer = Buffer.from(await coverImage.arrayBuffer());
-      coverImagePath = await uploadToNetlifyBlob(coverImageBuffer, coverImageName, coverImage.type);
+      coverImagePath = await uploadToVercelBlob(coverImageBuffer, coverImageName, coverImage.type);
     }
 
     // File paths
@@ -377,7 +360,7 @@ export const blogPosts: BlogPost[] = [${newArrayContent}];
           const imageBuffer = Buffer.from(await file.arrayBuffer());
           const imageExt = file.name.split('.').pop()?.toLowerCase() || 'jpg';
           const imageName = `building-approvals-dubai-${categorySlug}-content-${i + 1}-${timestamp}.${imageExt}`;
-          const imageUrl = await uploadToNetlifyBlob(imageBuffer, imageName, file.type);
+          const imageUrl = await uploadToVercelBlob(imageBuffer, imageName, file.type);
           const imgId = orderedPlaceholders[i];
           if (imgId) imageUrls[imgId] = imageUrl;
         }
@@ -397,7 +380,7 @@ export const blogPosts: BlogPost[] = [${newArrayContent}];
           const imageExt = img.contentType.split('/')[1]?.toLowerCase() || 'png';
           const imageName = `building-approvals-dubai-${categorySlug}-content-${img.index + 1}-${timestamp}.${imageExt}`;
           const imageBuffer = Buffer.from(img.data, 'base64');
-          imageUrls[`docx_${img.index}`] = await uploadToNetlifyBlob(imageBuffer, imageName, img.contentType);
+          imageUrls[`docx_${img.index}`] = await uploadToVercelBlob(imageBuffer, imageName, img.contentType);
         }
       }
 
