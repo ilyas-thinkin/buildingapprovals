@@ -23,6 +23,7 @@ export const blogPosts: BlogPost[] = [
     category: 'Modification Approval',
     author: 'Building Approvals Dubai',
     date: '2026-04-20',
+    dateModified: '2026-04-20',
     excerpt: 'Learn the villa modification approval process in Dubai for 2026. Understand Dubai Municipality permits, key documents, steps, timelines, and delays.',
     image: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/building-approvals-dubai-modification-approval-list-1776666807951.jpg',
     coverImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/building-approvals-dubai-modification-approval-cover-1776666807951.jpg',
