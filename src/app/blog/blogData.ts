@@ -248,6 +248,7 @@ export const blogPosts: BlogPost[] = [
     category: 'Dubai Civil Defence',
     author: 'Building Approvals Dubai',
     date: '2026-01-08',
+    dateModified: '2026-04-29',
     excerpt: "Fire and life safety are non-negotiable in Dubai's construction ecosystem. This comprehensive guide explains what DCD is, how to obtain approval step by step, and the specific requirements for different project categories.",
     image: '/images/blog/building-approvals-dubai-civil-defence-approval-card.jpg',
     coverImage: '/images/blog/building-approvals-dubai-civil-defence-approval-card.jpg',
