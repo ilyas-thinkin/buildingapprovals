@@ -4,6 +4,7 @@ import { Octokit } from 'octokit';
 import sanitizeHtml from 'sanitize-html';
 import { htmlToJsx } from 'html-to-jsx-transform';
 import { verifyAdminRequest } from '@/lib/admin-auth';
+import { cleanBlogMetaTitle, cleanBlogSlugText } from '@/lib/blog-seo';
 import {
   generateBlogComponentFromHTML as generateSharedBlogComponentFromHTML,
   generateBlogComponentFromMarkdown as generateSharedBlogComponentFromMarkdown,
@@ -777,7 +778,7 @@ export async function POST(request: NextRequest) {
     if (coverErr) return NextResponse.json({ error: coverErr }, { status: 400 });
 
     // ── Validate slug ──────────────────────────────────────────────────────────
-    slug = slug.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-+|-+$/g, '');
+    slug = cleanBlogSlugText(slug).toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-+|-+$/g, '');
     if (!slug) {
       return NextResponse.json({ error: 'Slug must contain at least one letter or number' }, { status: 400 });
     }
@@ -928,12 +929,12 @@ export async function POST(request: NextRequest) {
     // ── Build SEO metadata ─────────────────────────────────────────────────────
     const seoData = manualSEO
       ? {
-          metaTitle: metaTitle || `${title} | Building Approvals Dubai`,
+          metaTitle: cleanBlogMetaTitle(metaTitle, title),
           metaDescription: metaDescription || excerpt,
           keywords: keywords.split(',').map(k => k.trim()).filter(Boolean),
         }
       : {
-          metaTitle: `${title} | Building Approvals Dubai`,
+          metaTitle: title,
           metaDescription: excerpt,
           keywords: title.split(/\s+/).map(w => w.replace(/[^a-zA-Z0-9]/g, '')).filter(w => w.length > 3),
         };

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { cleanBlogMetaTitle, cleanBlogSlugText } from '@/lib/blog-seo';
 
 async function extractPdfText(contentBuffer: Buffer): Promise<string> {
   const pdfParseModule: any = await import('pdf-parse');
@@ -102,7 +103,11 @@ export async function POST(request: NextRequest) {
 
     // Extract form fields
     const title = formData.get('title') as string;
-    const slug = formData.get('slug') as string;
+    const slug = cleanBlogSlugText(formData.get('slug') as string)
+      .toLowerCase()
+      .replace(/[^a-z0-9-]/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-+|-+$/g, '');
     const category = formData.get('category') as string;
     const author = formData.get('author') as string;
     const excerpt = formData.get('excerpt') as string;
@@ -199,13 +204,13 @@ export async function POST(request: NextRequest) {
     // Generate SEO metadata
     const seoData = manualSEO
       ? {
-          metaTitle: metaTitle || title,
+          metaTitle: cleanBlogMetaTitle(metaTitle, title),
           metaDescription: metaDescription || excerpt,
           focusKeyword,
           keywords: keywords.split(',').map(k => k.trim()).filter(Boolean),
         }
       : {
-          metaTitle: `${title} | Building Approvals Dubai`,
+          metaTitle: title,
           metaDescription: excerpt,
           focusKeyword: title.split(' ').slice(0, 3).join(' '),
           keywords: title.split(' ').filter(word => word.length > 3),

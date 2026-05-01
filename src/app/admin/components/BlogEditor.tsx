@@ -11,6 +11,7 @@ import TableRow from '@tiptap/extension-table-row';
 import TableHeader from '@tiptap/extension-table-header';
 import TableCell from '@tiptap/extension-table-cell';
 import { BlogPost } from '@/app/blog/blogData';
+import { cleanBlogSlugText } from '@/lib/blog-seo';
 
 interface BlogEditorProps {
   editingBlog?: BlogPost | null;
@@ -407,7 +408,7 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
 
         const blog = data.blog;
         const content = extractContentFromComponent(blog.contentFile || '');
-        const autoMetaTitle = `${blog.title} | Building Approvals Dubai`;
+        const autoMetaTitle = blog.title || '';
         const autoMetaDescription = blog.excerpt || '';
         const autoKeywords = buildAutoKeywords(blog.title || '');
         const loadedKeywords = Array.isArray(blog.keywords) ? blog.keywords.join(', ') : '';
@@ -529,7 +530,7 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
   };
 
   const generateSlug = (title: string) => {
-    return title
+    return cleanBlogSlugText(title)
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '');

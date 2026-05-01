@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { cleanBlogSlugText } from '@/lib/blog-seo';
 import './upload-form.css';
 
 export default function UploadBlogPage() {
@@ -86,7 +87,7 @@ export default function UploadBlogPage() {
   };
 
   const generateSlug = () => {
-    const slug = formData.title
+    const slug = cleanBlogSlugText(formData.title)
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '');

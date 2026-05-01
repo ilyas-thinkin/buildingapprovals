@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { blogPosts } from '../blogData';
 import BlogContent from './BlogContent';
+import { cleanBlogMetaTitle } from '@/lib/blog-seo';
 import './blog-post.css';
 
 // ─── SITE CONFIG ──────────────────────────────────────────────────────────────
@@ -13,9 +14,7 @@ const TWITTER_HANDLE = '@buildingapprovalsdubai';
 // ──────────────────────────────────────────────────────────────────────────────
 
 function normalizeMetaTitle(title: string): string {
-  const suffix = `| ${SITE_NAME}`;
-  const normalized = title.trim();
-  return normalized.endsWith(suffix) ? normalized : `${normalized} ${suffix}`;
+  return cleanBlogMetaTitle(title);
 }
 
 interface BlogPostPageProps {
@@ -37,7 +36,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   const url = `${BASE_URL}/blog/${post.slug}`;
 
   return {
-    title: normalizeMetaTitle(post.metaTitle || post.title),
+    title: { absolute: normalizeMetaTitle(post.metaTitle || post.title) },
     description: post.metaDescription || post.excerpt,
     keywords: post.keywords?.join(', '),
     authors: [{ name: post.author }],

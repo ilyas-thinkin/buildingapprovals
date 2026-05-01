@@ -3,6 +3,7 @@ import { put } from '@vercel/blob';
 import { Octokit } from 'octokit';
 import { verifyAdminRequest } from '@/lib/admin-auth';
 import { generateBlogComponentFromHTML, generateBlogComponentFromMarkdown } from '@/lib/blog-generator';
+import { cleanBlogMetaTitle, cleanBlogSlugText } from '@/lib/blog-seo';
 
 function getErrMsg(e: unknown): string {
   return e instanceof Error ? e.message : String(e);
@@ -111,7 +112,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Title and slug are required' }, { status: 400 });
     }
 
-    slug = slug.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-+|-+$/g, '');
+    slug = cleanBlogSlugText(slug).toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-+|-+$/g, '');
     if (!slug) {
       return NextResponse.json({ error: 'Slug must contain at least one letter or number' }, { status: 400 });
     }
@@ -297,12 +298,12 @@ export async function POST(request: NextRequest) {
 
     const seoData = manualSEO
       ? {
-          metaTitle: metaTitle || `${title} | Building Approvals Dubai`,
+          metaTitle: cleanBlogMetaTitle(metaTitle, title),
           metaDescription: metaDescription || excerpt,
           keywords: keywords.split(',').map(k => k.trim()).filter(Boolean),
         }
       : {
-          metaTitle: `${title} | Building Approvals Dubai`,
+          metaTitle: title,
           metaDescription: excerpt,
           keywords: title.split(/\s+/).map(w => w.replace(/[^a-zA-Z0-9]/g, '')).filter(w => w.length > 3),
         };
