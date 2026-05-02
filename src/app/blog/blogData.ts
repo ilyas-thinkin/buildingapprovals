@@ -17,6 +17,22 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    id: '1777732827331',
+    title: 'DM Municipality Salon Approval in Dubai: Complete 2026 Guide',
+    slug: 'dm-municipality-salon-approval-dubai',
+    category: 'Interior Fitout',
+    author: 'Building Approvals Dubai',
+    date: '2026-05-02',
+    excerpt: 'Learn how to get salon approval in Dubai through DM Municipality, BPS, fitout approval, documents, inspections, and practical compliance tips for 2026.',
+    image: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/building-approvals-dubai-interior-fitout-list-1777732827331.jpg',
+    coverImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/building-approvals-dubai-interior-fitout-cover-1777732827331.jpg',
+    metaTitle: 'DM Municipality Salon Approval in Dubai 2026 Guide',
+    metaDescription: 'Learn how to get salon approval in Dubai through DM Municipality, BPS, fitout approval, documents, inspections, and practical compliance tips for 2026.',
+    keywords: ['salon approval', 'dm dubai', 'dm approval', 'fitout approval', 'dm dubai', 'dm bps'],
+    ogImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/building-approvals-dubai-interior-fitout-cover-1777732827331.jpg',
+  },
+
+  {
     id: '1776666807951',
     title: 'Villa Modification Approval in Dubai: Complete 2026 Guide',
     slug: 'villa-modification-approval-dubai',
