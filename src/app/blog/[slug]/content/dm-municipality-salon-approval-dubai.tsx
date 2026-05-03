@@ -132,7 +132,7 @@ export default function BlogContent() {
 
       <p>However, the following documents are commonly required for <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services/dubai-municipality"><strong>DM approval</strong></a> or salon fitout approval:</p>
 
-      <h3 className="text-align-center"><span className="text-size-lg"><span className="text-color-white">Requirement</span></h3>
+      <h3 className="text-align-center"><span className="text-size-lg"><span className="text-color-white">Requirement</span></span></h3>
 
       <h3>Practical Note</h3>
 
