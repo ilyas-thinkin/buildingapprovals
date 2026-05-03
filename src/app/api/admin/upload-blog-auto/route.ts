@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { put } from '@vercel/blob';
 import { Octokit } from 'octokit';
 import { cleanBlogMetaTitle, cleanBlogSlugText } from '@/lib/blog-seo';
+import { fixUnclosedInlineTags } from '@/lib/blog-generator';
 
 async function extractPdfText(contentBuffer: Buffer): Promise<string> {
   const pdfParseModule: any = await import('pdf-parse');
@@ -178,6 +179,9 @@ function sanitizeFinalComponent(componentCode: string): string {
   sanitized = sanitized.replace(/\s*<br\s*\/?>\s*(<\/ul>)/gi, '$1');
   sanitized = sanitized.replace(/(<ol[^>]*>)\s*<br\s*\/?>\s*/gi, '$1');
   sanitized = sanitized.replace(/\s*<br\s*\/?>\s*(<\/ol>)/gi, '$1');
+
+  // 8. Fix unclosed inline tags (e.g. <span> not closed before </h3>)
+  sanitized = fixUnclosedInlineTags(sanitized);
 
   return sanitized;
 }

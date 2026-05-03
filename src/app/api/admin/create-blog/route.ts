@@ -8,6 +8,7 @@ import { cleanBlogMetaTitle, cleanBlogSlugText } from '@/lib/blog-seo';
 import {
   generateBlogComponentFromHTML as generateSharedBlogComponentFromHTML,
   generateBlogComponentFromMarkdown as generateSharedBlogComponentFromMarkdown,
+  fixUnclosedInlineTags,
 } from '@/lib/blog-generator';
 
 function getErrMsg(e: unknown): string {
@@ -241,6 +242,8 @@ function sanitizeFinalComponent(componentCode: string): string {
 
   // ── Collapse excessive whitespace/blank lines ─────────────────────────────
   s = s.replace(/\n{3,}/g, '\n\n');
+
+  s = fixUnclosedInlineTags(s);
 
   return s;
 }

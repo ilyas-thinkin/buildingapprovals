@@ -206,6 +206,68 @@ function wrapWithOptionalClass(tag: string, content: string, className?: string)
     : `      <${tag}>${content}</${tag}>`;
 }
 
+// ─── Unclosed inline tag fixer ───────────────────────────────────────────────
+
+/**
+ * Stack-based pass that auto-closes inline tags left open inside a block element.
+ * Fixes cases like: <h3><span className="a"><span className="b">text</span></h3>
+ *                → <h3><span className="a"><span className="b">text</span></span></h3>
+ */
+export function fixUnclosedInlineTags(html: string): string {
+  const INLINE_TAGS = new Set([
+    'span','strong','em','b','i','a','mark','sub','sup',
+    'del','ins','code','s','small','cite','q','abbr','kbd','samp','var',
+  ]);
+  const BLOCK_CLOSING = new Set([
+    'h1','h2','h3','h4','h5','h6','p','li','div','td','th',
+    'blockquote','ul','ol','table','tr','thead','tbody','tfoot',
+    'section','article','aside','header','footer','nav','main','figure','figcaption',
+  ]);
+
+  // Matches tags; attribute values with quotes are consumed so > inside quotes won't confuse the regex
+  const tagRe = /<(\/?)([a-zA-Z][a-zA-Z0-9]*)(\s(?:[^>"']|"[^"]*"|'[^']*')*)?>/g;
+  const stack: string[] = [];
+  let result = '';
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = tagRe.exec(html)) !== null) {
+    const [fullMatch, slash, rawTag] = match;
+    const tag = rawTag.toLowerCase();
+    const isClosing = slash === '/';
+
+    result += html.slice(lastIndex, match.index);
+    lastIndex = match.index + fullMatch.length;
+
+    if (!isClosing && INLINE_TAGS.has(tag)) {
+      stack.push(tag);
+      result += fullMatch;
+    } else if (isClosing && INLINE_TAGS.has(tag)) {
+      if (stack.length > 0 && stack[stack.length - 1] === tag) {
+        stack.pop();
+        result += fullMatch;
+      } else if (stack.includes(tag)) {
+        // Out-of-order close: flush intervening tags first
+        while (stack.length > 0 && stack[stack.length - 1] !== tag) {
+          result += `</${stack.pop()}>`;
+        }
+        if (stack.length > 0) { stack.pop(); result += fullMatch; }
+      }
+      // else: orphan closing tag — drop it silently
+    } else if (isClosing && BLOCK_CLOSING.has(tag)) {
+      // Auto-close any open inline tags before the block closes
+      while (stack.length > 0) result += `</${stack.pop()}>`;
+      result += fullMatch;
+    } else {
+      result += fullMatch;
+    }
+  }
+
+  result += html.slice(lastIndex);
+  while (stack.length > 0) result += `</${stack.pop()}>`;
+  return result;
+}
+
 // ─── Final JSX component sanitizer ───────────────────────────────────────────
 
 export function sanitizeFinalComponent(componentCode: string): string {
@@ -278,6 +340,8 @@ export function sanitizeFinalComponent(componentCode: string): string {
   s = s.replace(/\*\*([^*<>]+)\*\*/g, '<strong>$1</strong>');
   s = s.replace(/<p>\s*#{1,6}\s+([^<]+)<\/p>/g, (_, text) => `<h2>${text.trim()}</h2>`);
   s = s.replace(/\n{3,}/g, '\n\n');
+
+  s = fixUnclosedInlineTags(s);
 
   return s;
 }
