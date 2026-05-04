@@ -85,7 +85,7 @@ export const blogPosts: BlogPost[] = [
   {
     id: '1770014417337',
     title: 'DSO Approval / DIEZ Approval in Dubai 2026: Complete Guide',
-    slug: 'dso-approval-diez-approval-in-dubai-2026-a-complete-guide',
+    slug: 'dso-approval-diez-approval-in-dubai-2026',
     category: 'DSO / DIEZ Approval',
     author: 'Building Approvals Dubai',
     date: '2026-02-02',
