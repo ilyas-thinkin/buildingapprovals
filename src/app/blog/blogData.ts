@@ -102,7 +102,7 @@ export const blogPosts: BlogPost[] = [
   {
     id: '1769065428206',
     title: 'Why hire a Consultant for Dubai Civil Defence DCD Approval?',
-    slug: 'why-hire-a-consultant-for-dubai-civil-defence-approval',
+    slug: 'why-hire-a-consultant-for-dcd-approval',
     category: 'Dubai Civil Defence',
     author: 'Building Approvals Dubai',
     date: '2026-01-22',
