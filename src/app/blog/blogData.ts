@@ -202,7 +202,7 @@ export const blogPosts: BlogPost[] = [
 
   {
     id: '1768287588802',
-    title: 'How to Get DEWA Approvals in Dubai 2026: Step-by-Step Process & Checklist',
+    title: 'How to get DEWA Approvals in Dubai 2026?',
     slug: 'how-to-get-dewa-approvals-in-dubai-2026-step-by-step-process-checklist',
     category: 'DEWA Approvals',
     author: 'Building Approvals Dubai',

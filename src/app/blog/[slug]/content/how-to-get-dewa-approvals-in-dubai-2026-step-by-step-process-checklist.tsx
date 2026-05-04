@@ -1,8 +1,6 @@
 export default function BlogContent() {
   return (
     <div className="blog-content-wrapper">
-      <h2><strong>How to Get DEWA Approvals in Dubai: Step-by-Step Process &amp; Checklist</strong></h2>
-
       <p>Obtaining <strong>building approvals in Dubai</strong> involves multiple authorities, and <strong>DEWA approval</strong> is one of the most critical stages. Whether you are constructing a new building, renovating an existing property, or carrying out a commercial fit-out, DEWA approval is mandatory to legally connect electricity and water services.</p>
 
       <p>This guide explains <strong>how DEWA fits into Dubai’s building approvals system</strong>, the <strong>step-by-step DEWA approval process</strong>, and a <strong>complete list of documents required</strong> to avoid delays.</p>
