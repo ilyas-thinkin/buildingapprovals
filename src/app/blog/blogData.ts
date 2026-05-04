@@ -253,11 +253,12 @@ export const blogPosts: BlogPost[] = [
 
   {
     id: '2',
-    title: 'Dubai Municipality Approvals (DM) 2026: Updated Rules & Digital Innovations',
-    slug: 'dubai-municipality-approvals-(DM)-2026-updated-rules',
+    title: 'Dubai Municipality Approvals (DM): Updated Rules 2026',
+    slug: 'dubai-municipality-approvals-dm-2026-updated-rules',
     category: 'Dubai Municipality',
     author: 'Building Approvals Dubai',
     date: '2024-12-26',
+    dateModified: '2026-05-04',
     excerpt: 'Discover the latest updates to Dubai Municipality approval processes in 2026, including new digital platforms, streamlined procedures, and enhanced compliance requirements.',
     image: '/images/blog/building-approvals-dubai-municipality-update-card.jpg',
     coverImage: '/images/blog/building-approvals-dubai-municipality-update-cover.webp',
