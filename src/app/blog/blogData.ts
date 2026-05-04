@@ -101,11 +101,12 @@ export const blogPosts: BlogPost[] = [
 
   {
     id: '1769065428206',
-    title: 'Why hire a Consultant for Dubai Civil Defence Approval? 2026',
+    title: 'Why hire a Consultant for Dubai Civil Defence DCD Approval?',
     slug: 'why-hire-a-consultant-for-dubai-civil-defence-approval',
     category: 'Dubai Civil Defence',
     author: 'Building Approvals Dubai',
     date: '2026-01-22',
+    dateModified: '2026-05-04',
     excerpt: 'Why hire a Consultant for Dubai Civil Defence Approval?',
     image: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-civil-defence-list-1769065428206.jpg',
     coverImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-civil-defence-cover-1769065428206.jpg',
