@@ -84,11 +84,12 @@ export const blogPosts: BlogPost[] = [
 
   {
     id: '1770014417337',
-    title: 'DSO Approval / DIEZ Approval in Dubai 2026: A Complete Guide',
+    title: 'DSO Approval / DIEZ Approval in Dubai 2026: Complete Guide',
     slug: 'dso-approval-diez-approval-in-dubai-2026-a-complete-guide',
     category: 'DSO / DIEZ Approval',
     author: 'Building Approvals Dubai',
     date: '2026-02-02',
+    dateModified: '2026-05-04',
     excerpt: 'Learn how DSO approval works in Dubai, the DIEZ process for fit-out projects, and why hiring a consultant avoids delays and rejections.',
     image: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dso-diez-approval-list-1770014417337.jpg',
     coverImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dso-diez-approval-cover-1770014417337.jpg',
