@@ -1,7 +1,7 @@
 export default function BlogContent() {
   return (
     <div className="blog-content-wrapper">
-      <p>Setting up a new office, restaurant, shop, or clinic in Dubai is exciting—but before you start the interior work, there's one crucial step you cannot skip: <strong>Fit-Out Approval</strong>.</p>
+      <p>Setting up a new office, restaurant, shop, or clinic in Dubai is exciting—but before you start the interior work, there&apos;s one crucial step you cannot skip: <strong>Fit-Out Approval</strong>.</p>
 
       <p>Dubai has a well-regulated approval system to ensure safety, quality, and compliance. While it may sound complicated at first, the process becomes smooth when you understand the requirements and follow the right steps.</p>
 
@@ -16,7 +16,7 @@ export default function BlogContent() {
       <ul>
         <li>Offices</li>
         <li>Retail shops</li>
-        <li>Restaurants &amp; cafés</li>
+        <li>Restaurants &amp; caf&amp;eacute;s</li>
         <li>Clinics &amp; medical centres</li>
         <li>Warehouses</li>
         <li>Salons, gyms, and showrooms</li>
@@ -78,13 +78,9 @@ export default function BlogContent() {
         <li>Have their own fit-out approval processes</li>
       </ul>
 
-      <div style={{ margin: '40px 0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}>
-        <img
-          src="/images/blog/building-approvals-dubai-fit-out-approval-content.jpg"
-          alt="Building Approvals Dubai - Fit-Out Approval in Dubai Simple Practical Guide for 2026"
-          style={{ width: '100%', height: 'auto', display: 'block' }}
-        />
-      </div>
+      <figure className="blog-image-figure">
+        <img src="/images/blog/building-approvals-dubai-fit-out-approval-content.jpg" alt="Building Approvals Dubai - Fit-Out Approval in Dubai Simple Practical Guide for 2026" />
+      </figure>
 
       <h2>Step-by-Step Fit-Out Approval Process in Dubai</h2>
 
@@ -203,20 +199,19 @@ export default function BlogContent() {
         <li>Coordinate with building management early</li>
       </ul>
 
-      <div className="key-takeaways-box">
-        <h3>Key Takeaways</h3>
-        <ul>
+      <h3>Key Takeaways</h3>
+
+      <ul>
         <li>Fit-out approval is mandatory for all interior works in Dubai</li>
         <li>Multiple authorities may be involved depending on location and use</li>
         <li>Proper planning and compliant drawings are the key to fast approval</li>
         <li>Starting work without approval can lead to serious penalties</li>
         <li>Professional guidance makes the process smoother and faster</li>
-        </ul>
-      </div>
+      </ul>
 
       <div className="cta-box">
-        <h3>Need Help with Building Approvals?</h3>
-        <p>Our expert team is ready to assist you with all your Dubai building approval needs.</p>
+        <h3>Ready to Start Your Project?</h3>
+        <p>Building Approvals Dubai handles approvals, planning, and project coordination across Dubai.</p>
         <a href="/contact" className="cta-button">Get in Touch</a>
       </div>
     </div>
