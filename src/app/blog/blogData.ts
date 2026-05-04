@@ -196,10 +196,11 @@ export const blogPosts: BlogPost[] = [
   {
     id: '1768287588802',
     title: 'How to Get DEWA Approvals in Dubai 2026: Step-by-Step Process & Checklist',
-    slug: 'how-to-get-dewa-approvals--in-dubai-2026-step-by-step-process-checklist',
+    slug: 'how-to-get-dewa-approvals-in-dubai-2026-step-by-step-process-checklist',
     category: 'DEWA Approvals',
     author: 'Building Approvals Dubai',
     date: '2026-01-13',
+    dateModified: '2026-05-04',
     excerpt: "This guide explains how DEWA fits into Dubai's building approvals system, the step-by-step DEWA approval process, and a complete list of documents required to avoid delays.",
     image: '/images/blog/building-approvals-dubai-dewa-approval-list.jpg',
     coverImage: '/images/blog/building-approvals-dubai-dewa-approval-cover.jpg',
