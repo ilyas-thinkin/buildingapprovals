@@ -271,11 +271,11 @@ export const blogPosts: BlogPost[] = [
   {
     id: '3',
     title: 'Dubai Civil Defence Approval (DCD) – Complete Guide for 2026',
-    slug: 'dcd-approval-dubai-complete-process-2026',
+    slug: 'dcd-approval-dubai-complete-process',
     category: 'Dubai Civil Defence',
     author: 'Building Approvals Dubai',
     date: '2026-01-08',
-    dateModified: '2026-04-29',
+    dateModified: '2026-05-04',
     excerpt: 'Get hassle-free DCD Approval in Dubai with expert support for submissions, drawings, and follow-ups through the DCD Portal. Fast, clear, and reliable.',
     image: '/images/blog/building-approvals-dubai-civil-defence-approval-card.jpg',
     coverImage: '/images/blog/building-approvals-dubai-civil-defence-approval-card.jpg',

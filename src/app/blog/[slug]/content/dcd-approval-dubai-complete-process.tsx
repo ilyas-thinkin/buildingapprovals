@@ -290,7 +290,7 @@ export default function BlogContent() {
       </ul>
 
       <figure className="blog-image-figure">
-        <img src="https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-civil-defence-content-1-1770375576779.png" alt="Building Approvals Dubai - Dubai Civil Defence Approval (DCD) \\\&#92;u2013 Complete Guide for 2026" />
+        <img src="https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-civil-defence-content-1-1770375576779.png" alt="Building Approvals Dubai - Dubai Civil Defence Approval (DCD) \\\\\\\&#92;u2013 Complete Guide for 2026" />
       </figure>
 
       <h2>Common Reasons for DCD Approval Delays</h2>
