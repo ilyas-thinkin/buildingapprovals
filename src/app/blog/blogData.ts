@@ -136,7 +136,7 @@ export const blogPosts: BlogPost[] = [
   {
     id: '1768976989112',
     title: 'Dubai Municipality (DM): Approvals & Compliance Guide 2026',
-    slug: 'dubai-municipality-services-categories-complete-guide-for-approvals-compliance-in-dubai-2026',
+    slug: 'dubai-municipality-dm-approvals-compliance-guide',
     category: 'Dubai Municipality',
     author: 'Building Approvals Dubai',
     date: '2026-01-21',
