@@ -142,10 +142,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <>
-      {/* eslint-disable react/no-danger */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
-      {/* eslint-enable react/no-danger */}
 
       <div className="blog-post-page">
         <article className="blog-post" itemScope itemType="https://schema.org/Article">

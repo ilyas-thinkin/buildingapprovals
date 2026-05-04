@@ -3,7 +3,7 @@ import { put } from '@vercel/blob';
 import { Octokit } from 'octokit';
 import { verifyAdminRequest } from '@/lib/admin-auth';
 import { generateBlogComponentFromHTML, generateBlogComponentFromMarkdown } from '@/lib/blog-generator';
-import { cleanBlogMetaTitle, cleanBlogSlugText } from '@/lib/blog-seo';
+import { cleanBlogAssetUrl, cleanBlogMetaTitle, cleanBlogPlainText, cleanBlogSlugText, toTsStringLiteral } from '@/lib/blog-seo';
 
 function getErrMsg(e: unknown): string {
   return e instanceof Error ? e.message : String(e);
@@ -80,6 +80,22 @@ async function uploadToVercelBlob(data: Buffer, key: string, contentType: string
   return url;
 }
 
+function validateImage(file: File, label: string): string | null {
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/avif'];
+  const allowedExts = ['jpg', 'jpeg', 'png', 'webp', 'avif'];
+  const ext = file.name.split('.').pop()?.toLowerCase() || '';
+
+  if (!allowedTypes.includes(file.type) || !allowedExts.includes(ext)) {
+    return `${label} must be a JPG, PNG, WEBP, or AVIF image`;
+  }
+
+  if (file.size > 10 * 1024 * 1024) {
+    return `${label} must be smaller than 10 MB`;
+  }
+
+  return null;
+}
+
 export async function POST(request: NextRequest) {
   if (!verifyAdminRequest(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -94,19 +110,19 @@ export async function POST(request: NextRequest) {
     }
 
     // Extract form data
-    const title = (formData.get('title') as string || '').trim();
+    const title = cleanBlogPlainText(formData.get('title') as string || '', 180);
     let slug = (formData.get('slug') as string || '').trim();
-    const category = (formData.get('category') as string || '').trim();
-    const author = (formData.get('author') as string || 'Building Approvals Dubai').trim();
-    const excerpt = (formData.get('excerpt') as string || '').trim();
+    const category = cleanBlogPlainText(formData.get('category') as string || '', 120);
+    const author = cleanBlogPlainText(formData.get('author') as string || 'Building Approvals Dubai', 120);
+    const excerpt = cleanBlogPlainText(formData.get('excerpt') as string || '', 500);
     const contentType = (formData.get('contentType') as string || 'manual');
     const manualContent = (formData.get('manualContent') as string || '').trim();
     const contentFile = formData.get('contentFile') as File | null;
     const manualSEO = formData.get('manualSEO') === 'true';
-    const metaTitle = (formData.get('metaTitle') as string || '').trim();
-    const metaDescription = (formData.get('metaDescription') as string || '').trim();
-    const keywords = (formData.get('keywords') as string || '').trim();
-    const imageAlt = (formData.get('imageAlt') as string || `Building Approvals Dubai - ${title}`).trim();
+    const metaTitle = cleanBlogPlainText(formData.get('metaTitle') as string || '', 180);
+    const metaDescription = cleanBlogPlainText(formData.get('metaDescription') as string || '', 500);
+    const keywords = cleanBlogPlainText(formData.get('keywords') as string || '', 500);
+    const imageAlt = cleanBlogPlainText(formData.get('imageAlt') as string || `Building Approvals Dubai - ${title}`, 180);
 
     if (!title || !slug) {
       return NextResponse.json({ error: 'Title and slug are required' }, { status: 400 });
@@ -129,8 +145,8 @@ export async function POST(request: NextRequest) {
 
     const cardImage = formData.get('cardImage') as File | null;
     const coverImage = formData.get('coverImage') as File | null;
-    const existingCardImage = formData.get('existingCardImage') as string;
-    const existingCoverImage = formData.get('existingCoverImage') as string;
+    const existingCardImage = cleanBlogAssetUrl(formData.get('existingCardImage') as string || '');
+    const existingCoverImage = cleanBlogAssetUrl(formData.get('existingCoverImage') as string || '');
 
     // Check for required environment variables
     const githubToken = process.env.GITHUB_TOKEN;
@@ -168,6 +184,8 @@ export async function POST(request: NextRequest) {
     const categorySlug = createCategorySlug(category || title.split(' ').slice(0, 3).join(' '));
 
     if (cardImage && cardImage.size > 0) {
+      const cardErr = validateImage(cardImage, 'Card image');
+      if (cardErr) return NextResponse.json({ error: cardErr }, { status: 400 });
       const cardImageExt = cardImage.name.split('.').pop();
       const cardImageName = `building-approvals-dubai-${categorySlug}-list-${timestamp}.${cardImageExt}`;
       const cardImageBuffer = Buffer.from(await cardImage.arrayBuffer());
@@ -175,6 +193,8 @@ export async function POST(request: NextRequest) {
     }
 
     if (coverImage && coverImage.size > 0) {
+      const coverErr = validateImage(coverImage, 'Cover image');
+      if (coverErr) return NextResponse.json({ error: coverErr }, { status: 400 });
       const coverImageExt = coverImage.name.split('.').pop();
       const coverImageName = `building-approvals-dubai-${categorySlug}-cover-${timestamp}.${coverImageExt}`;
       const coverImageBuffer = Buffer.from(await coverImage.arrayBuffer());
@@ -280,22 +300,6 @@ export async function POST(request: NextRequest) {
     const date = dateMatch ? dateMatch[1] : new Date().toISOString().split('T')[0];
 
     // Helper to format string values
-    const cleanForString = (text: string): string => {
-      let cleaned = text
-        .replace(/[\r\n]+/g, ' ')
-        .replace(/\s+/g, ' ')
-        .trim();
-
-      if (cleaned.includes("'")) {
-        cleaned = cleaned.replace(/"/g, '\\"');
-        return `"${cleaned}"`;
-      }
-      return `'${cleaned}'`;
-    };
-
-    const escapeForSingleQuote = (text: string): string =>
-      text.replace(/[\r\n]+/g, ' ').replace(/\s+/g, ' ').replace(/'/g, "\\'").trim();
-
     const seoData = manualSEO
       ? {
           metaTitle: cleanBlogMetaTitle(metaTitle, title),
@@ -311,19 +315,19 @@ export async function POST(request: NextRequest) {
     // Build updated blog entry
     const updatedBlog = `{
     id: '${id}',
-    title: ${cleanForString(title)},
+    title: ${toTsStringLiteral(title)},
     slug: '${slug}',
-    category: ${cleanForString(category)},
-    author: ${cleanForString(author)},
+    category: ${toTsStringLiteral(category || 'General')},
+    author: ${toTsStringLiteral(author)},
     date: '${date}',
     dateModified: '${new Date().toISOString().split('T')[0]}',
-    excerpt: ${cleanForString(excerpt)},
-    image: '${cardImagePath}',
-    coverImage: '${coverImagePath}',
-    metaTitle: ${cleanForString(seoData.metaTitle)},
-    metaDescription: ${cleanForString(seoData.metaDescription)},
-    keywords: [${seoData.keywords.map(k => `'${escapeForSingleQuote(k)}'`).join(', ')}],
-    ogImage: '${coverImagePath}',
+    excerpt: ${toTsStringLiteral(excerpt)},
+    image: ${toTsStringLiteral(cardImagePath)},
+    coverImage: ${toTsStringLiteral(coverImagePath)},
+    metaTitle: ${toTsStringLiteral(seoData.metaTitle)},
+    metaDescription: ${toTsStringLiteral(seoData.metaDescription)},
+    keywords: [${seoData.keywords.map(k => toTsStringLiteral(k)).join(', ')}],
+    ogImage: ${toTsStringLiteral(coverImagePath)},
   }`;
 
     blogObjects[blogIndex] = updatedBlog;

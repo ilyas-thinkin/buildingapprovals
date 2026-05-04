@@ -1,9 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Octokit } from 'octokit';
 import { verifyAdminRequest } from '@/lib/admin-auth';
+import { cleanBlogSlugText } from '@/lib/blog-seo';
 
 function getErrMsg(e: unknown): string {
   return e instanceof Error ? e.message : String(e);
+}
+
+function normalizeSlug(slug: string): string {
+  return cleanBlogSlugText(slug)
+    .toLowerCase()
+    .replace(/[^a-z0-9-]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '');
 }
 
 export async function DELETE(
@@ -15,7 +24,12 @@ export async function DELETE(
   }
 
   try {
-    const { slug } = await params;
+    const { slug: rawSlug } = await params;
+    const slug = normalizeSlug(rawSlug);
+
+    if (!slug) {
+      return NextResponse.json({ error: 'Invalid blog slug' }, { status: 400 });
+    }
 
     const githubToken = process.env.GITHUB_TOKEN;
     const githubOwner = process.env.GITHUB_OWNER;
@@ -148,7 +162,12 @@ export async function GET(
   }
 
   try {
-    const { slug } = await params;
+    const { slug: rawSlug } = await params;
+    const slug = normalizeSlug(rawSlug);
+
+    if (!slug) {
+      return NextResponse.json({ error: 'Invalid blog slug' }, { status: 400 });
+    }
 
     const githubToken = process.env.GITHUB_TOKEN;
     const githubOwner = process.env.GITHUB_OWNER;
@@ -188,8 +207,7 @@ export async function GET(
       return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const blog: any = {};
+    const blog: Record<string, string | string[]> = {};
     const fields = ['id', 'title', 'excerpt', 'date', 'dateModified', 'author', 'category', 'image', 'coverImage', 'slug', 'metaTitle', 'metaDescription', 'ogImage'];
 
     fields.forEach(field => {

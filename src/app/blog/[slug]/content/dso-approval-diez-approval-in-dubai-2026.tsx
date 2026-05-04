@@ -194,7 +194,7 @@ export default function BlogContent() {
         <li>Submitting generic DM-style drawings</li>
         <li>Ignoring DSO-specific guidelines</li>
         <li>Using unregistered contractors</li>
-        <li>Starting work "at risk" without approval</li>
+        <li>Starting work &quot;at risk&quot; without approval</li>
       </ul>
 
       <h2>FAQ: DSO Approval in Dubai</h2>

@@ -4,10 +4,10 @@ export default function BlogContent() {
       <h3>You submit drawings, wait for review… and then the same message hits again:</h3>
 
       <blockquote>
-        <p>"Rejected / Revise &amp; Resubmit."</p>
+        <p>&quot;Rejected / Revise &amp; Resubmit.&quot;</p>
       </blockquote>
 
-      <p>In Dubai, fit-out delays often don&apos;t happen because the design is "bad"; they happen because the submission doesn&apos;t match <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/">Dubai Municipality (DM)</a> requirements, the MEP coordination is off, or the site execution doesn&apos;t follow the approved set.</p>
+      <p>In Dubai, fit-out delays often don&apos;t happen because the design is &quot;bad&quot;; they happen because the submission doesn&apos;t match <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/">Dubai Municipality (DM)</a> requirements, the MEP coordination is off, or the site execution doesn&apos;t follow the approved set.</p>
 
       <p>This guide covers the most common <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/dubai-municipality-approval-process-2026">DM Approval</a> violations during the <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/fit-out-approval-dubai-simple-practical-guide-2026">fit-out approval</a> process in Dubai, UAE, why they happen, and the practical steps you can take to avoid rejections, fines, and stop-work situations.</p>
 
@@ -15,7 +15,7 @@ export default function BlogContent() {
 
       <h2>Why DM Approval Rejections Happen in Fit-Out Projects</h2>
 
-      <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/fit-out-approval-dubai-simple-practical-guide-2026">Fit-out approvals</a> in Dubai are rarely "one-department only." Even when DM is the main authority, your application may depend on:</p>
+      <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/fit-out-approval-dubai-simple-practical-guide-2026">Fit-out approvals</a> in Dubai are rarely &quot;one-department only.&quot; Even when DM is the main authority, your application may depend on:</p>
 
       <ul>
         <li>Building management/landlord requirements (NOCs, access, rules)</li>
@@ -37,7 +37,7 @@ export default function BlogContent() {
         <li>Actual ceiling heights differ from the drawings</li>
         <li>Columns/shafts are missing or shifted</li>
         <li>Unit boundary lines don&apos;t match lease drawings</li>
-        <li>"As-built" base plan not verified</li>
+        <li>&quot;As-built&quot; base plan not verified</li>
       </ul>
 
       <p>Why does it get flagged? DM reviewers expect your proposed works to align with real constraints and existing approvals. Mismatches create risk during the inspection and completion stages.</p>
@@ -47,7 +47,7 @@ export default function BlogContent() {
       <ul>
         <li>Start from a verified base plan (landlord + site measure)</li>
         <li>Cross-check unit area, gridlines, and key fixed services</li>
-        <li>Prepare a clean "existing vs proposed" comparison sheet</li>
+        <li>Prepare a clean &quot;existing vs proposed&quot; comparison sheet</li>
       </ul>
 
       <h3>2) Unapproved Layout Changes (Scope Creep)</h3>
@@ -80,7 +80,7 @@ export default function BlogContent() {
         <li>Electrical DB location conflicts with joinery or access</li>
       </ul>
 
-      <p>Why does it get flagged? Poor coordination is one of the biggest causes of "revise and resubmit," and it increases inspection failure risk.</p>
+      <p>Why does it get flagged? Poor coordination is one of the biggest causes of &quot;revise and resubmit,&quot; and it increases inspection failure risk.</p>
 
       <p><strong>Fix:</strong></p>
 
@@ -133,7 +133,7 @@ export default function BlogContent() {
       <p><strong>What it looks like:</strong></p>
 
       <ul>
-        <li>"Generic" finish notes with no compliance specs</li>
+        <li>&quot;Generic&quot; finish notes with no compliance specs</li>
         <li>Missing key notes for wet areas (waterproofing system, floor finish build-up)</li>
         <li>Incomplete ceiling/partition specifications</li>
       </ul>
@@ -186,7 +186,7 @@ export default function BlogContent() {
 
       <h3>How to Avoid DM Violations (Practical Checklist)</h3>
 
-      <p>Use this as a "pre-submission" gate to reduce rejections.</p>
+      <p>Use this as a &quot;pre-submission&quot; gate to reduce rejections.</p>
 
       <figure className="blog-image-figure">
         <img src="https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-content-1-1770282014471.jpeg" alt="Building Approvals Dubai - Municipality Approval in Dubai: The Most Common Fit-Out Approval Violations" />
@@ -215,11 +215,11 @@ export default function BlogContent() {
         <li>Ensure plans, legends, and revisions match across all disciplines.</li>
       </ul>
 
-      <h3>4. Add the missing "reviewer-friendly" pages</h3>
+      <h3>4. Add the missing &quot;reviewer-friendly&quot; pages</h3>
 
       <ul>
         <li>Key notes, schedules, typical details, and sections at congested zones.</li>
-        <li>Clear scope definition: "what stays" vs "what changes."</li>
+        <li>Clear scope definition: &quot;what stays&quot; vs &quot;what changes.&quot;</li>
       </ul>
 
       <h3>5. Validate compliance-sensitive areas</h3>
@@ -235,7 +235,7 @@ export default function BlogContent() {
         <li>Keep the approved IFC set on site + revision control log.</li>
       </ul>
 
-      <p><strong>Pro tip:</strong> Most delays are not "big violations"; they&apos;re small inconsistencies: one drawing shows a door swing, another doesn&apos;t; diffuser count differs from the schedule; the DB location shifts without updating sections. A consultant-led QA pass before submission often saves multiple resubmissions.</p>
+      <p><strong>Pro tip:</strong> Most delays are not &quot;big violations&quot;; they&apos;re small inconsistencies: one drawing shows a door swing, another doesn&apos;t; diffuser count differs from the schedule; the DB location shifts without updating sections. A consultant-led QA pass before submission often saves multiple resubmissions.</p>
 
       <figure className="blog-image-figure">
         <img src="https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-content-2-1770282014471.png" alt="Building Approvals Dubai - Municipality Approval in Dubai: The Most Common Fit-Out Approval Violations" />
@@ -244,7 +244,7 @@ export default function BlogContent() {
       <h3>Quick Red Flags That Usually Trigger Rejection</h3>
 
       <ul>
-        <li>"Proposed" drawings without an existing base reference</li>
+        <li>&quot;Proposed&quot; drawings without an existing base reference</li>
         <li>No coordinated reflected ceiling plan (RCP) for busy ceilings</li>
         <li>Ventilation intent not shown for toilets/pantries/kitchens</li>
         <li>Drainage routes are missing for new sinks/floor traps</li>

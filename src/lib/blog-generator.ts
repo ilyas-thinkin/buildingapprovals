@@ -116,6 +116,17 @@ function normalizeHtmlContent(html: string): string {
   return normalized;
 }
 
+function escapeForJSXAttribute(text: string): string {
+  return text
+    .replace(/&(?!(amp|lt|gt|quot|apos|nbsp|#\d+|#x[\da-f]+);)/gi, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\{/g, '&#123;')
+    .replace(/\}/g, '&#125;')
+    .replace(/`/g, '&#96;');
+}
+
 export function escapeForJSX(text: string): string {
   let e = text;
   e = e.replace(/\{/g, '&#123;');
@@ -132,12 +143,28 @@ export function escapeForJSX(text: string): string {
   );
   e = e.replace(/</g, '&lt;');
   e = e.replace(/>/g, '&gt;');
+  e = e.replace(/"/g, '&quot;');
   tagPlaceholders.forEach((tag, i) => { e = e.replace(`__TAG_PLACEHOLDER_${i}__`, tag); });
   e = e.replace(/`/g, '&#96;');
   e = e.replace(/\$\{/g, '&#36;{');
   e = e.replace(/\$&#123;/g, '&#36;&#123;');
   e = e.replace(/\\(?![nrt"'\\])/g, '&#92;');
   return e;
+}
+
+function sanitizeBlogUrl(rawUrl: string): string {
+  const url = decodeCommonEntities(rawUrl).trim().replace(/[\u0000-\u001F\u007F\s]+/g, '');
+  if (!url) return '';
+
+  if (url.startsWith('/') && !url.startsWith('//')) return url;
+  if (url.startsWith('#')) return url;
+
+  try {
+    const parsed = new URL(url);
+    return ['http:', 'https:', 'mailto:', 'tel:'].includes(parsed.protocol) ? parsed.toString() : '';
+  } catch {
+    return '';
+  }
 }
 
 // ─── Inline helpers ───────────────────────────────────────────────────────────
@@ -181,7 +208,11 @@ function processInlineFormatting(text: string): string {
   let p = text;
   p = p.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
   p = p.replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em>$1</em>');
-  p = p.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+  p = p.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, label, rawUrl) => {
+    const safeUrl = sanitizeBlogUrl(rawUrl);
+    if (!safeUrl) return label;
+    return `<a href="${escapeForJSXAttribute(safeUrl)}" target="_blank" rel="noopener noreferrer">${label}</a>`;
+  });
   p = p.replace(/<span[^>]*class=["']([^"']*(?:text-size-(?:sm|lg|xl)|text-color-(?:slate|navy|teal|emerald|amber|rose|white))[^"']*)["'][^>]*>/gi, '<span className="$1">');
   return p;
 }
@@ -414,8 +445,10 @@ export function generateBlogComponentFromHTML(
     if (imgIdMatch) {
       const imageUrl = imageUrls[imgIdMatch[1]];
       if (imageUrl) {
+        const safeImageUrl = sanitizeBlogUrl(imageUrl);
+        if (!safeImageUrl) continue;
         elements.push(`      <figure className="blog-image-figure">
-        <img src="${imageUrl}" alt="${escapeForJSX(altText)}" />
+        <img src="${escapeForJSXAttribute(safeImageUrl)}" alt="${escapeForJSXAttribute(altText)}" />
       </figure>`);
       }
       continue;
@@ -425,8 +458,10 @@ export function generateBlogComponentFromHTML(
     if (docxImgMatch) {
       const imageUrl = imageUrls[`docx_${docxImgMatch[1]}`];
       if (imageUrl) {
+        const safeImageUrl = sanitizeBlogUrl(imageUrl);
+        if (!safeImageUrl) continue;
         elements.push(`      <figure className="blog-image-figure">
-        <img src="${imageUrl}" alt="${escapeForJSX(altText)}" />
+        <img src="${escapeForJSXAttribute(safeImageUrl)}" alt="${escapeForJSXAttribute(altText)}" />
       </figure>`);
       }
       continue;
@@ -590,8 +625,10 @@ export function generateBlogComponentFromHTML(
         if (src && !src.startsWith('data:')) {
           const altMatch = block.match(/\balt=["']([^"']*?)["']/i);
           const imgAlt = altMatch ? altMatch[1] : altText;
+          const safeSrc = sanitizeBlogUrl(src);
+          if (!safeSrc) continue;
           elements.push(`      <figure className="blog-image-figure">
-        <img src="${src}" alt="${escapeForJSX(imgAlt || altText)}" />
+        <img src="${escapeForJSXAttribute(safeSrc)}" alt="${escapeForJSXAttribute(imgAlt || altText)}" />
       </figure>`);
           continue;
         }
@@ -684,8 +721,10 @@ export function generateBlogComponentFromMarkdown(
     if (docxImageMatch) {
       const imageUrl = imageUrls[`docx_${docxImageMatch[1]}`];
       if (imageUrl) {
+        const safeImageUrl = sanitizeBlogUrl(imageUrl);
+        if (!safeImageUrl) continue;
         flushList();
-        elements.push(`      <figure className="blog-image-figure">\n        <img src="${imageUrl}" alt="${escapeForJSX(altText)}" />\n      </figure>`);
+        elements.push(`      <figure className="blog-image-figure">\n        <img src="${escapeForJSXAttribute(safeImageUrl)}" alt="${escapeForJSXAttribute(altText)}" />\n      </figure>`);
       }
       continue;
     }
@@ -694,8 +733,10 @@ export function generateBlogComponentFromMarkdown(
     if (editorImageMatch) {
       const imageUrl = imageUrls[editorImageMatch[1]];
       if (imageUrl) {
+        const safeImageUrl = sanitizeBlogUrl(imageUrl);
+        if (!safeImageUrl) continue;
         flushList();
-        elements.push(`      <figure className="blog-image-figure">\n        <img src="${imageUrl}" alt="${escapeForJSX(altText)}" />\n      </figure>`);
+        elements.push(`      <figure className="blog-image-figure">\n        <img src="${escapeForJSXAttribute(safeImageUrl)}" alt="${escapeForJSXAttribute(altText)}" />\n      </figure>`);
       }
       continue;
     }

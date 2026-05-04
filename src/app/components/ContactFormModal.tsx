@@ -41,15 +41,13 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onClose, se
     email: '',
     countryCode: '+971',
     phone: '',
-    service: selectedService,
+    service: '',
   });
   const [isServiceOpen, setIsServiceOpen] = useState(false);
   const serviceDropdownRef = useRef<HTMLDivElement | null>(null);
   const formRef = useRef<HTMLFormElement | null>(null);
 
-  useEffect(() => {
-    setFormData(prev => ({ ...prev, service: selectedService }));
-  }, [selectedService]);
+  const selectedServiceValue = formData.service || selectedService || 'General Enquiry';
 
   useEffect(() => {
     if (isOpen) {
@@ -112,7 +110,9 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onClose, se
     e.preventDefault();
 
     // Format WhatsApp message
-    const message = `*New Service Enquiry*%0A%0A*Name:* ${formData.name}%0A*Email:* ${formData.email}%0A*Phone:* ${formData.countryCode}${formData.phone}%0A*Service:* ${formData.service}`;
+    const message = encodeURIComponent(
+      `*New Service Enquiry*\n\n*Name:* ${formData.name}\n*Email:* ${formData.email}\n*Phone:* ${formData.countryCode}${formData.phone}\n*Service:* ${selectedServiceValue}`
+    );
 
     // WhatsApp number
     const whatsappNumber = '971589575610';
@@ -127,7 +127,7 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onClose, se
       email: '',
       countryCode: '+971',
       phone: '',
-      service: selectedService,
+      service: '',
     });
   };
 
@@ -233,7 +233,7 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onClose, se
                 aria-haspopup="listbox"
                 aria-expanded={isServiceOpen}
               >
-                <span>{formData.service || 'Select a service'}</span>
+                <span>{selectedServiceValue}</span>
                 <svg className="service-trigger-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
@@ -244,10 +244,10 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onClose, se
                     <button
                       type="button"
                       key={option}
-                      className={`service-option ${formData.service === option ? 'active' : ''}`}
+                      className={`service-option ${selectedServiceValue === option ? 'active' : ''}`}
                       onClick={() => handleServiceSelect(option)}
                       role="option"
-                      aria-selected={formData.service === option}
+                      aria-selected={selectedServiceValue === option}
                     >
                       {option}
                     </button>

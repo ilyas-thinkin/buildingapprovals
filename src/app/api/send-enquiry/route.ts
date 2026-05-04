@@ -1,10 +1,58 @@
 import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
+type EnquiryPayload = {
+  name?: unknown;
+  email?: unknown;
+  countryCode?: unknown;
+  phone?: unknown;
+  service?: unknown;
+  message?: unknown;
+};
+
+const MAX_LENGTHS = {
+  name: 100,
+  email: 254,
+  countryCode: 8,
+  phone: 32,
+  service: 120,
+  message: 2000,
+};
+
+function cleanText(value: unknown, maxLength: number): string {
+  if (typeof value !== 'string') return '';
+  return value
+    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/[\u0000-\u001F\u007F]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, maxLength);
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function isValidEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { name, email, countryCode, phone, service, message } = body;
+    const body = await request.json() as EnquiryPayload;
+    const name = cleanText(body.name, MAX_LENGTHS.name);
+    const email = cleanText(body.email, MAX_LENGTHS.email).toLowerCase();
+    const countryCode = cleanText(body.countryCode, MAX_LENGTHS.countryCode).replace(/[^\d+]/g, '');
+    const phone = cleanText(body.phone, MAX_LENGTHS.phone).replace(/[^\d\s()+-]/g, '');
+    const service = cleanText(body.service, MAX_LENGTHS.service);
+    const message = cleanText(body.message, MAX_LENGTHS.message);
 
     // Validate required fields
     if (!name || !email || !phone || !service) {
@@ -13,6 +61,19 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    if (!isValidEmail(email)) {
+      return NextResponse.json(
+        { error: 'Invalid email address' },
+        { status: 400 }
+      );
+    }
+
+    const htmlName = escapeHtml(name);
+    const htmlEmail = escapeHtml(email);
+    const htmlPhone = escapeHtml(`${countryCode} ${phone}`.trim());
+    const htmlService = escapeHtml(service);
+    const htmlMessage = escapeHtml(message);
 
     // Create transporter - configured with Hostinger SMTP settings
     const transporter = nodemailer.createTransport({
@@ -56,24 +117,24 @@ export async function POST(request: NextRequest) {
               <div class="content">
                 <div class="field">
                   <div class="label">Name:</div>
-                  <div class="value">${name}</div>
+                  <div class="value">${htmlName}</div>
                 </div>
                 <div class="field">
                   <div class="label">Email:</div>
-                  <div class="value">${email}</div>
+                  <div class="value">${htmlEmail}</div>
                 </div>
                 <div class="field">
                   <div class="label">Phone:</div>
-                  <div class="value">${countryCode} ${phone}</div>
+                  <div class="value">${htmlPhone}</div>
                 </div>
                 <div class="field">
                   <div class="label">Service Requested:</div>
-                  <div class="value">${service}</div>
+                  <div class="value">${htmlService}</div>
                 </div>
                 ${message ? `
                 <div class="field">
                   <div class="label">Message:</div>
-                  <div class="value">${message}</div>
+                  <div class="value">${htmlMessage}</div>
                 </div>
                 ` : ''}
                 <hr style="margin: 20px 0; border: none; border-top: 1px solid #ddd;">

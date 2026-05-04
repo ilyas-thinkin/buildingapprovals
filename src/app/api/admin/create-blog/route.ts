@@ -4,7 +4,7 @@ import { Octokit } from 'octokit';
 import sanitizeHtml from 'sanitize-html';
 import { htmlToJsx } from 'html-to-jsx-transform';
 import { verifyAdminRequest } from '@/lib/admin-auth';
-import { cleanBlogMetaTitle, cleanBlogSlugText } from '@/lib/blog-seo';
+import { cleanBlogMetaTitle, cleanBlogPlainText, cleanBlogSlugText, toTsStringLiteral } from '@/lib/blog-seo';
 import {
   generateBlogComponentFromHTML as generateSharedBlogComponentFromHTML,
   generateBlogComponentFromMarkdown as generateSharedBlogComponentFromMarkdown,
@@ -739,22 +739,22 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
 
-    const title = (formData.get('title') as string || '').trim();
+    const title = cleanBlogPlainText(formData.get('title') as string || '', 180);
     let slug = (formData.get('slug') as string || '').trim();
-    const category = (formData.get('category') as string || '').trim();
-    const author = (formData.get('author') as string || 'Building Approvals Dubai').trim();
-    const excerpt = (formData.get('excerpt') as string || '').trim();
+    const category = cleanBlogPlainText(formData.get('category') as string || '', 120);
+    const author = cleanBlogPlainText(formData.get('author') as string || 'Building Approvals Dubai', 120);
+    const excerpt = cleanBlogPlainText(formData.get('excerpt') as string || '', 500);
     const manualSEO = formData.get('manualSEO') === 'true';
-    const metaTitle = (formData.get('metaTitle') as string || '').trim();
-    const metaDescription = (formData.get('metaDescription') as string || '').trim();
-    const keywords = (formData.get('keywords') as string || '').trim();
+    const metaTitle = cleanBlogPlainText(formData.get('metaTitle') as string || '', 180);
+    const metaDescription = cleanBlogPlainText(formData.get('metaDescription') as string || '', 500);
+    const keywords = cleanBlogPlainText(formData.get('keywords') as string || '', 500);
 
     const cardImage = formData.get('cardImage') as File | null;
     const coverImage = formData.get('coverImage') as File | null;
     const contentFile = formData.get('contentFile') as File | null;
     const contentType = formData.get('contentType') as string;
     const manualContent = (formData.get('manualContent') as string || '').trim();
-    const imageAlt = (formData.get('imageAlt') as string || `Building Approvals Dubai - ${title}`).trim();
+    const imageAlt = cleanBlogPlainText(formData.get('imageAlt') as string || `Building Approvals Dubai - ${title}`, 180);
 
     // ── Validate required fields ──────────────────────────────────────────────
     const missing: string[] = [];
@@ -950,29 +950,20 @@ export async function POST(request: NextRequest) {
     if (!('content' in blogDataFile.data)) throw new Error('Could not read blogData.ts');
     const blogDataContent = Buffer.from(blogDataFile.data.content, 'base64').toString('utf-8');
 
-    const cleanForString = (text: string): string => {
-      let cleaned = text.replace(/[\r\n]+/g, ' ').replace(/\s+/g, ' ').trim();
-      if (cleaned.includes("'")) { cleaned = cleaned.replace(/"/g, '\\"'); return `"${cleaned}"`; }
-      return `'${cleaned}'`;
-    };
-
-    const escapeForSingleQuote = (text: string): string =>
-      text.replace(/[\r\n]+/g, ' ').replace(/\s+/g, ' ').replace(/'/g, "\\'").trim();
-
     const newBlogEntry = `  {
     id: '${timestamp}',
-    title: ${cleanForString(title)},
+    title: ${toTsStringLiteral(title)},
     slug: '${slug}',
-    category: ${cleanForString(category || 'General')},
-    author: ${cleanForString(author)},
+    category: ${toTsStringLiteral(category || 'General')},
+    author: ${toTsStringLiteral(author)},
     date: '${new Date().toISOString().split('T')[0]}',
-    excerpt: ${cleanForString(excerpt)},
-    image: '${cardImageUrl}',
-    coverImage: '${coverImageUrl}',
-    metaTitle: ${cleanForString(seoData.metaTitle)},
-    metaDescription: ${cleanForString(seoData.metaDescription)},
-    keywords: [${seoData.keywords.map(k => `'${escapeForSingleQuote(k)}'`).join(', ')}],
-    ogImage: '${coverImageUrl}',
+    excerpt: ${toTsStringLiteral(excerpt)},
+    image: ${toTsStringLiteral(cardImageUrl)},
+    coverImage: ${toTsStringLiteral(coverImageUrl)},
+    metaTitle: ${toTsStringLiteral(seoData.metaTitle)},
+    metaDescription: ${toTsStringLiteral(seoData.metaDescription)},
+    keywords: [${seoData.keywords.map(k => toTsStringLiteral(k)).join(', ')}],
+    ogImage: ${toTsStringLiteral(coverImageUrl)},
   },`;
 
     const arrayMatch = blogDataContent.match(/export const blogPosts: BlogPost\[\] = \[([\s\S]*?)\];/);

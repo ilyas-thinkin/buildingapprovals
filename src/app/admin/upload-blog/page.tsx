@@ -4,6 +4,21 @@ import { useState } from 'react';
 import { cleanBlogSlugText } from '@/lib/blog-seo';
 import './upload-form.css';
 
+type UploadResult = {
+  success?: boolean;
+  message?: string;
+  slug?: string;
+  previewUrl?: string;
+  originalSlug?: string;
+  slugChanged?: boolean;
+  note?: string;
+  filesCreated?: string[];
+  instructions?: Record<string, string>;
+  blogData?: Record<string, unknown>;
+  blogContent?: string;
+  images?: Record<string, unknown>;
+};
+
 export default function UploadBlogPage() {
   const [formData, setFormData] = useState({
     title: '',
@@ -25,7 +40,7 @@ export default function UploadBlogPage() {
   });
 
   const [uploading, setUploading] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<UploadResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -66,21 +81,25 @@ export default function UploadBlogPage() {
       if (files.cardImage) formDataToSend.append('cardImage', files.cardImage);
       if (files.coverImage) formDataToSend.append('coverImage', files.coverImage);
       if (files.contentFile) formDataToSend.append('contentFile', files.contentFile);
+      formDataToSend.append('contentType', 'file');
+
+      const token = sessionStorage.getItem('admin_token');
 
       const response = await fetch('/api/admin/upload-blog-auto', {
         method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
         body: formDataToSend,
       });
 
-      const data = await response.json();
+      const data = await response.json() as UploadResult & { error?: string };
 
       if (!response.ok) {
         throw new Error(data.error || 'Upload failed');
       }
 
       setResult(data);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Upload failed');
     } finally {
       setUploading(false);
     }
@@ -314,8 +333,8 @@ export default function UploadBlogPage() {
 
               <h4>Instructions</h4>
               <ol>
-                {Object.entries(result.instructions).map(([key, value]) => (
-                  <li key={key}>{value as string}</li>
+                {Object.entries(result.instructions || {}).map(([key, value]) => (
+                  <li key={key}>{value}</li>
                 ))}
               </ol>
 
