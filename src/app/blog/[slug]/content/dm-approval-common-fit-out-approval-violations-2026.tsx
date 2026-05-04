@@ -1,7 +1,7 @@
 export default function BlogContent() {
   return (
     <div className="blog-content-wrapper">
-      <p>You submit drawings, wait for review… and then the same message hits again:</p>
+      <h3>You submit drawings, wait for review… and then the same message hits again:</h3>
 
       <blockquote>
         <p>"Rejected / Revise &amp; Resubmit."</p>
@@ -260,11 +260,11 @@ export default function BlogContent() {
 
       <h3>2) Can I start fit-out work before DM Approval is issued?</h3>
 
-      <p>Starting work before required approvals can lead to stop-work issues and complications during inspections. It&apos;s safer to proceed only after the correct approval route is cleared for your scope.</p>
+      <p>Starting work before required <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services">approvals</a> can lead to stop-work issues and complications during inspections. It&apos;s safer to proceed only after the correct <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services">approval</a> route is cleared for your scope.</p>
 
       <h3>3) Do office fit-outs always need Dubai Municipality approval?</h3>
 
-      <p>Many office interior changes do require approvals, especially when layouts, partitions, ceilings, or MEP systems change. Requirements vary by building, location, and authority route.</p>
+      <p>Many office interior changes do require <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services">approvals</a>, especially when layouts, partitions, ceilings, or MEP systems change. Requirements vary by building, location, and authority route.</p>
 
       <h3>4) How can I reduce DM fit-out approval delays?</h3>
 

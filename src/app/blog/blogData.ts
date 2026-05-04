@@ -68,7 +68,7 @@ export const blogPosts: BlogPost[] = [
   {
     id: '1770279885245',
     title: 'Municipality Approval in Dubai: Fit-Out Approval Violations',
-    slug: 'municipality-approval-in-dubai-the-most-common-fit-out-approval-violations',
+    slug: 'dm-approval-common-fit-out-approval-violations-2026',
     category: 'Dubai Municipality',
     author: 'Building Approvals Dubai',
     date: '2026-02-05',
@@ -76,7 +76,7 @@ export const blogPosts: BlogPost[] = [
     excerpt: 'Avoid DM approval delays in Dubai. Discover the most common fit-out approval violations, why they happen, and how to fix drawings, MEP, and site issues fast.',
     image: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-list-1770279885245.jpg',
     coverImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-cover-1770279885245.jpg',
-    metaTitle: 'Municipality Approval in Dubai: The Most Common Fit-Out Approval Violations',
+    metaTitle: 'DM Approval: Common Fit-Out Approval Violations 2026',
     metaDescription: 'Avoid DM approval delays in Dubai. Discover the most common fit-out approval violations, why they happen, and how to fix drawings, MEP, and site issues fast.',
     keywords: ['Municipality', 'Approval', 'Dubai:', 'Most', 'Common', 'Fit-Out', 'Approval', 'Violations'],
     ogImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-cover-1770279885245.jpg',
