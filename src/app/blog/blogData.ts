@@ -220,7 +220,7 @@ export const blogPosts: BlogPost[] = [
   {
     id: '4',
     title: 'How to get Fitout Approvals in Dubai: Step by Step Process',
-    slug: 'fit-out-approval-dubai-simple-practical-guide-2026',
+    slug: 'how-to-get-fitout-approvals-in-dubai',
     category: 'Fit-Out Approvals',
     author: 'Building Approvals Dubai',
     date: '2026-01-09',
