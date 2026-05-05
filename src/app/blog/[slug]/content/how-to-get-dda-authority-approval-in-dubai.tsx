@@ -71,7 +71,7 @@ export default function BlogContent() {
 
       <h3>Common mistake: Submitting drawings that don&apos;t align with DDA drafting standards—this often leads to rejection.</h3>
 
-      <h3><em><span className="text-size-lg">Also Read: </span></em><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/why-hire-a-consultant-for-dcd-approval"><em><span className="text-size-lg">https://www.buildingapprovals.ae/blog/why-hire-a-consultant-for-dcd-approval</span></em></a></h3>
+      <h3><em><span>Also Read: </span></em><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/why-hire-a-consultant-for-dcd-approval"><em><span>https://www.buildingapprovals.ae/blog/why-hire-a-consultant-for-dcd-approval</span></em></a></h3>
 
       <h2>Step-by-Step Process to Get DDA Approval in Dubai</h2>
 
