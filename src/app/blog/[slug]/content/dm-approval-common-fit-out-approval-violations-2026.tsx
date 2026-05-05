@@ -20,7 +20,7 @@ export default function BlogContent() {
       <ul>
         <li>Building management/landlord requirements (NOCs, access, rules)</li>
         <li><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/fit-out-approval-dubai-simple-practical-guide-2026">Fitout Approvals</a> coordination (Architectural + MEP + method statements)</li>
-        <li>Interfaces with other authorities (commonly DCD for fire &amp; life safety, and <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services/dewa">DEWA</a> for power/load topics)</li>
+        <li>Interfaces with other authorities (commonly <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services/civil-defense">DCD</a> for fire &amp; life safety, and <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services/dewa">DEWA</a> for power/load topics)</li>
       </ul>
 
       <p>When submissions are incomplete or inconsistent, authorities can reject or request revisions. Dubai&apos;s permit regulations also require that rejection decisions be reasoned and follow set procedures.</p>
@@ -149,7 +149,7 @@ export default function BlogContent() {
 
       <h3>7) Green Building / Sustainability Gaps (When Applicable)</h3>
 
-      <p>Dubai Municipality issues Green Building Regulations &amp; Specifications that affect how buildings and services are designed and commissioned in Dubai.</p>
+      <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/">Dubai Municipality</a> issues Green Building Regulations &amp; Specifications that affect how buildings and services are designed and commissioned in Dubai.</p>
 
       <p><strong>Common pitfalls:</strong></p>
 
@@ -191,6 +191,8 @@ export default function BlogContent() {
       <figure className="blog-image-figure">
         <img src="https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-content-1-1770282014471.jpeg" alt="Building Approvals Dubai - Municipality Approval in Dubai: The Most Common Fit-Out Approval Violations" />
       </figure>
+
+      <h3><em><span className="text-size-lg">Also Read: </span></em><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/dubai-municipality-dm-approvals-compliance-guide"><em><span className="text-size-lg">https://www.buildingapprovals.ae/blog/dubai-municipality-dm-approvals-compliance-guide</span></em></a></h3>
 
       <h2>Step-by-step (works for most fit-out approvals in Dubai)</h2>
 
