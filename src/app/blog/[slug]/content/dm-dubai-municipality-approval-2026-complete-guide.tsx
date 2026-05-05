@@ -88,7 +88,7 @@ export default function BlogContent() {
       <h2>Step-by-Step Process to Obtain Dubai Municipality Approval</h2>
 
       <figure className="blog-image-figure">
-        <img src="https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-content-1-1769065838329.jpeg" alt="Building Approvals Dubai - Dubai Municipality Approval 2026 \&#92;u2013 Complete Guide for Construction, Fit-Out &amp; Engineering Projects in Dubai" />
+        <img src="https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-content-1-1769065838329.jpeg" alt="Building Approvals Dubai - Dubai Municipality Approval 2026 \\\\u2013 Complete Guide for Construction, Fit-Out &amp; Engineering Projects in Dubai" />
       </figure>
 
       <h2>Step 1 – Appoint a Registered Consultant</h2>
