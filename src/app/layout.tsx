@@ -88,8 +88,6 @@ export const metadata: Metadata = {
   verification: {
     google: "1RihkLPG-TpLD2tnqwYW9MHjgWWaajO_br8pGGWeDpY",
   },
-  // Web app manifest for PWA support and icon configuration.
-  manifest: "/manifest.json",
   // Favicon variants for different devices.
   icons: {
     icon: [
