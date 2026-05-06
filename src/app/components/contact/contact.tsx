@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from 'react';
+import ContactFormModal from '../ContactFormModal';
 import './contact.css';
 
 const Contact: React.FC = () => {
@@ -39,6 +40,7 @@ const Contact: React.FC = () => {
     message: '',
   });
   const [isServiceOpen, setIsServiceOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const formRef = useRef<HTMLFormElement | null>(null);
   const serviceWrapperRef = useRef<HTMLDivElement | null>(null);
 
@@ -98,6 +100,7 @@ const Contact: React.FC = () => {
   };
 
   return (
+    <>
     <section className="contact-shell" id="contact">
       <div className="contact-hero">
         <div className="contact-badge">We respond fast</div>
@@ -310,7 +313,46 @@ const Contact: React.FC = () => {
           referrerPolicy="no-referrer-when-downgrade"
         ></iframe>
       </div>
+
+      <div className="contact-bottom-copy" aria-label="Contact Building Approvals Dubai">
+        <div className="contact-bottom-copy-icon" aria-hidden="true">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
+            <path d="M7 8.5H17" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+            <path d="M7 12H14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+            <path d="M7 15.5H11" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+            <path d="M5 3.75H19C20.1 3.75 21 4.65 21 5.75V16.75C21 17.85 20.1 18.75 19 18.75H12.8L8.8 21.25V18.75H5C3.9 18.75 3 17.85 3 16.75V5.75C3 4.65 3.9 3.75 5 3.75Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/>
+          </svg>
+        </div>
+        <div className="contact-bottom-copy-content">
+          <span className="contact-bottom-copy-kicker">Ready to start?</span>
+          <h2>Speak with an approvals specialist</h2>
+          <p>
+            Contact us for reliable support with buidling approvals in Dubai. Our team helps property owners, contractors, and businesses manage documents, drawings, submissions, and follow-ups for smooth authority approvals. Whether you need dubai approvals for fit-out, renovation, villa modification, or commercial projects, we guide you through each step with clear communication and practical assistance. For hassle-free approvals dubai, reach out today and let us help move your project forward.
+          </p>
+          <div className="contact-bottom-copy-actions">
+            <button type="button" onClick={() => setIsModalOpen(true)}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M4 6.75C4 5.78 4.78 5 5.75 5H18.25C19.22 5 20 5.78 20 6.75V17.25C20 18.22 19.22 19 18.25 19H5.75C4.78 19 4 18.22 4 17.25V6.75Z" stroke="currentColor" strokeWidth="1.8"/>
+                <path d="M5 7L12 12.25L19 7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              Get in touch
+            </button>
+            <a href="tel:+971589575610">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M6.6 10.8C8.05 13.65 10.35 15.95 13.2 17.4L15.4 15.2C15.68 14.92 16.08 14.83 16.44 14.95C17.58 15.33 18.78 15.53 20 15.53C20.55 15.53 21 15.98 21 16.53V20C21 20.55 20.55 21 20 21C10.61 21 3 13.39 3 4C3 3.45 3.45 3 4 3H7.48C8.03 3 8.48 3.45 8.48 4C8.48 5.22 8.68 6.42 9.05 7.56C9.16 7.92 9.08 8.31 8.79 8.6L6.6 10.8Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/>
+              </svg>
+              058 957 5610
+            </a>
+          </div>
+        </div>
+      </div>
     </section>
+    <ContactFormModal
+      isOpen={isModalOpen}
+      onClose={() => setIsModalOpen(false)}
+      selectedService=""
+    />
+    </>
   );
 };
 

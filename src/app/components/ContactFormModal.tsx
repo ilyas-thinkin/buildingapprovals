@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import './ContactFormModal.css';
 
 interface ContactFormModalProps {
@@ -46,8 +47,13 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onClose, se
   const [isServiceOpen, setIsServiceOpen] = useState(false);
   const serviceDropdownRef = useRef<HTMLDivElement | null>(null);
   const formRef = useRef<HTMLFormElement | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
   const selectedServiceValue = formData.service || selectedService || 'General Enquiry';
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -144,9 +150,9 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onClose, se
     setIsServiceOpen(false);
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || !isMounted) return null;
 
-  return (
+  return createPortal(
     <div className="modal-overlay" onClick={handleOverlayClick}>
       <div className="modal-wrapper">
         <button className="modal-close" onClick={onClose} aria-label="Close modal">
@@ -161,14 +167,14 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onClose, se
             <p className="modal-subtitle">Get in touch with us for your approval needs</p>
           </div>
 
-          <form className="contact-form" onSubmit={handleSubmit} ref={formRef}>
-          <div className="form-group">
-            <label htmlFor="name" className="form-label">Full Name *</label>
+          <form className="modal-contact-form" onSubmit={handleSubmit} ref={formRef}>
+          <div className="modal-form-group">
+            <label htmlFor="name" className="modal-form-label">Full Name *</label>
             <input
               type="text"
               id="name"
               name="name"
-              className="form-input"
+              className="modal-form-input"
               placeholder="Enter your full name"
               value={formData.name}
               onChange={handleChange}
@@ -176,13 +182,13 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onClose, se
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="email" className="form-label">Email Address *</label>
+          <div className="modal-form-group">
+            <label htmlFor="email" className="modal-form-label">Email Address *</label>
             <input
               type="email"
               id="email"
               name="email"
-              className="form-input"
+              className="modal-form-input"
               placeholder="your.email@example.com"
               value={formData.email}
               onChange={handleChange}
@@ -190,12 +196,12 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onClose, se
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="phone" className="form-label">Phone Number *</label>
-            <div className="phone-input-group">
+          <div className="modal-form-group">
+            <label htmlFor="phone" className="modal-form-label">Phone Number *</label>
+            <div className="modal-phone-input-group">
               <select
                 name="countryCode"
-                className="country-code-select"
+                className="modal-country-code-select"
                 value={formData.countryCode}
                 onChange={handleChange}
               >
@@ -214,7 +220,7 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onClose, se
                 type="tel"
                 id="phone"
                 name="phone"
-                className="form-input phone-input"
+                className="modal-form-input modal-phone-input"
                 placeholder="50 123 4567"
                 value={formData.phone}
                 onChange={handleChange}
@@ -223,28 +229,28 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onClose, se
             </div>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="service" className="form-label">Service *</label>
-            <div className="service-select-wrapper" ref={serviceDropdownRef}>
+          <div className="modal-form-group">
+            <label htmlFor="service" className="modal-form-label">Service *</label>
+            <div className="modal-service-select-wrapper" ref={serviceDropdownRef}>
               <button
                 type="button"
-                className={`form-input service-trigger ${isServiceOpen ? 'is-open' : ''}`}
+                className={`modal-form-input modal-service-trigger ${isServiceOpen ? 'is-open' : ''}`}
                 onClick={toggleServiceDropdown}
                 aria-haspopup="listbox"
                 aria-expanded={isServiceOpen}
               >
                 <span>{selectedServiceValue}</span>
-                <svg className="service-trigger-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <svg className="modal-service-trigger-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </button>
               {isServiceOpen && (
-                <div className="service-options" role="listbox">
+                <div className="modal-service-options" role="listbox">
                   {serviceOptions.map(option => (
                     <button
                       type="button"
                       key={option}
-                      className={`service-option ${selectedServiceValue === option ? 'active' : ''}`}
+                      className={`modal-service-option ${selectedServiceValue === option ? 'active' : ''}`}
                       onClick={() => handleServiceSelect(option)}
                       role="option"
                       aria-selected={selectedServiceValue === option}
@@ -266,7 +272,8 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onClose, se
         </form>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
