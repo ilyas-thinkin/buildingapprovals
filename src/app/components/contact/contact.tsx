@@ -117,9 +117,14 @@ const Contact: React.FC = () => {
               </div>
               <div>
                 <p className="contact-list-label">Address</p>
-                <p className="contact-text">
+                <a
+                  href="https://maps.app.goo.gl/WuitF9PhjnDoV71E6"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="contact-text"
+                >
                   Al Babtain Building - Office No: 302 2nd St - Deira - Dubai
-                </p>
+                </a>
                 <p className="contact-small">Opening hours: Mon – Fri · 9AM – 6PM</p>
               </div>
             </div>
