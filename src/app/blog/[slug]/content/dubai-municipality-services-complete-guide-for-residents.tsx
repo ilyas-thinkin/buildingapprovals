@@ -3,11 +3,11 @@ export default function BlogContent() {
     <div className="blog-content-wrapper">
       <h2>Introduction</h2>
 
-      <p>Dubai Municipality plays an important role in regulating construction, renovation, fitout, food safety, public health, waste management, land services, and many other essential services in Dubai. For property owners, facility management companies, fitout contractors, and interior designers, understanding how the Dubai Municipality works can help avoid approval delays, penalties, and project interruptions.</p>
+      <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/index.html#">Dubai Municipality</a> plays an important role in regulating construction, renovation, fitout, food safety, public health, waste management, land services, and many other essential services in Dubai. For property owners, facility management companies, fitout contractors, and interior designers, understanding how the <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/index.html#">Dubai Municipality</a> works can help avoid approval delays, penalties, and project interruptions.</p>
 
-      <p>Whether you are planning a shop fitout, villa renovation, warehouse modification, restaurant setup, or building-related work, you may need to deal with DM municipality services, DM approval requirements, BPS Dubai submissions, inspections, and document verification.</p>
+      <p>Whether you are planning a shop fitout, villa renovation, warehouse modification, restaurant setup, or building-related work, you may need to deal with <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/index.html#">DM municipality</a> services, DM approval requirements, <a target="_blank" rel="noopener noreferrer nofollow" href="https://buildindubai.gov.ae/">BPS Dubai</a> submissions, inspections, and document verification.</p>
 
-      <p>Dubai Municipality’s official website provides access to service categories such as Building, Construction &amp; Land; Food and Consumer Products; Training &amp; Accreditation; and Waste and Pest Control. It also includes Quick Pay, Track Requests, and Verify Documents options for users.</p>
+      <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/index.html#">Dubai Municipality’s</a> official website provides access to service categories such as Building, Construction &amp; Land; Food and Consumer Products; Training &amp; Accreditation; and Waste and Pest Control. It also includes Quick Pay, Track Requests, and Verify Documents options for users.</p>
 
       <h2>Table of Contents</h2>
 
@@ -27,7 +27,7 @@ export default function BlogContent() {
 
       <h2>What is the Dubai Municipality?</h2>
 
-      <p>Dubai Municipality is the government authority responsible for many civic, planning, building, safety, environmental, and public service functions in Dubai. It supports urban development, public health, sustainability, infrastructure, and regulatory compliance across the emirate.</p>
+      <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/index.html#">Dubai Municipality</a> is the government authority responsible for many civic, planning, building, safety, environmental, and public service functions in Dubai. It supports urban development, public health, sustainability, infrastructure, and regulatory compliance across the emirate.</p>
 
       <p>For businesses and property-related projects, Dubai Municipality is commonly involved in:</p>
 
@@ -43,7 +43,7 @@ export default function BlogContent() {
         <li>Document verification and request tracking</li>
       </ul>
 
-      <p>In simple terms, Dubai Municipality ensures that projects and businesses follow Dubai’s approved standards before work starts, during execution, and at completion.</p>
+      <p>In simple terms, <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/index.html#">Dubai Municipality</a> ensures that projects and businesses follow Dubai’s approved standards before work starts, during execution, and at completion.</p>
 
       <h2>Why is Dubai Municipality approval important?</h2>
 
@@ -51,13 +51,13 @@ export default function BlogContent() {
 
       <p>For fitout companies and interior designers, DM approval helps ensure that drawings, layouts, structural changes, MEP works, and site execution match approved standards. For property owners and facility managers, it protects the asset from unauthorized modifications and future compliance issues.</p>
 
-      <p>Dubai Municipality approval is required for many construction, renovation, fitout, and modification works in Dubai. It helps confirm that the project follows approved building rules, safety standards, land-use requirements, and technical guidelines before work begins.</p>
+      <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/index.html#">Dubai Municipality</a> approval is required for many construction, renovation, fitout, and modification works in Dubai. It helps confirm that the project follows approved building rules, safety standards, land-use requirements, and technical guidelines before work begins.</p>
 
       <h2>Main Dubai Municipality services</h2>
 
       <p>Dubai Municipality offers a wide range of services, but for property and business users, the most relevant categories usually include building, construction, land, food safety, professional accreditation, waste management, and document-related services.</p>
 
-      <p>The official Dubai Municipality website highlights service categories including Building, Construction &amp; Land; Food and Consumer Products; Training &amp; Accreditation for Professionals; and Waste and Pest Control.</p>
+      <p>The official <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/index.html#">Dubai Municipality</a> website highlights service categories including Building, Construction &amp; Land; Food and Consumer Products; Training &amp; Accreditation for Professionals; and Waste and Pest Control.</p>
 
       <h3>1. Building, Construction, and Land Services</h3>
 
@@ -90,7 +90,7 @@ export default function BlogContent() {
 
       <h3>3. Food and Consumer Product Services</h3>
 
-      <p>Restaurants, cafes, groceries, cloud kitchens, supermarkets, and food trading businesses may need Dubai Municipality approvals related to food safety, layout, hygiene, storage, and inspection requirements.</p>
+      <p>Restaurants, cafes, groceries, cloud kitchens, supermarkets, and food trading businesses may need <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/index.html#">Dubai Municipality</a> approvals related to food safety, layout, hygiene, storage, and inspection requirements.</p>
 
       <h3>4. Waste and Pest Control Services</h3>
 
@@ -102,7 +102,7 @@ export default function BlogContent() {
 
       <h2>Dubai Municipality approval process</h2>
 
-      <p>The exact process depends on the project type, location, building use, authority jurisdiction, and scope of work. However, most Dubai Municipality approval processes follow a similar structure.</p>
+      <p>The exact process depends on the project type, location, building use, authority jurisdiction, and scope of work. However, most <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/index.html#">Dubai Municipality</a> approval processes follow a similar structure.</p>
 
       <h3>Step 1: Identify the project scope</h3>
 
@@ -149,13 +149,13 @@ export default function BlogContent() {
 
       <h3>Step 4: Submit through the relevant portal</h3>
 
-      <p>Depending on the service, applications may be submitted through Dubai Municipality digital services or the Build in Dubai platform. A Build in Dubai service page explains the general procedure as logging in, filling the application form, uploading documents, applying for the service, and paying the fees.</p>
+      <p>Depending on the service, applications may be submitted through <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/index.html#">Dubai Municipality</a> digital services or the Build in Dubai platform. A Build in Dubai service page explains the general procedure as logging in, filling the application form, uploading documents, applying for the service, and paying the fees.</p>
 
       <h3>Step 5: Authority review and comments</h3>
 
       <p>After submission, the authority reviews the application. If drawings or documents are incomplete, comments may be issued.</p>
 
-      <p>Common comments may relate to:</p>
+      <p><strong>Common comments may relate to:</strong></p>
 
       <ul>
         <li>Drawing mismatch</li>
@@ -181,13 +181,13 @@ export default function BlogContent() {
 
       <h2>BPS Dubai and DM login explained</h2>
 
-      <p>BPS Dubai generally refers to the Dubai Building Permit System or building permit-related digital process used for construction and building approvals. For consultants, contractors, and project stakeholders, BPS Dubai is important because it helps manage permit submissions, status tracking, and approval-related workflows.</p>
+      <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://buildindubai.gov.ae/">BPS Dubai</a> generally refers to the Dubai Building Permit System or building permit-related digital process used for construction and building approvals. For consultants, contractors, and project stakeholders, BPS Dubai is important because it helps manage permit submissions, status tracking, and approval-related workflows.</p>
 
-      <p>Dubai Municipality’s official site includes login access, service categories, track request options, document verification, and payment features.</p>
+      <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://buildindubai.gov.ae/">Dubai Municipality’s</a> official site includes login access, service categories, track request options, document verification, and payment features.</p>
 
       <h3>What is DM login used for?</h3>
 
-      <p>DM login may be used to access Dubai Municipality digital services, submit applications, track requests, verify documents, and manage service-related actions.</p>
+      <p>DM login may be used to access <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/index.html#">Dubai Municipality</a> digital services, submit applications, track requests, verify documents, and manage service-related actions.</p>
 
       <p>For business users, this is especially useful when handling:</p>
 
@@ -250,11 +250,11 @@ export default function BlogContent() {
 
       <h3>Best practice</h3>
 
-      <p>Always check the latest fee directly through the official Dubai Municipality service page or approved portal before submission. Fees and requirements can change, and relying on old information may lead to incorrect budgeting.</p>
+      <p>Always check the latest fee directly through the official <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/index.html#">Dubai Municipality</a> service page or approved portal before submission. Fees and requirements can change, and relying on old information may lead to incorrect budgeting.</p>
 
       <h2>Dubai Municipality rules for fitout and renovation projects</h2>
 
-      <p>For fitout and renovation projects, Dubai Municipality rules are designed to protect building safety, public health, fire safety, accessibility, and structural stability.</p>
+      <p>For fitout and renovation projects, <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/index.html#">Dubai Municipality</a> rules are designed to protect building safety, public health, fire safety, accessibility, and structural stability.</p>
 
       <h3>Key rules to keep in mind</h3>
 
