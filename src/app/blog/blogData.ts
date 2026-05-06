@@ -17,6 +17,22 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    id: '1778068785631',
+    title: "Dubai Municipality Services: Complete Guide for Residents",
+    slug: 'dubai-municipality-services-complete-guide-for-residents',
+    category: "General",
+    author: "Building Approvals Dubai",
+    date: '2026-05-06',
+    excerpt: "Learn about Dubai Municipality services, DM approval process, rules, fees, BPS Dubai, branches, and fitout approval steps for property projects.",
+    image: "https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/building-approvals-dubai-dubai-municipality-services-list-1778068785631.jpg",
+    coverImage: "https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/building-approvals-dubai-dubai-municipality-services-cover-1778068785631.jpg",
+    metaTitle: "dubai-municipality-services-complete-guide-for-residents",
+    metaDescription: "Learn about Dubai Municipality services, DM approval process, rules, fees, BPS Dubai, branches, and fitout approval steps for property projects.",
+    keywords: ["dm dubai", "bps dubai", "dm municipality"],
+    ogImage: "https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/building-approvals-dubai-dubai-municipality-services-cover-1778068785631.jpg",
+  },
+
+  {
     id: '1777732827331',
     title: 'DM Municipality Salon Approval in Dubai: Complete 2026 Guide',
     slug: 'dm-municipality-salon-approval-dubai',
