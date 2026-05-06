@@ -192,7 +192,7 @@ export default function BlogContent() {
         <img src="https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-content-1-1770282014471.jpeg" alt="Building Approvals Dubai - Municipality Approval in Dubai: The Most Common Fit-Out Approval Violations" />
       </figure>
 
-      <h3><em><span className="text-size-lg">Also Read: </span></em><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/dubai-municipality-dm-approvals-compliance-guide"><em><span className="text-size-lg">https://www.buildingapprovals.ae/blog/dubai-municipality-dm-approvals-compliance-guide</span></em></a></h3>
+      <h3><em><span>Also Read: </span></em><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/dubai-municipality-dm-approvals-compliance-guide"><em><span>https://www.buildingapprovals.ae/blog/dubai-municipality-dm-approvals-compliance-guide</span></em></a></h3>
 
       <h2>Step-by-step (works for most fit-out approvals in Dubai)</h2>
 
@@ -290,7 +290,7 @@ export default function BlogContent() {
 
       <ul>
         <li>Official portal for DM approval: <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/">https://www.dm.gov.ae/</a></li>
-        <li>Get in touch with us: <strong>+971 589575610</strong> to get specialist guidance now - <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/contact">https://www.buildingapprovals.ae/contact</a></li>
+        <li>Get in touch with us: <a target="_blank" rel="noopener noreferrer nofollow" href="https://<a href=">+971 589575610</a> to get specialist guidance now - <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/contact">https://www.buildingapprovals.ae/contact</a></li>
       </ul>
 
       <div className="cta-box">

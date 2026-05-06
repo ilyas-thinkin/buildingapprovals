@@ -89,7 +89,7 @@ export const blogPosts: BlogPost[] = [
     category: "Dubai Municipality",
     author: "Building Approvals Dubai",
     date: '2026-02-05',
-    dateModified: '2026-05-05',
+    dateModified: '2026-05-06',
     excerpt: "Avoid DM approval delays in Dubai. Discover the most common fit-out approval violations, why they happen, and how to fix drawings, MEP, and site issues fast.",
     image: "https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-list-1770279885245.jpg",
     coverImage: "https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-cover-1770279885245.jpg",
