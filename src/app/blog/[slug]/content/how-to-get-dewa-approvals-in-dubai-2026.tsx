@@ -1,15 +1,15 @@
 export default function BlogContent() {
   return (
     <div className="blog-content-wrapper">
-      <p>Obtaining <strong>building approvals in Dubai</strong> involves multiple authorities, and <strong>DEWA approval</strong> is one of the most critical stages. Whether you are constructing a new building, renovating an existing property, or carrying out a commercial fit-out, DEWA approval is mandatory to legally connect electricity and water services.</p>
+      <p>Obtaining <strong>building approvals in Dubai</strong> involves multiple authorities, and <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services/dewa"><strong>DEWA approval</strong> </a>is one of the most critical stages. Whether you are constructing a new building, renovating an existing property, or carrying out a commercial fit-out, <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services/dewa">DEWA approval</a> is mandatory to legally connect electricity and water services.</p>
 
-      <p>This guide explains <strong>how DEWA fits into Dubai’s building approvals system</strong>, the <strong>step-by-step DEWA approval process</strong>, and a <strong>complete list of documents required</strong> to avoid delays.</p>
+      <p>This guide explains <strong>how </strong><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dewa.gov.ae/en/"><strong>DEWA</strong></a><strong> fits into Dubai’s building approvals system</strong>, the <strong>step-by-step </strong><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services/dewa"><strong>DEWA approval</strong></a><strong> process</strong>, and a <strong>complete list of documents required</strong> to avoid delays.</p>
 
       <h2><strong>What Is DEWA and Its Role in Building Approvals?</strong></h2>
 
-      <p>The <strong>Dubai Electricity and Water Authority (DEWA)</strong> is the official government body responsible for approving and supplying electricity and water in Dubai. As part of the overall <strong>building approval process</strong>, DEWA ensures that all electrical and plumbing systems comply with Dubai’s safety, sustainability, and load regulations.</p>
+      <p>The <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services/dewa"><strong>Dubai Electricity and Water Authority (DEWA)</strong></a> is the official government body responsible for approving and supplying electricity and water in Dubai. As part of the overall <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services"><strong>building approval</strong></a><strong> process</strong>, DEWA ensures that all electrical and plumbing systems comply with Dubai’s safety, sustainability, and load regulations.</p>
 
-      <p>No project can receive final <strong>building approvals</strong> or completion certification without DEWA clearance.</p>
+      <p>No project can receive final <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services"><strong>building approvals</strong></a> or completion certification without DEWA clearance.</p>
 
       <h2><strong>Why DEWA Approval Is Mandatory for Building Approvals</strong></h2>
 
@@ -18,12 +18,12 @@ export default function BlogContent() {
       <ul>
         <li>Safe electrical and water system design</li>
         <li>Accurate load capacity planning</li>
-        <li>Compliance with Dubai Municipality regulations</li>
+        <li>Compliance with <a target="_blank" rel="noopener noreferrer nofollow" href="https://dm.gov.ae/">Dubai Municipality</a> regulations</li>
         <li>Fire and electrical hazard prevention</li>
         <li>Long-term utility reliability</li>
       </ul>
 
-      <p>Without DEWA approval, your <strong>building approval application</strong> may be rejected or delayed indefinitely.</p>
+      <p>Without <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services/dewa">DEWA approval</a>, your <strong>building approval application</strong> may be rejected or delayed indefinitely.</p>
 
       <h2><strong>Types of DEWA Building Approvals in Dubai</strong></h2>
 
@@ -40,35 +40,39 @@ export default function BlogContent() {
 
       <p>Each stage must be cleared before moving to the next phase of <strong>building approvals</strong>.</p>
 
+      <blockquote>
+        <p><em><span className="text-size-xl">Must Know: </span></em><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/how-to-secure-a-nakheel-noc-in-dubai-2026"><em><span className="text-size-xl">How to Secure a Nakheel NOC in Dubai 2026</span></em></a></p>
+      </blockquote>
+
       <figure className="blog-image-figure">
         <img src="/images/blog/building-approvals-dubai-dewa-approval-content.jpeg" alt="Building Approvals Dubai - How to Get DEWA Approvals in Dubai: Step-by-Step Process &amp; Checklist" />
       </figure>
 
       <h2><strong>Step-by-Step DEWA Approval Process for Building Approvals</strong></h2>
 
-      <p><strong>1. Appoint a DEWA-Approved Consultant</strong></p>
+      <h3><strong>1. Appoint a DEWA-Approved Consultant</strong></h3>
 
       <p>All DEWA applications must be submitted by a <strong>DEWA-approved consultant or contractor</strong>. This is a mandatory requirement for building approvals in Dubai.</p>
 
-      <p><strong>2. Prepare DEWA-Compliant Drawings</strong></p>
+      <h3><strong>2. Prepare DEWA-Compliant Drawings</strong></h3>
 
-      <h3>The consultant prepares electrical and water drawings aligned with:</h3>
+      <p><strong>The consultant prepares electrical and water drawings aligned with:</strong></p>
 
       <ul>
-        <li>Dubai Municipality approvals</li>
+        <li><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services/dubai-municipality">Dubai Municipality approvals</a></li>
         <li>Approved architectural and MEP layouts</li>
         <li>DEWA technical standards</li>
       </ul>
 
-      <p>Accuracy at this stage helps speed up the building approval process.</p>
+      <p>Accuracy at this stage helps speed up the <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services">building approval </a>process.</p>
 
-      <p><strong>3. Online Submission for Building Approvals</strong></p>
+      <h3><strong>3. Online Submission for Building Approvals</strong></h3>
 
-      <p>DEWA approvals are submitted through DEWA’s online portal, ensuring transparency and faster processing for building approvals.</p>
+      <p>DEWA approvals are submitted through DEWA’s online portal, ensuring transparency and faster processing for <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services">building approvals.</a></p>
 
-      <p><strong>4. Technical Review by DEWA</strong></p>
+      <h3><strong>4. Technical Review by DEWA</strong></h3>
 
-      <h3>DEWA engineers review the submission and may:</h3>
+      <p><strong>DEWA engineers review the submission and may:</strong></p>
 
       <ul>
         <li>Approve the design</li>
@@ -78,43 +82,47 @@ export default function BlogContent() {
 
       <p>Prompt responses help avoid delays in building approvals.</p>
 
-      <p><strong>5. DEWA Design Approval Issuance</strong></p>
+      <h3><strong>5. DEWA Design Approval Issuance</strong></h3>
 
-      <p>Once all comments are resolved, DEWA issues official approval, allowing electrical and water works to begin.</p>
+      <p>Once all comments are resolved, <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dewa.gov.ae/en/">DEWA</a> issues official approval, allowing electrical and water works to begin.</p>
 
-      <p><strong>6. Site Inspection &amp; Final Building Approval</strong></p>
+      <h3><strong>6. Site Inspection &amp; Final Building Approval</strong></h3>
 
-      <h3>After installation:</h3>
+      <p><strong>After installation:</strong></p>
 
       <ul>
-        <li>DEWA inspects the site</li>
+        <li><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dewa.gov.ae/en/">DEWA</a> inspects the site</li>
         <li>Verifies compliance with approved drawings</li>
         <li>Approves meter installation and utility connection</li>
       </ul>
 
       <p>This stage is essential for final <strong>building approvals and occupancy permits</strong>.</p>
 
+      <blockquote>
+        <p><span className="text-size-xl">Must Know: </span><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/dcd-approval-dubai-complete-process"><span className="text-size-xl">Dubai Civil Defence Approval (DCD) – Complete Guide for 2026</span></a></p>
+      </blockquote>
+
       <h2>Documents Required for DEWA Building Approvals</h2>
 
-      <h2><strong>General Building Approval Documents</strong></h2>
+      <h3><strong>General Building Approval Documents</strong></h3>
 
       <ul>
-        <li>DEWA application form</li>
+        <li><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dewa.gov.ae/en/">DEWA</a> application form</li>
         <li>Trade license (commercial projects)</li>
         <li>Owner’s Emirates ID or passport copy</li>
         <li>Consultant and contractor licenses</li>
       </ul>
 
-      <h2><strong>Property &amp; Authority Documents</strong></h2>
+      <h3><strong>Property &amp; Authority Documents</strong></h3>
 
       <ul>
         <li>Title deed or Ejari</li>
         <li>Location map and plot details</li>
-        <li>Dubai Municipality building approval</li>
+        <li><a target="_blank" rel="noopener noreferrer nofollow" href="https://dm.gov.ae/">Dubai Municipality</a> <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services">building approval</a></li>
         <li>Approved architectural and MEP drawings</li>
       </ul>
 
-      <h2><strong>Electrical Approval Documents</strong></h2>
+      <h3><strong>Electrical Approval Documents</strong></h3>
 
       <ul>
         <li>Electrical load schedule</li>
@@ -124,7 +132,7 @@ export default function BlogContent() {
         <li>Earthing and lightning protection details</li>
       </ul>
 
-      <h2><strong>Water Approval Documents</strong></h2>
+      <h3><strong>Water Approval Documents</strong></h3>
 
       <ul>
         <li>Water demand calculations</li>
@@ -133,7 +141,7 @@ export default function BlogContent() {
         <li>Pump and tank details</li>
       </ul>
 
-      <h2><strong>Additional Documents (If Applicable)</strong></h2>
+      <h3><strong>Additional Documents (If Applicable)</strong></h3>
 
       <ul>
         <li>NOC from the developer or building management</li>
@@ -147,7 +155,7 @@ export default function BlogContent() {
       <ul>
         <li>Incorrect electrical load calculations</li>
         <li>Missing or outdated drawings</li>
-        <li>Mismatch between municipality and DEWA approvals</li>
+        <li>Mismatch between <a target="_blank" rel="noopener noreferrer nofollow" href="https://dm.gov.ae/">municipality</a> and <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services/dewa">DEWA approvals</a></li>
         <li>Non-compliant electrical or water designs</li>
         <li>Applications submitted by non-approved consultants</li>
       </ul>
@@ -155,16 +163,23 @@ export default function BlogContent() {
       <h2>Tips to Get DEWA Building Approvals Faster</h2>
 
       <ul>
-        <li>Engage DEWA-approved consultants early</li>
-        <li>Align drawings with Dubai Municipality approvals</li>
+        <li>Engage <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services/dewa">DEWA-approved consultants</a> early</li>
+        <li>Align drawings with <a target="_blank" rel="noopener noreferrer nofollow" href="https://dm.gov.ae/">Dubai Municipality</a> approvals</li>
         <li>Avoid last-minute design changes</li>
-        <li>Respond quickly to DEWA comments</li>
+        <li>Respond quickly to <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dewa.gov.ae/en/">DEWA</a> comments</li>
         <li>Double-check documents before submission</li>
       </ul>
 
       <h2>Final Thoughts</h2>
 
-      <p>DEWA approval is not just a utility requirement—it is a <strong>core component of building approvals in Dubai</strong>. Understanding the process and preparing the right documents can significantly streamline your project timeline.</p>
+      <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services/dewa">DEWA approval</a> is not just a utility requirement—it is a <strong>core component of </strong><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services"><strong>building approvals</strong></a><strong> in Dubai</strong>. Understanding the process and preparing the right documents can significantly streamline your project timeline.</p>
+
+      <h2>Ready to Apply?</h2>
+
+      <ul>
+        <li>Official portal for DEWA approval: <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dewa.gov.ae/en/">https://www.dewa.gov.ae/en/</a></li>
+        <li>Get in touch with us: <a target="_blank" rel="noopener noreferrer nofollow" href="https://<a href=">+971 589575610</a> to get specialist guidance now - <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/contact">https://www.buildingapprovals.ae/contact</a></li>
+      </ul>
 
       <div className="cta-box">
         <h3>Ready to Start Your Project?</h3>
