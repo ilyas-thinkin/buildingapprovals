@@ -16,7 +16,7 @@ export default function BlogContent() {
       <ul>
         <li>Offices</li>
         <li>Retail shops</li>
-        <li>Restaurants &amp; caf&amp;eacute;s</li>
+        <li>Restaurants &amp; cafe</li>
         <li>Clinics &amp; medical centres</li>
         <li>Warehouses</li>
         <li>Salons, gyms, and showrooms</li>
@@ -26,7 +26,7 @@ export default function BlogContent() {
 
       <h2>Why Fit-Out Approval Is Mandatory</h2>
 
-      <p>Dubai authorities focus heavily on safety, functionality, and sustainability. Fit-out approval ensures:</p>
+      <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services">Dubai authorities</a> focus heavily on safety, functionality, and sustainability. Fit-out approval ensures:</p>
 
       <ul>
         <li>Fire and life safety compliance</li>
@@ -67,7 +67,7 @@ export default function BlogContent() {
       <h3>3. Building Management / Developer</h3>
 
       <ul>
-        <li>Mall, tower, or free zone authority approval</li>
+        <li>Mall, tower, or free zone <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services">authority approval</a></li>
         <li>Ensures fit-out aligns with building guidelines</li>
       </ul>
 
@@ -77,6 +77,10 @@ export default function BlogContent() {
         <li>DIFC, DAFZA, JAFZA, DSO, etc.</li>
         <li>Have their own fit-out approval processes</li>
       </ul>
+
+      <blockquote>
+        <p><strong><span className="text-size-xl">Must Read:</span></strong><span className="text-size-xl"> </span><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/dm-municipality-salon-approval-dubai"><span className="text-size-xl">DM Municipality Salon Approval in Dubai: Complete 2026 Guide</span></a></p>
+      </blockquote>
 
       <figure className="blog-image-figure">
         <img src="/images/blog/building-approvals-dubai-fit-out-approval-content.jpg" alt="Building Approvals Dubai - Fit-Out Approval in Dubai Simple Practical Guide for 2026" />
@@ -109,15 +113,15 @@ export default function BlogContent() {
         <li>Fire &amp; life safety drawings</li>
       </ul>
 
-      <p>All drawings must match Dubai Municipality and DCD standards.</p>
+      <p>All drawings must match <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/#">Dubai Municipality</a> and <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dcd.gov.ae/portal/">DCD</a> standards.</p>
 
       <h3>Step 3: Submit Drawings for Approval</h3>
 
       <p>Submissions are usually done through:</p>
 
       <ul>
-        <li>Dubai Municipality online portal</li>
-        <li>Dubai Civil Defence system</li>
+        <li><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/">Dubai Municipality</a> online portal</li>
+        <li><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dcd.gov.ae/portal/">Dubai Civil Defence</a> system</li>
         <li>Free zone portals (if applicable)</li>
       </ul>
 
@@ -125,32 +129,32 @@ export default function BlogContent() {
 
       <h3>Step 4: Respond to Comments &amp; Resubmission</h3>
 
-      <p>If comments are issued:</p>
+      <p><strong>If comments are issued:</strong></p>
 
       <ul>
         <li>Revise drawings as per feedback</li>
         <li>Clarify technical points</li>
-        <li>Resubmit for approval</li>
+        <li>Resubmit for <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services">approval</a></li>
       </ul>
 
-      <p>Quick response here saves weeks of delay.</p>
+      <p><strong>Note: </strong>Quick response here saves weeks of delay.</p>
 
       <h3>Step 5: Receive Fit-Out Approval</h3>
 
-      <p>Once approved:</p>
+      <p><strong>Once approved:</strong></p>
 
       <ul>
-        <li>You receive official NOCs and permit</li>
+        <li>You receive official NOCs and a permit</li>
         <li>Fit-out work can legally begin</li>
-        <li>Contractors are allowed to mobilize on site</li>
+        <li>Contractors are allowed to mobilize on-site</li>
       </ul>
 
       <h3>Step 6: Site Inspections &amp; Completion Approval</h3>
 
-      <p>After fit-out completion:</p>
+      <p><strong>After fit-out completion:</strong></p>
 
       <ul>
-        <li>Authorities conduct inspections</li>
+        <li><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services">Authorities</a> conduct inspections</li>
         <li>Fire safety systems are tested</li>
         <li>Final approval or completion certificate is issued</li>
       </ul>
@@ -180,11 +184,11 @@ export default function BlogContent() {
       <h2>Common Mistakes That Delay Approval</h2>
 
       <ul>
-        <li>Starting work without approval</li>
+        <li>Starting work without <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services/dubai-municipality">approval</a></li>
         <li>Submitting non-compliant drawings</li>
-        <li>Ignoring DCD fire safety requirements</li>
+        <li>Ignoring <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dcd.gov.ae/portal/">DCD</a> fire safety requirements</li>
         <li>Using unapproved contractors</li>
-        <li>Poor coordination between consultant and contractor</li>
+        <li>Poor coordination between the consultant and the contractor</li>
       </ul>
 
       <p>Avoiding these mistakes can save significant time and cost.</p>
@@ -202,11 +206,18 @@ export default function BlogContent() {
       <h3>Key Takeaways</h3>
 
       <ul>
-        <li>Fit-out approval is mandatory for all interior works in Dubai</li>
-        <li>Multiple authorities may be involved depending on location and use</li>
+        <li><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services/dubai-municipality">Fit-out approval</a> is mandatory for all interior works in Dubai</li>
+        <li>Multiple authorities may be involved, depending on location and use</li>
         <li>Proper planning and compliant drawings are the key to fast approval</li>
         <li>Starting work without approval can lead to serious penalties</li>
         <li>Professional guidance makes the process smoother and faster</li>
+      </ul>
+
+      <h2>Ready to Apply?</h2>
+
+      <ul>
+        <li>Official portal for DM approval: <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/">https://www.dm.gov.ae/</a></li>
+        <li>Get in touch with us: <a target="_blank" rel="noopener noreferrer nofollow" href="https://<a href=">+971 589575610</a> to get specialist guidance now - <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/contact">https://www.buildingapprovals.ae/contact</a></li>
       </ul>
 
       <div className="cta-box">
