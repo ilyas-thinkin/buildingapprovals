@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { blogPosts } from '../blogData';
 import BlogContent from './BlogContent';
+import BlogBottomActions from '../BlogBottomActions';
 import { cleanBlogMetaTitle } from '@/lib/blog-seo';
 import './blog-post.css';
 
@@ -173,6 +174,28 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <div className="blog-post-content" itemProp="articleBody">
             <BlogContent slug={slug} />
           </div>
+
+          <section className="blog-post-approval-cta" aria-label="Building approvals in Dubai">
+            <div className="blog-post-approval-icon" aria-hidden="true">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
+                <path d="M9 12.75L11.25 15L15.5 9.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M4.75 6.5L12 3L19.25 6.5V11.25C19.25 15.75 16.4 19.9 12 21.25C7.6 19.9 4.75 15.75 4.75 11.25V6.5Z" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+            <div className="blog-post-approval-content">
+              <span className="blog-post-approval-kicker">Dubai approval guidance</span>
+              <h2>Move your project forward with the right approvals</h2>
+              <p>
+                Building approvals are an important step before starting any construction, renovation, or fit-out project in Dubai. Proper authority approvals help ensure your project follows local regulations, safety standards, and municipality requirements. Whether you need dubai approvals for commercial spaces, villas, offices, or modifications, getting the right guidance can save time and avoid costly delays. With professional support for approvals dubai, your project can move smoothly from documentation to final approval.
+              </p>
+              <div className="blog-post-approval-tags" aria-label="Approval support areas">
+                <span>Commercial spaces</span>
+                <span>Villa modifications</span>
+                <span>Fit-out projects</span>
+              </div>
+              <BlogBottomActions />
+            </div>
+          </section>
 
           <div className="related-articles-section">
             <h2 className="related-articles-title">You Might Also Like</h2>

@@ -112,7 +112,7 @@ export default function BlogPage() {
             <span className="blog-bottom-copy-kicker">Dubai approval guidance</span>
             <h2>Move your project forward with the right approvals</h2>
             <p>
-              Buidling approvals are an important step before starting any construction, renovation, or fit-out project in Dubai. Proper authority approvals help ensure your project follows local regulations, safety standards, and municipality requirements. Whether you need dubai approvals for commercial spaces, villas, offices, or modifications, getting the right guidance can save time and avoid costly delays. With professional support for approvals dubai, your project can move smoothly from documentation to final approval.
+              Building approvals are an important step before starting any construction, renovation, or fit-out project in Dubai. Proper authority approvals help ensure your project follows local regulations, safety standards, and municipality requirements. Whether you need dubai approvals for commercial spaces, villas, offices, or modifications, getting the right guidance can save time and avoid costly delays. With professional support for approvals dubai, your project can move smoothly from documentation to final approval.
             </p>
             <div className="blog-bottom-copy-tags" aria-label="Approval support areas">
               <span>Commercial spaces</span>
