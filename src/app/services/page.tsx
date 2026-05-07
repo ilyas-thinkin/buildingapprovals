@@ -16,8 +16,8 @@ const ServicesPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedService, setSelectedService] = useState('');
   const [isRailHovered, setIsRailHovered] = useState(false);
-  const [autoScrollDirection, setAutoScrollDirection] = useState<1 | -1>(1);
   const [isTouching, setIsTouching] = useState(false);
+  const autoScrollDirectionRef = useRef<1 | -1>(1);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const railSectionRef = useRef<HTMLElement>(null);
 
@@ -323,23 +323,34 @@ const ServicesPage: React.FC = () => {
     const scrollEl = scrollContainerRef.current;
     if (!scrollEl) return;
 
-    const interval = window.setInterval(() => {
+    let animationFrame = 0;
+    let lastFrameTime = 0;
+    const pixelsPerSecond = 50;
+
+    const autoScroll = (frameTime: number) => {
       const maxScroll = scrollEl.scrollWidth - scrollEl.clientWidth;
-      const next = scrollEl.scrollLeft + autoScrollDirection * 1.2;
+      const elapsed = lastFrameTime ? frameTime - lastFrameTime : 0;
+      const distance = (pixelsPerSecond * elapsed) / 1000;
+      const next = scrollEl.scrollLeft + autoScrollDirectionRef.current * distance;
 
       if (next <= 0) {
-        scrollEl.scrollTo({ left: 0, behavior: 'smooth' });
-        setAutoScrollDirection(1);
+        scrollEl.scrollLeft = 0;
+        autoScrollDirectionRef.current = 1;
       } else if (next >= maxScroll) {
-        scrollEl.scrollTo({ left: maxScroll, behavior: 'smooth' });
-        setAutoScrollDirection(-1);
+        scrollEl.scrollLeft = maxScroll;
+        autoScrollDirectionRef.current = -1;
       } else {
-        scrollEl.scrollBy({ left: autoScrollDirection * 1.2, behavior: 'smooth' });
+        scrollEl.scrollLeft = next;
       }
-    }, 24);
 
-    return () => window.clearInterval(interval);
-  }, [activeService, autoScrollDirection, isRailHovered, isTouching]);
+      lastFrameTime = frameTime;
+      animationFrame = window.requestAnimationFrame(autoScroll);
+    };
+
+    animationFrame = window.requestAnimationFrame(autoScroll);
+
+    return () => window.cancelAnimationFrame(animationFrame);
+  }, [activeService, isRailHovered, isTouching]);
 
   return (
     <div className="services-page">
@@ -379,6 +390,7 @@ const ServicesPage: React.FC = () => {
             onMouseLeave={() => setIsRailHovered(false)}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
+            onTouchCancel={handleTouchEnd}
           >
             <div className="services-rail">
               {services.map((service) => (
