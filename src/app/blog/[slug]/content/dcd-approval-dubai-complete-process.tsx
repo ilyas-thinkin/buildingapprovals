@@ -66,7 +66,7 @@ export default function BlogContent() {
         <li>Fees vary based on project size and type</li>
       </ul>
 
-      <h3><em>Also Read: </em><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/why-hire-a-consultant-for-dubai-civil-defence-approval"><em>https://www.buildingapprovals.ae/blog/why-hire-a-consultant-for-dubai-civil-defence-approval</em></a></h3>
+      <h3><em>Also Read: </em><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/why-hire-a-consultant-for-dcd-approval"><em>Why hire a Consultant for Dubai Civil Defence DCD Approval?</em></a></h3>
 
       <h3>Step 4: Technical Review by DCD</h3>
 
@@ -290,7 +290,7 @@ export default function BlogContent() {
       </ul>
 
       <figure className="blog-image-figure">
-        <img src="https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-civil-defence-content-1-1770375576779.png" alt="Building Approvals Dubai - Dubai Civil Defence Approval (DCD) \\\\\\\&#92;u2013 Complete Guide for 2026" />
+        <img src="https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-civil-defence-content-1-1770375576779.png" alt="Building Approvals Dubai - Dubai Civil Defence Approval (DCD) \\\\\\\\\\\\\\\\u2013 Complete Guide for 2026" />
       </figure>
 
       <h2>Common Reasons for DCD Approval Delays</h2>
