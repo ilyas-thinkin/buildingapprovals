@@ -133,36 +133,37 @@ const ServicesSection: React.FC = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Track which card is snapped into view by watching the scroll position
+  const SCROLL_PADDING = 20;
+
+  // Track which card is snapped by watching scroll on the grid itself
   useEffect(() => {
-    const wrapper = wrapperRef.current;
-    if (!wrapper || !isMobile) return;
+    const el = wrapperRef.current;
+    if (!el || !isMobile) return;
 
     const onScroll = () => {
-      const cards = wrapper.querySelectorAll('.service-card') as NodeListOf<HTMLElement>;
-      const scrollLeft = wrapper.scrollLeft;
+      const cards = el.querySelectorAll('.service-card') as NodeListOf<HTMLElement>;
+      const snapLeft = el.scrollLeft + SCROLL_PADDING;
       let closest = 0;
       let closestDist = Infinity;
       cards.forEach((card, i) => {
-        const dist = Math.abs(card.offsetLeft - scrollLeft);
+        const dist = Math.abs(card.offsetLeft - snapLeft);
         if (dist < closestDist) { closestDist = dist; closest = i; }
       });
       setCurrentSlide(closest);
     };
 
-    wrapper.addEventListener('scroll', onScroll, { passive: true });
-    return () => wrapper.removeEventListener('scroll', onScroll);
+    el.addEventListener('scroll', onScroll, { passive: true });
+    return () => el.removeEventListener('scroll', onScroll);
   }, [isMobile]);
 
   const goToSlide = (index: number) => {
     setCurrentSlide(index);
-    const wrapper = wrapperRef.current;
-    if (!wrapper) return;
-    const cards = wrapper.querySelectorAll('.service-card') as NodeListOf<HTMLElement>;
+    const el = wrapperRef.current;
+    if (!el) return;
+    const cards = el.querySelectorAll('.service-card') as NodeListOf<HTMLElement>;
     const card = cards[index] as HTMLElement | undefined;
-    if (card) {
-      wrapper.scrollTo({ left: card.offsetLeft, behavior: 'smooth' });
-    }
+    // scrollIntoView respects scroll-padding and snap points natively
+    if (card) card.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
   };
 
   return (
@@ -184,13 +185,13 @@ const ServicesSection: React.FC = () => {
           </a>
         </div>
 
-        {/* Services Grid / Carousel */}
-        <div
-          className={`services-carousel-wrapper ${isMobile ? 'mobile-scroll' : ''}`}
-          ref={wrapperRef}
-        >
+        {/* Services Grid / Carousel
+            On mobile: the grid itself is the scroll+flex container so cards are
+            direct snap children — required for iOS Safari scroll-snap to work */}
+        <div className="services-carousel-outer">
           <div
             className={`services-grid ${isMobile ? 'mobile-carousel' : ''}`}
+            ref={wrapperRef}
           >
             {services.map((service, index) => (
               <div key={index} className="service-card">
@@ -212,7 +213,7 @@ const ServicesSection: React.FC = () => {
             ))}
           </div>
 
-          {/* Carousel Dots - Mobile Only */}
+          {/* Dots sit outside the scroll container so they don't scroll away */}
           {isMobile && (
             <div className="carousel-dots">
               {services.map((_, index) => (

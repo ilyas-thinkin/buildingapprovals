@@ -489,35 +489,39 @@
     color: currentColor;
   }
 
-  /* Carousel Wrapper — native scroll-snap (works reliably on iOS Safari) */
-  .services-carousel-wrapper.mobile-scroll {
+  /* Carousel outer — non-scrolling, just holds grid + dots */
+  .services-carousel-outer {
+    margin-bottom: 24px;
+  }
+
+  /* Grid becomes the scroll+flex container on mobile.
+     Negative margins break it out of the 20px section padding so it
+     reaches the viewport edges; padding-left/right bring the first card
+     back in and create the peek-of-next-card effect on the right. */
+  .services-grid.mobile-carousel {
+    display: flex;
     overflow-x: scroll;
     overflow-y: hidden;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    margin-bottom: 24px;
-    padding: 16px 0;
+    gap: 16px;
+    padding: 16px 20px;
+    scroll-padding-left: 20px;
+    margin: 0 -20px;
+    margin-bottom: 0;
   }
 
-  .services-carousel-wrapper.mobile-scroll::-webkit-scrollbar {
+  .services-grid.mobile-carousel::-webkit-scrollbar {
     display: none;
   }
 
-  .services-grid.mobile-carousel {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 0;
-    padding: 0 24px;
-    justify-content: flex-start;
-    width: max-content;
-  }
-
+  /* Cards are now direct children of the scroll container — required for
+     iOS Safari scroll-snap to function. Width leaves ~16px peek of next card. */
   .services-grid.mobile-carousel .service-card {
-    flex: 0 0 calc(100vw - 48px);
-    min-width: calc(100vw - 48px);
-    max-width: calc(100vw - 48px);
+    flex: 0 0 calc(100vw - 56px);
+    min-width: calc(100vw - 56px);
     scroll-snap-align: start;
   }
 
