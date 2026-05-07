@@ -14,6 +14,7 @@ const ServicesSection: React.FC = () => {
   const touchEndX = useRef(0);
   const carouselRef = useRef<HTMLDivElement>(null);
 
+
   const services = [
     {
       id: 'civil-defense',
@@ -138,8 +139,9 @@ const ServicesSection: React.FC = () => {
   }, []);
 
   // Capture mobile slide width plus gap so transforms center each card
+  // Double-rAF defers measurement until iOS has fully laid out the flex row
   useEffect(() => {
-    const updateSlideOffset = () => {
+    const measureOffsets = () => {
       if (!carouselRef.current || !isMobile) {
         setSlideOffset(0);
         setStartOffset(0);
@@ -164,39 +166,60 @@ const ServicesSection: React.FC = () => {
       }
     };
 
-    updateSlideOffset();
-    window.addEventListener('resize', updateSlideOffset);
-    return () => window.removeEventListener('resize', updateSlideOffset);
+    // Double rAF ensures iOS Safari has finished layout before measuring
+    const rafId = requestAnimationFrame(() => {
+      requestAnimationFrame(measureOffsets);
+    });
+
+    window.addEventListener('resize', measureOffsets);
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.removeEventListener('resize', measureOffsets);
+    };
   }, [isMobile]);
 
-  // Touch handlers for swipe
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
+  // Non-passive touch listeners so we can preventDefault on iOS Safari
+  // (React 17+ makes synthetic touch handlers passive, blocking preventDefault)
+  useEffect(() => {
+    const el = carouselRef.current;
+    if (!el || !isMobile) return;
 
-  const handleTouchMove = (e: React.TouchEvent) => {
-    touchEndX.current = e.touches[0].clientX;
-  };
+    const onTouchStart = (e: TouchEvent) => {
+      touchStartX.current = e.touches[0].clientX;
+      touchEndX.current = e.touches[0].clientX;
+    };
 
-  const handleTouchEnd = () => {
-    if (!touchStartX.current || !touchEndX.current) return;
-
-    const distance = touchStartX.current - touchEndX.current;
-    const minSwipeDistance = 50;
-
-    if (Math.abs(distance) > minSwipeDistance) {
-      if (distance > 0) {
-        // Swipe left - next slide
-        setCurrentSlide((prev) => Math.min(prev + 1, services.length - 1));
-      } else {
-        // Swipe right - previous slide
-        setCurrentSlide((prev) => Math.max(prev - 1, 0));
+    const onTouchMove = (e: TouchEvent) => {
+      touchEndX.current = e.touches[0].clientX;
+      // Prevent page scroll on iOS when the swipe is primarily horizontal
+      if (Math.abs(touchStartX.current - e.touches[0].clientX) > 8) {
+        e.preventDefault();
       }
-    }
+    };
 
-    touchStartX.current = 0;
-    touchEndX.current = 0;
-  };
+    const onTouchEnd = () => {
+      const distance = touchStartX.current - touchEndX.current;
+      if (Math.abs(distance) > 50) {
+        if (distance > 0) {
+          setCurrentSlide((prev) => Math.min(prev + 1, services.length - 1));
+        } else {
+          setCurrentSlide((prev) => Math.max(prev - 1, 0));
+        }
+      }
+      touchStartX.current = 0;
+      touchEndX.current = 0;
+    };
+
+    el.addEventListener('touchstart', onTouchStart, { passive: true });
+    el.addEventListener('touchmove', onTouchMove, { passive: false });
+    el.addEventListener('touchend', onTouchEnd, { passive: true });
+
+    return () => {
+      el.removeEventListener('touchstart', onTouchStart);
+      el.removeEventListener('touchmove', onTouchMove);
+      el.removeEventListener('touchend', onTouchEnd);
+    };
+  }, [isMobile, services.length]);
 
   const goToSlide = (index: number) => {
     setCurrentSlide(index);
@@ -232,9 +255,6 @@ const ServicesSection: React.FC = () => {
           <div
             className={`services-grid ${isMobile ? 'mobile-carousel' : ''}`}
             ref={carouselRef}
-            onTouchStart={isMobile ? handleTouchStart : undefined}
-            onTouchMove={isMobile ? handleTouchMove : undefined}
-            onTouchEnd={isMobile ? handleTouchEnd : undefined}
             style={mobileTransform}
           >
             {services.map((service, index) => (
