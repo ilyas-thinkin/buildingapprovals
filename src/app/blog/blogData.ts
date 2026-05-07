@@ -275,7 +275,7 @@ export const blogPosts: BlogPost[] = [
     category: "Dubai Municipality",
     author: "Building Approvals Dubai",
     date: '2024-12-26',
-    dateModified: '2026-05-05',
+    dateModified: '2026-05-07',
     excerpt: "Discover the latest updates to Dubai Municipality approval processes in 2026, including new digital platforms, streamlined procedures, and enhanced compliance requirements.",
     image: "/images/blog/building-approvals-dubai-municipality-update-card.jpg",
     coverImage: "/images/blog/building-approvals-dubai-municipality-update-cover.webp",
