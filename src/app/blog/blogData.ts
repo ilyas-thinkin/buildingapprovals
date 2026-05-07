@@ -224,7 +224,7 @@ export const blogPosts: BlogPost[] = [
     category: "DEWA Approvals",
     author: "Building Approvals Dubai",
     date: '2026-01-13',
-    dateModified: '2026-05-06',
+    dateModified: '2026-05-07',
     excerpt: "This guide explains how DEWA fits into Dubai's building approvals system, the step-by-step DEWA approval process, and a complete list of documents required to avoid delays.",
     image: "/images/blog/building-approvals-dubai-dewa-approval-list.jpg",
     coverImage: "/images/blog/building-approvals-dubai-dewa-approval-cover.jpg",
