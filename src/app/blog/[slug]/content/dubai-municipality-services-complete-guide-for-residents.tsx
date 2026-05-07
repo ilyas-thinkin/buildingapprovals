@@ -180,7 +180,7 @@ export default function BlogContent() {
       <p>Depending on the project, final inspection, completion certificate, or closure approval may be required before handover or business operation.</p>
 
       <blockquote>
-        <p><strong><span>Must know:</span></strong> <a target="_blank" rel="noopener noreferrer nofollow" href="https://How to get Fitout Approvals in Dubai: Step by Step Process"><span>How to get Fitout Approvals in Dubai: Step by Step Process</span></a></p>
+        <p><strong>Must know:</strong> <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/how-to-get-fitout-approvals-in-dubai">How to get Fitout Approvals in Dubai: Step by Step Process</a></p>
       </blockquote>
 
       <h2>BPS Dubai and DM login explained</h2>
@@ -272,7 +272,7 @@ export default function BlogContent() {
       </ol>
 
       <blockquote>
-        <p>Must Know: <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/dubai-municipality-approval-process-2026"><span>Dubai Municipality (DM) Approval Process 2026: Step by Step</span></a></p>
+        <p>Must Know: <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/dubai-municipality-approval-process-2026">Dubai Municipality (DM) Approval Process 2026: Step by Step</a></p>
       </blockquote>
 
       <h2>Fitout approval in Dubai: where Dubai Municipality fits in</h2>
