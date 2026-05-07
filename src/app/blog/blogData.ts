@@ -140,7 +140,7 @@ export const blogPosts: BlogPost[] = [
     category: "DDA Approval",
     author: "Building Approvals Dubai",
     date: '2026-01-21',
-    dateModified: '2026-05-05',
+    dateModified: '2026-05-07',
     excerpt: "This guide explains what DDA Approval is, who needs it, documents required, approval types, covered areas, and a step-by-step process so you can move forward confidently in Dubai, UAE.",
     image: "https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dda-approval-list-1768987140126.jpeg",
     coverImage: "https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dda-approval-cover-1768987140126.jpeg",
