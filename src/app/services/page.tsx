@@ -16,8 +16,8 @@ const ServicesPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedService, setSelectedService] = useState('');
   const [isRailHovered, setIsRailHovered] = useState(false);
-  const [autoScrollDirection, setAutoScrollDirection] = useState<1 | -1>(1);
   const [isTouching, setIsTouching] = useState(false);
+  const autoScrollDirectionRef = useRef<1 | -1>(1);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const railSectionRef = useRef<HTMLElement>(null);
 
@@ -312,7 +312,8 @@ const ServicesPage: React.FC = () => {
   };
 
   const handleTouchEnd = () => {
-    setIsTouching(false);
+    // Delay resuming auto-scroll so iOS momentum scroll can settle first
+    setTimeout(() => setIsTouching(false), 1000);
   };
 
   const activeServiceData = services.find(s => s.id === activeService);
@@ -323,23 +324,36 @@ const ServicesPage: React.FC = () => {
     const scrollEl = scrollContainerRef.current;
     if (!scrollEl) return;
 
-    const interval = window.setInterval(() => {
+    // rAF + direct scrollLeft assignment — avoids WebKit bug #238497 on iOS 15.4+
+    // where repeated scrollBy({ behavior:'smooth' }) calls cancel each other silently.
+    const PIXELS_PER_SECOND = 50;
+    let lastTime = 0;
+    let rafId = 0;
+
+    const tick = (now: number) => {
+      const elapsed = lastTime ? now - lastTime : 0;
+      lastTime = now;
+
+      const delta = (PIXELS_PER_SECOND * elapsed) / 1000;
       const maxScroll = scrollEl.scrollWidth - scrollEl.clientWidth;
-      const next = scrollEl.scrollLeft + autoScrollDirection * 1.2;
+      const next = scrollEl.scrollLeft + autoScrollDirectionRef.current * delta;
 
       if (next <= 0) {
-        scrollEl.scrollTo({ left: 0, behavior: 'smooth' });
-        setAutoScrollDirection(1);
+        scrollEl.scrollLeft = 0;
+        autoScrollDirectionRef.current = 1;
       } else if (next >= maxScroll) {
-        scrollEl.scrollTo({ left: maxScroll, behavior: 'smooth' });
-        setAutoScrollDirection(-1);
+        scrollEl.scrollLeft = maxScroll;
+        autoScrollDirectionRef.current = -1;
       } else {
-        scrollEl.scrollBy({ left: autoScrollDirection * 1.2, behavior: 'smooth' });
+        scrollEl.scrollLeft = next;
       }
-    }, 24);
 
-    return () => window.clearInterval(interval);
-  }, [activeService, autoScrollDirection, isRailHovered, isTouching]);
+      rafId = requestAnimationFrame(tick);
+    };
+
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
+  }, [activeService, isRailHovered, isTouching]);
 
   return (
     <div className="services-page">
@@ -379,6 +393,7 @@ const ServicesPage: React.FC = () => {
             onMouseLeave={() => setIsRailHovered(false)}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
+            onTouchCancel={handleTouchEnd}
           >
             <div className="services-rail">
               {services.map((service) => (

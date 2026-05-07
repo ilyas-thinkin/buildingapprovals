@@ -135,8 +135,9 @@
   scrollbar-width: none;
   -ms-overflow-style: none;
   padding: 12px 0;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
+  /* scroll-behavior: smooth removed — triggers WebKit bug #238497 on iOS 15.4+
+     where repeated programmatic scrollBy/scrollTo calls silently cancel each other */
+  overscroll-behavior-x: contain;
 }
 
 /* Grab cursor only on desktop */
