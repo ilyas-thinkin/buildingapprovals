@@ -16,7 +16,6 @@ const ServicesPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedService, setSelectedService] = useState('');
   const [isRailHovered, setIsRailHovered] = useState(false);
-  const [isTouching, setIsTouching] = useState(false);
   const autoScrollDirectionRef = useRef<1 | -1>(1);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const railSectionRef = useRef<HTMLElement>(null);
@@ -307,33 +306,23 @@ const ServicesPage: React.FC = () => {
     scrollContainerRef.current?.scrollBy({ left: 300, behavior: 'smooth' });
   };
 
-  const handleTouchStart = () => {
-    setIsTouching(true);
-  };
-
-  const handleTouchEnd = () => {
-    // Delay resuming auto-scroll so iOS momentum scroll can settle first
-    setTimeout(() => setIsTouching(false), 1000);
-  };
 
   const activeServiceData = services.find(s => s.id === activeService);
 
   useEffect(() => {
-    if (activeService || isRailHovered || isTouching) return;
+    if (activeService || isRailHovered) return;
 
     const scrollEl = scrollContainerRef.current;
     if (!scrollEl) return;
 
-    // rAF + direct scrollLeft assignment — avoids WebKit bug #238497 on iOS 15.4+
-    // where repeated scrollBy({ behavior:'smooth' }) calls cancel each other silently.
     const PIXELS_PER_SECOND = 50;
     let lastTime = 0;
     let rafId = 0;
 
     const tick = (now: number) => {
-      // Cap elapsed to 2 frames max — prevents a large jump when the main
-      // thread was busy (e.g. processing a tap elsewhere on the page)
-      const elapsed = lastTime ? Math.min(now - lastTime, 32) : 0;
+      // Cap to exactly 1 frame (16ms) so a tap-delayed frame moves the same
+      // amount as a normal frame — preventing any visible jerk on interaction
+      const elapsed = lastTime ? Math.min(now - lastTime, 16) : 0;
       lastTime = now;
 
       const delta = (PIXELS_PER_SECOND * elapsed) / 1000;
@@ -355,7 +344,7 @@ const ServicesPage: React.FC = () => {
 
     rafId = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(rafId);
-  }, [activeService, isRailHovered, isTouching]);
+  }, [activeService, isRailHovered]);
 
   return (
     <div className="services-page">
@@ -393,9 +382,6 @@ const ServicesPage: React.FC = () => {
             ref={scrollContainerRef}
             onMouseEnter={() => setIsRailHovered(true)}
             onMouseLeave={() => setIsRailHovered(false)}
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-            onTouchCancel={handleTouchEnd}
           >
             <div className="services-rail">
               {services.map((service) => (
