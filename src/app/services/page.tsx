@@ -331,7 +331,9 @@ const ServicesPage: React.FC = () => {
     let rafId = 0;
 
     const tick = (now: number) => {
-      const elapsed = lastTime ? now - lastTime : 0;
+      // Cap elapsed to 2 frames max — prevents a large jump when the main
+      // thread was busy (e.g. processing a tap elsewhere on the page)
+      const elapsed = lastTime ? Math.min(now - lastTime, 32) : 0;
       lastTime = now;
 
       const delta = (PIXELS_PER_SECOND * elapsed) / 1000;
