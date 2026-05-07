@@ -130,30 +130,33 @@
 
 .services-rail-scroll {
   flex: 1;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   padding: 12px 0;
+  overscroll-behavior-x: contain;
 }
 
-/* Pause on desktop hover */
-.services-rail-scroll:hover .services-rail {
-  animation-play-state: paused;
+.services-rail-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Grab cursor only on desktop */
+@media (min-width: 769px) {
+  .services-rail-scroll {
+    cursor: grab;
+  }
+  .services-rail-scroll:active {
+    cursor: grabbing;
+  }
 }
 
 .services-rail {
   display: flex;
   gap: 20px;
   padding: 0 8px;
-  width: max-content;
-  animation: railScroll 40s linear infinite;
-}
-
-.services-rail.paused {
-  animation-play-state: paused;
-}
-
-@keyframes railScroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+  min-width: min-content;
 }
 
 .service-rail-item {

@@ -15,6 +15,10 @@ const ServicesPage: React.FC = () => {
   const [activeService, setActiveService] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedService, setSelectedService] = useState('');
+  const [isRailHovered, setIsRailHovered] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const autoScrollDirectionRef = useRef<1 | -1>(1);
+  const isTouchingRef = useRef(false);
   const railSectionRef = useRef<HTMLElement>(null);
 
   const services = useMemo<Service[]>(() => ([
@@ -297,6 +301,73 @@ const ServicesPage: React.FC = () => {
 
 
 
+  // Prime iOS Safari: a 0→1→0 scroll registers the element as a scroll target
+  // so programmatic scrollLeft works immediately without requiring user touch first
+  useEffect(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    requestAnimationFrame(() => {
+      el.scrollLeft = 1;
+      el.scrollLeft = 0;
+    });
+  }, []);
+
+  useEffect(() => {
+    if (activeService || isRailHovered) return;
+    const scrollEl = scrollContainerRef.current;
+    if (!scrollEl) return;
+
+    const PIXELS_PER_SECOND = 50;
+    let lastTime = 0;
+    let accumulator = 0;
+    let rafId = 0;
+
+    const tick = (now: number) => {
+      if (isTouchingRef.current) {
+        // User is swiping — pause movement, reset timing so no jump on resume
+        lastTime = 0;
+        accumulator = 0;
+        rafId = requestAnimationFrame(tick);
+        return;
+      }
+
+      const elapsed = lastTime ? Math.min(now - lastTime, 32) : 0;
+      lastTime = now;
+      accumulator += (PIXELS_PER_SECOND * elapsed) / 1000;
+
+      // Only apply whole pixels — iOS Safari rounds sub-pixel scrollLeft to 0,
+      // which causes the element to stall permanently at scrollLeft = 0
+      if (accumulator >= 1) {
+        const pixels = Math.floor(accumulator);
+        accumulator -= pixels;
+
+        const maxScroll = scrollEl.scrollWidth - scrollEl.clientWidth;
+        const next = scrollEl.scrollLeft + autoScrollDirectionRef.current * pixels;
+
+        if (next <= 0) {
+          scrollEl.scrollLeft = 0;
+          autoScrollDirectionRef.current = 1;
+        } else if (next >= maxScroll) {
+          scrollEl.scrollLeft = maxScroll;
+          autoScrollDirectionRef.current = -1;
+        } else {
+          scrollEl.scrollLeft = next;
+        }
+      }
+
+      rafId = requestAnimationFrame(tick);
+    };
+
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
+  }, [activeService, isRailHovered]);
+
+  const scrollLeftFn = () => scrollContainerRef.current?.scrollBy({ left: -300, behavior: 'smooth' });
+  const scrollRightFn = () => scrollContainerRef.current?.scrollBy({ left: 300, behavior: 'smooth' });
+
+  const handleTouchStart = () => { isTouchingRef.current = true; };
+  const handleTouchEnd = () => { setTimeout(() => { isTouchingRef.current = false; }, 600); };
+
   const activeServiceData = services.find(s => s.id === activeService);
 
 
@@ -319,9 +390,20 @@ const ServicesPage: React.FC = () => {
           <p className="services-rail-subtitle">Tap an icon to preview details instantly.</p>
         </div>
         <div className="services-rail-container">
-          <div className="services-rail-scroll">
-            {/* Items duplicated so the CSS animation loops seamlessly */}
-            <div className={`services-rail${activeService ? ' paused' : ''}`}>
+          <button className="rail-arrow rail-arrow-left" onClick={scrollLeftFn} onMouseEnter={() => setIsRailHovered(true)} onMouseLeave={() => setIsRailHovered(false)} aria-label="Scroll left">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </button>
+
+          <div
+            className="services-rail-scroll"
+            ref={scrollContainerRef}
+            onMouseEnter={() => setIsRailHovered(true)}
+            onMouseLeave={() => setIsRailHovered(false)}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            onTouchCancel={handleTouchEnd}
+          >
+            <div className="services-rail">
               {services.map((service) => (
                 <button
                   key={service.id}
@@ -333,21 +415,12 @@ const ServicesPage: React.FC = () => {
                   <span className="service-rail-label">{service.title}</span>
                 </button>
               ))}
-              {services.map((service) => (
-                <button
-                  key={`dup-${service.id}`}
-                  className={`service-rail-item ${activeService === service.id ? 'active' : ''}`}
-                  onClick={() => handleServiceClick(service.id)}
-                  aria-label={`View ${service.title}`}
-                  aria-hidden="true"
-                  tabIndex={-1}
-                >
-                  <div className="service-rail-icon">{service.icon}</div>
-                  <span className="service-rail-label">{service.title}</span>
-                </button>
-              ))}
             </div>
           </div>
+
+          <button className="rail-arrow rail-arrow-right" onClick={scrollRightFn} onMouseEnter={() => setIsRailHovered(true)} onMouseLeave={() => setIsRailHovered(false)} aria-label="Scroll right">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </button>
         </div>
 
         {/* Service Description Panel */}
