@@ -130,36 +130,30 @@
 
 .services-rail-scroll {
   flex: 1;
-  overflow-x: auto;
-  overflow-y: visible;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  overflow: hidden;
   padding: 12px 0;
-  /* scroll-behavior: smooth removed — triggers WebKit bug #238497 on iOS 15.4+
-     where repeated programmatic scrollBy/scrollTo calls silently cancel each other */
-  overscroll-behavior-x: contain;
 }
 
-/* Grab cursor only on desktop */
-@media (min-width: 769px) {
-  .services-rail-scroll {
-    cursor: grab;
-  }
-
-  .services-rail-scroll:active {
-    cursor: grabbing;
-  }
-}
-
-.services-rail-scroll::-webkit-scrollbar {
-  display: none;
+/* Pause on desktop hover */
+.services-rail-scroll:hover .services-rail {
+  animation-play-state: paused;
 }
 
 .services-rail {
   display: flex;
   gap: 20px;
   padding: 0 8px;
-  min-width: min-content;
+  width: max-content;
+  animation: railScroll 40s linear infinite;
+}
+
+.services-rail.paused {
+  animation-play-state: paused;
+}
+
+@keyframes railScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
 
 .service-rail-item {

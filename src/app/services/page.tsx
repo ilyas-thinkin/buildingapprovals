@@ -15,9 +15,6 @@ const ServicesPage: React.FC = () => {
   const [activeService, setActiveService] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedService, setSelectedService] = useState('');
-  const [isRailHovered, setIsRailHovered] = useState(false);
-  const autoScrollDirectionRef = useRef<1 | -1>(1);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const railSectionRef = useRef<HTMLElement>(null);
 
   const services = useMemo<Service[]>(() => ([
@@ -298,53 +295,10 @@ const ServicesPage: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const scrollLeft = () => {
-    scrollContainerRef.current?.scrollBy({ left: -300, behavior: 'smooth' });
-  };
-
-  const scrollRight = () => {
-    scrollContainerRef.current?.scrollBy({ left: 300, behavior: 'smooth' });
-  };
 
 
   const activeServiceData = services.find(s => s.id === activeService);
 
-  useEffect(() => {
-    if (activeService || isRailHovered) return;
-
-    const scrollEl = scrollContainerRef.current;
-    if (!scrollEl) return;
-
-    const PIXELS_PER_SECOND = 50;
-    let lastTime = 0;
-    let rafId = 0;
-
-    const tick = (now: number) => {
-      // Cap to exactly 1 frame (16ms) so a tap-delayed frame moves the same
-      // amount as a normal frame — preventing any visible jerk on interaction
-      const elapsed = lastTime ? Math.min(now - lastTime, 16) : 0;
-      lastTime = now;
-
-      const delta = (PIXELS_PER_SECOND * elapsed) / 1000;
-      const maxScroll = scrollEl.scrollWidth - scrollEl.clientWidth;
-      const next = scrollEl.scrollLeft + autoScrollDirectionRef.current * delta;
-
-      if (next <= 0) {
-        scrollEl.scrollLeft = 0;
-        autoScrollDirectionRef.current = 1;
-      } else if (next >= maxScroll) {
-        scrollEl.scrollLeft = maxScroll;
-        autoScrollDirectionRef.current = -1;
-      } else {
-        scrollEl.scrollLeft = next;
-      }
-
-      rafId = requestAnimationFrame(tick);
-    };
-
-    rafId = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafId);
-  }, [activeService, isRailHovered]);
 
   return (
     <div className="services-page">
@@ -365,25 +319,9 @@ const ServicesPage: React.FC = () => {
           <p className="services-rail-subtitle">Tap an icon to preview details instantly.</p>
         </div>
         <div className="services-rail-container">
-          <button
-            className="rail-arrow rail-arrow-left"
-            onClick={scrollLeft}
-            onMouseEnter={() => setIsRailHovered(true)}
-            onMouseLeave={() => setIsRailHovered(false)}
-            aria-label="Scroll left"
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-
-          <div
-            className="services-rail-scroll"
-            ref={scrollContainerRef}
-            onMouseEnter={() => setIsRailHovered(true)}
-            onMouseLeave={() => setIsRailHovered(false)}
-          >
-            <div className="services-rail">
+          <div className="services-rail-scroll">
+            {/* Items duplicated so the CSS animation loops seamlessly */}
+            <div className={`services-rail${activeService ? ' paused' : ''}`}>
               {services.map((service) => (
                 <button
                   key={service.id}
@@ -391,26 +329,25 @@ const ServicesPage: React.FC = () => {
                   onClick={() => handleServiceClick(service.id)}
                   aria-label={`View ${service.title}`}
                 >
-                  <div className="service-rail-icon">
-                    {service.icon}
-                  </div>
+                  <div className="service-rail-icon">{service.icon}</div>
+                  <span className="service-rail-label">{service.title}</span>
+                </button>
+              ))}
+              {services.map((service) => (
+                <button
+                  key={`dup-${service.id}`}
+                  className={`service-rail-item ${activeService === service.id ? 'active' : ''}`}
+                  onClick={() => handleServiceClick(service.id)}
+                  aria-label={`View ${service.title}`}
+                  aria-hidden="true"
+                  tabIndex={-1}
+                >
+                  <div className="service-rail-icon">{service.icon}</div>
                   <span className="service-rail-label">{service.title}</span>
                 </button>
               ))}
             </div>
           </div>
-
-          <button
-            className="rail-arrow rail-arrow-right"
-            onClick={scrollRight}
-            onMouseEnter={() => setIsRailHovered(true)}
-            onMouseLeave={() => setIsRailHovered(false)}
-            aria-label="Scroll right"
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
         </div>
 
         {/* Service Description Panel */}
