@@ -489,32 +489,36 @@
     color: currentColor;
   }
 
-  /* Carousel Wrapper */
-  .services-carousel-wrapper {
-    position: relative;
-    overflow-x: hidden;
-    overflow-y: visible;
+  /* Carousel Wrapper — native scroll-snap (works reliably on iOS Safari) */
+  .services-carousel-wrapper.mobile-scroll {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     margin-bottom: 24px;
-    width: 100%;
-    margin-left: 0;
     padding: 16px 0;
+  }
+
+  .services-carousel-wrapper.mobile-scroll::-webkit-scrollbar {
+    display: none;
   }
 
   .services-grid.mobile-carousel {
     display: flex;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     gap: 16px;
     margin-bottom: 0;
-    padding: 0;
+    padding: 0 24px;
     justify-content: flex-start;
+    width: max-content;
   }
 
   .services-grid.mobile-carousel .service-card {
-    flex: 0 0 calc(100% - 48px);
-    min-width: calc(100% - 48px);
-    max-width: calc(100% - 48px);
-    margin: 0 auto;
-    scroll-snap-align: center;
+    flex: 0 0 calc(100vw - 48px);
+    min-width: calc(100vw - 48px);
+    max-width: calc(100vw - 48px);
+    scroll-snap-align: start;
   }
 
   /* Carousel Dots */

@@ -7,12 +7,7 @@ import './ServicesSection.css';
 const ServicesSection: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
-  const MOBILE_CARD_GAP = 16;
-  const [slideOffset, setSlideOffset] = useState(0);
-  const [startOffset, setStartOffset] = useState(0);
-  const touchStartX = useRef(0);
-  const touchEndX = useRef(0);
-  const carouselRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
 
   const services = [
@@ -138,98 +133,37 @@ const ServicesSection: React.FC = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Capture mobile slide width plus gap so transforms center each card
-  // Double-rAF defers measurement until iOS has fully laid out the flex row
+  // Track which card is snapped into view by watching the scroll position
   useEffect(() => {
-    const measureOffsets = () => {
-      if (!carouselRef.current || !isMobile) {
-        setSlideOffset(0);
-        setStartOffset(0);
-        return;
-      }
+    const wrapper = wrapperRef.current;
+    if (!wrapper || !isMobile) return;
 
-      const cards = carouselRef.current.querySelectorAll('.service-card') as NodeListOf<HTMLElement>;
-      if (!cards.length) return;
-
-      const firstCard = cards[0];
-      const firstCenter = firstCard.offsetLeft + firstCard.offsetWidth / 2;
-      const containerCenter = carouselRef.current.offsetWidth / 2;
-
-      setStartOffset(containerCenter - firstCenter);
-
-      if (cards.length > 1) {
-        const secondCard = cards[1];
-        const secondCenter = secondCard.offsetLeft + secondCard.offsetWidth / 2;
-        setSlideOffset(secondCenter - firstCenter);
-      } else {
-        setSlideOffset(firstCard.offsetWidth + MOBILE_CARD_GAP);
-      }
+    const onScroll = () => {
+      const cards = wrapper.querySelectorAll('.service-card') as NodeListOf<HTMLElement>;
+      const scrollLeft = wrapper.scrollLeft;
+      let closest = 0;
+      let closestDist = Infinity;
+      cards.forEach((card, i) => {
+        const dist = Math.abs(card.offsetLeft - scrollLeft);
+        if (dist < closestDist) { closestDist = dist; closest = i; }
+      });
+      setCurrentSlide(closest);
     };
 
-    // Double rAF ensures iOS Safari has finished layout before measuring
-    const rafId = requestAnimationFrame(() => {
-      requestAnimationFrame(measureOffsets);
-    });
-
-    window.addEventListener('resize', measureOffsets);
-    return () => {
-      cancelAnimationFrame(rafId);
-      window.removeEventListener('resize', measureOffsets);
-    };
+    wrapper.addEventListener('scroll', onScroll, { passive: true });
+    return () => wrapper.removeEventListener('scroll', onScroll);
   }, [isMobile]);
-
-  // Non-passive touch listeners so we can preventDefault on iOS Safari
-  // (React 17+ makes synthetic touch handlers passive, blocking preventDefault)
-  useEffect(() => {
-    const el = carouselRef.current;
-    if (!el || !isMobile) return;
-
-    const onTouchStart = (e: TouchEvent) => {
-      touchStartX.current = e.touches[0].clientX;
-      touchEndX.current = e.touches[0].clientX;
-    };
-
-    const onTouchMove = (e: TouchEvent) => {
-      touchEndX.current = e.touches[0].clientX;
-      // Prevent page scroll on iOS when the swipe is primarily horizontal
-      if (Math.abs(touchStartX.current - e.touches[0].clientX) > 8) {
-        e.preventDefault();
-      }
-    };
-
-    const onTouchEnd = () => {
-      const distance = touchStartX.current - touchEndX.current;
-      if (Math.abs(distance) > 50) {
-        if (distance > 0) {
-          setCurrentSlide((prev) => Math.min(prev + 1, services.length - 1));
-        } else {
-          setCurrentSlide((prev) => Math.max(prev - 1, 0));
-        }
-      }
-      touchStartX.current = 0;
-      touchEndX.current = 0;
-    };
-
-    el.addEventListener('touchstart', onTouchStart, { passive: true });
-    el.addEventListener('touchmove', onTouchMove, { passive: false });
-    el.addEventListener('touchend', onTouchEnd, { passive: true });
-
-    return () => {
-      el.removeEventListener('touchstart', onTouchStart);
-      el.removeEventListener('touchmove', onTouchMove);
-      el.removeEventListener('touchend', onTouchEnd);
-    };
-  }, [isMobile, services.length]);
 
   const goToSlide = (index: number) => {
     setCurrentSlide(index);
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
+    const cards = wrapper.querySelectorAll('.service-card') as NodeListOf<HTMLElement>;
+    const card = cards[index] as HTMLElement | undefined;
+    if (card) {
+      wrapper.scrollTo({ left: card.offsetLeft, behavior: 'smooth' });
+    }
   };
-
-  const mobileTransform = isMobile
-    ? {
-        transform: `translateX(${startOffset - currentSlide * slideOffset}px)`,
-      }
-    : undefined;
 
   return (
     <section className="services-section" id="services">
@@ -251,11 +185,12 @@ const ServicesSection: React.FC = () => {
         </div>
 
         {/* Services Grid / Carousel */}
-        <div className="services-carousel-wrapper">
+        <div
+          className={`services-carousel-wrapper ${isMobile ? 'mobile-scroll' : ''}`}
+          ref={wrapperRef}
+        >
           <div
             className={`services-grid ${isMobile ? 'mobile-carousel' : ''}`}
-            ref={carouselRef}
-            style={mobileTransform}
           >
             {services.map((service, index) => (
               <div key={index} className="service-card">
