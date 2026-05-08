@@ -1,19 +1,19 @@
 export default function BlogContent() {
   return (
     <div className="blog-content-wrapper">
-      <p>Dubai&apos;s construction sector continues to grow rapidly in 2026, with strict regulations designed to ensure safety, sustainability, and compliance with international standards. Whether you are planning a villa, office fit-out, commercial building, or warehouse, understanding the <strong>Dubai Municipality approval process 2026</strong> is crucial to secure your building approvals in Dubai without delays.</p>
+      <p>Dubai&apos;s construction sector continues to grow rapidly in 2026, with strict regulations designed to ensure safety, sustainability, and compliance with international standards. Whether you are planning a villa, office fit-out, commercial building, or warehouse, understanding the <a target="_blank" rel="noopener noreferrer nofollow" href="https://dm.gov.ae/"><strong>Dubai Municipality</strong></a><strong> approval process 2026</strong> is crucial to secure your building approvals in Dubai without delays.</p>
 
       <p>This step-by-step guide covers each stage of the process, required documents, estimated timelines, and practical tips for a smooth approval journey.</p>
 
       <h2>Step 1: Prepare Your Application Documents</h2>
 
-      <p>Before submitting your project, ensure all documentation meets Dubai Municipality requirements:</p>
+      <p>Before submitting your project, ensure all documentation meets <a target="_blank" rel="noopener noreferrer nofollow" href="https://dm.gov.ae/">Dubai Municipality</a> requirements:</p>
 
       <ul>
         <li>Complete architectural drawings (plans, elevations, sections)</li>
         <li>Site plans showing plot details, setbacks, and access routes</li>
         <li>Proof of compliance with updated <strong>Dubai building codes</strong></li>
-        <li>Supporting documents for approvals and compliance certificates</li>
+        <li>Supporting documents for <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services">approvals</a> and compliance certificates</li>
         <li>Final review to avoid missing or inconsistent information</li>
       </ul>
 
@@ -21,7 +21,7 @@ export default function BlogContent() {
 
       <h2>Step 2: Technical Assessment</h2>
 
-      <p>Dubai Municipality conducts a detailed technical review to verify:</p>
+      <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://dm.gov.ae/">Dubai Municipality</a> conducts a detailed technical review to verify:</p>
 
       <ul>
         <li>Compliance with zoning regulations</li>
@@ -49,6 +49,10 @@ export default function BlogContent() {
         <img src="/images/blog/building-approvals-dubai-municipality-approval-process-content.jpg" alt="Building Approvals Dubai - Dubai Municipality Approval Process 2026 Complete Guide" />
       </figure>
 
+      <blockquote>
+        <p><strong><span className="text-size-xl">Keep Learning:</span></strong><span className="text-size-xl"> </span><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/dm-dubai-municipality-approval-2026-complete-guide"><span className="text-size-xl">DM Dubai Municipality Approval 2026 – Complete Guide</span></a></p>
+      </blockquote>
+
       <h2>Step 4: Address Modifications and Clarifications</h2>
 
       <p>Authorities may request changes or additional information:</p>
@@ -59,15 +63,15 @@ export default function BlogContent() {
         <li>Resubmit the revised application for final consideration</li>
       </ul>
 
-      <p><strong>Tip:</strong> Quick response to modification requests significantly speeds up the approval timeline.</p>
+      <p><strong>Tip:</strong> Quick response to modification requests significantly speeds up the <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services">approval</a> timeline.</p>
 
       <h2>Step 5: Obtain Preliminary Approval</h2>
 
       <p>Once your application passes reviews:</p>
 
       <ul>
-        <li>Receive preliminary approval notification</li>
-        <li>Review conditions and requirements attached to the approval</li>
+        <li>Receive preliminary <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services">approval</a> notification</li>
+        <li>Review the conditions and requirements attached to the <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services">approval</a></li>
         <li>Gain authorization to commence project planning and preparation</li>
       </ul>
 
@@ -76,7 +80,7 @@ export default function BlogContent() {
       <p>The last step allows you to legally begin construction:</p>
 
       <ul>
-        <li>Obtain the final building permit from Dubai Municipality</li>
+        <li>Obtain the final building permit from <a target="_blank" rel="noopener noreferrer nofollow" href="https://dm.gov.ae/">Dubai Municipality</a></li>
         <li>Ensure all conditions and compliance requirements are fully met</li>
       </ul>
 
@@ -86,8 +90,8 @@ export default function BlogContent() {
         <table>
         <thead>
         <tr>
-          <th>Project Type</th>
-          <th>Timeline (Approx.)</th>
+          <th><span className="text-color-white">Project Type</span></th>
+          <th><span className="text-color-white">Timeline (Approx.)</span></th>
         </tr>
         </thead>
         <tbody>
@@ -105,9 +109,13 @@ export default function BlogContent() {
 
       <p><em>Timelines vary based on project complexity, size, and required permits.</em></p>
 
+      <blockquote>
+        <p><strong><em><span className="text-size-xl">Keep Learning: </span></em></strong><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/villa-modification-approval-dubai"><span className="text-size-xl">Villa Modification Approval in Dubai: Complete 2026 Guide</span></a></p>
+      </blockquote>
+
       <h2>Why Professional Support Speeds Up Dubai Building Approvals</h2>
 
-      <p>Hiring experts can help you navigate the complexities of <strong>Dubai Municipality approvals:</strong></p>
+      <p>Hiring experts can help you navigate the complexities of <a target="_blank" rel="noopener noreferrer nofollow" href="https://dm.gov.ae/"><strong>Dubai Municipality</strong></a><strong> approvals:</strong></p>
 
       <ul>
         <li>Ensure submissions comply with the latest building codes</li>
@@ -120,7 +128,7 @@ export default function BlogContent() {
 
       <h2>Common Challenges We Manage for Smooth Approvals</h2>
 
-      <p>Dubai building approvals may face obstacles such as:</p>
+      <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services">Dubai building approvals</a> may face obstacles such as:</p>
 
       <ul>
         <li>Extended processing times due to municipal backlogs</li>
@@ -130,8 +138,6 @@ export default function BlogContent() {
         <li>Heritage preservation requirements in historic areas</li>
         <li>Adhering to sustainable building practices</li>
       </ul>
-
-      <h2>Key Takeaways</h2>
 
       <div className="cta-box">
         <h3>Ready to Start Your Project?</h3>
