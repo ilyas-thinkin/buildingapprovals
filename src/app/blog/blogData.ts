@@ -17,6 +17,22 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    id: '1778239781036',
+    title: "Dubai Municipality Approval Documents Checklist 2026",
+    slug: 'dubai-municipality-approval-documents-2026',
+    category: "Dubai Municipality",
+    author: "Building Approvals Dubai",
+    date: '2026-05-08',
+    excerpt: "Get a clear Dubai Municipality approval document checklist for 2026, including drawings, NOCs, IDs, Ejari, trade license, and practical tips to avoid delays.",
+    image: "https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/building-approvals-dubai-dubai-municipality-list-1778239781036.jpg",
+    coverImage: "https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/building-approvals-dubai-dubai-municipality-cover-1778239781036.jpg",
+    metaTitle: "Dubai Municipality Approval Documents Checklist 2026",
+    metaDescription: "Get a clear Dubai Municipality approval document checklist for 2026, including drawings, NOCs, IDs, Ejari, trade license, and practical tips to avoid delays.",
+    keywords: ["Dubai Municipality", "dm approval"],
+    ogImage: "https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/building-approvals-dubai-dubai-municipality-cover-1778239781036.jpg",
+  },
+
+  {
     id: '1778068785631',
     title: "Dubai Municipality Services: Complete Guide for Residents",
     slug: 'dubai-municipality-services-complete-guide-for-residents',
