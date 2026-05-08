@@ -17,6 +17,22 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    id: '1778247712910',
+    title: "DCD Approval Dubai for Fitout Projects: Complete 2026 Guide",
+    slug: 'dcd-approval-dubai-fitout-projects',
+    category: "Dubai Civil Defence",
+    author: "Building Approvals Dubai",
+    date: '2026-05-08',
+    excerpt: "Learn DCD approval Dubai requirements for fit-out projects in 2026, including process, documents, inspections, timelines, common delays, and expert tips.",
+    image: "https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/building-approvals-dubai-dubai-civil-defence-list-1778247712910.jpg",
+    coverImage: "https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/building-approvals-dubai-dubai-civil-defence-cover-1778247712910.jpg",
+    metaTitle: "DCD Approval Dubai for Fitout Projects 2026: Complete Guide",
+    metaDescription: "Learn DCD approval Dubai requirements for fit-out projects in 2026, including process, documents, inspections, timelines, common delays, and expert tips.",
+    keywords: ["DCD Approval", "dubai civil defence approval"],
+    ogImage: "https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/building-approvals-dubai-dubai-civil-defence-cover-1778247712910.jpg",
+  },
+
+  {
     id: '1778239781036',
     title: "Dubai Municipality Approval Documents Checklist 2026",
     slug: 'dubai-municipality-approval-documents-2026',
