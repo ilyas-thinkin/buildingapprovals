@@ -1,10 +1,10 @@
 export default function BlogContent() {
   return (
     <div className="blog-content-wrapper">
-      <h3>You submit drawings, wait for review… and then the same message hits again:</h3>
+      <p><strong>You submit drawings, wait for review… and then the same message hits again:</strong></p>
 
       <blockquote>
-        <p>&quot;Rejected / Revise &amp; Resubmit.&quot;</p>
+        <p><strong>&quot;Rejected / Revise &amp; Resubmit.&quot;</strong></p>
       </blockquote>
 
       <p>In Dubai, fit-out delays often don&apos;t happen because the design is &quot;bad&quot;; they happen because the submission doesn&apos;t match <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/">Dubai Municipality (DM)</a> requirements, the MEP coordination is off, or the site execution doesn&apos;t follow the approved set.</p>
@@ -184,15 +184,11 @@ export default function BlogContent() {
         <li>Assign one person to quality-check the entire submission before uploading</li>
       </ul>
 
-      <h3>How to Avoid DM Violations (Practical Checklist)</h3>
-
-      <p>Use this as a &quot;pre-submission&quot; gate to reduce rejections.</p>
-
       <figure className="blog-image-figure">
         <img src="https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-content-1-1770282014471.jpeg" alt="Building Approvals Dubai - Municipality Approval in Dubai: The Most Common Fit-Out Approval Violations" />
       </figure>
 
-      <h3><em>Also Read: </em><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/dubai-municipality-dm-approvals-compliance-guide"><em>https://www.buildingapprovals.ae/blog/dubai-municipality-dm-approvals-compliance-guide</em></a></h3>
+      <h3><em><span className="text-size-xl">Also Read: </span></em><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/dubai-municipality-dm-approvals-compliance-guide"><span className="text-size-xl">Dubai Municipality (DM): Approvals &amp; Compliance Guide 2026</span></a></h3>
 
       <h2>Step-by-step (works for most fit-out approvals in Dubai)</h2>
 
@@ -285,6 +281,10 @@ export default function BlogContent() {
         <li>Treat approvals like inspection prep: build exactly as approved and maintain revision control.</li>
         <li>For faster outcomes, run a QA check on drawings + documents before submission.</li>
       </ul>
+
+      <blockquote>
+        <p><strong><span className="text-size-xl">Keep Learning: </span></strong><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/villa-modification-approval-dubai"><span className="text-size-xl">Villa Modification Approval in Dubai: Complete 2026 Guide</span></a></p>
+      </blockquote>
 
       <h2>Ready to Apply?</h2>
 
