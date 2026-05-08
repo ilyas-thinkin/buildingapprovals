@@ -191,7 +191,7 @@ export const blogPosts: BlogPost[] = [
     category: "Dubai Municipality",
     author: "Building Approvals Dubai",
     date: '2026-01-14',
-    dateModified: '2026-05-05',
+    dateModified: '2026-05-08',
     excerpt: "DM municipality approval confirms that Dubai fitout approvals meet building codes, safety rules, environmental standards, and zoning requirements across Dubai.",
     image: "https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-list-1769065838329.jpg",
     coverImage: "https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-cover-1769065838329.jpg",
