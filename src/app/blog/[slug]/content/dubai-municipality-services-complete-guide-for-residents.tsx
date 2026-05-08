@@ -331,78 +331,119 @@ export default function BlogContent() {
 
       <h2>Dubai Municipality branches and support</h2>
 
-      <p>Dubai Municipality provides digital access through its official website and platforms. The official website includes service categories, login access, service centers, help and support, Quick Pay, Track Requests, and Verify Documents.</p>
+      <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/">Dubai Municipality</a> provides digital access through its official website and platforms. The official website includes service categories, login access, service centers, help and support, Quick Pay, Track Requests, and Verify Documents.</p>
 
-      <h2>Search intent alignment</h2>
+      <h3><strong>1. Dubai Municipality Headquarters</strong></h3>
 
-      <p>This article is written for users who want to understand Dubai Municipality services, rules, fees, and processes before starting a property-related or business-related project in Dubai.</p>
+      <p>Dubai Municipality Headquarters is the main administrative office where key municipal departments, leadership teams, and public service functions are managed. It supports city planning, public services, regulations, and civic development across Dubai.</p>
 
-      <p><strong>It supports four types of search intent:</strong></p>
+      <p><strong>Location:</strong> <a target="_blank" rel="noopener noreferrer nofollow" href="https://maps.app.goo.gl/RtLNVhXXUm53eeUT7">Maps</a></p>
 
-      <ul>
-        <li><strong>Informational</strong>: learning what the Dubai Municipality does</li>
-        <li><strong>Commercial</strong>: Comparing approval requirements before hiring a consultant</li>
-        <li><strong>Transactional</strong>: preparing for <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services/dubai-municipality">DM approval</a> or fitout approval</li>
-        <li><strong>Navigational</strong>: understanding DM login, BPS Dubai, and Dubai Municipality branches</li>
-      </ul>
+      <p><strong>Address:</strong> Dubai Municipality Headquarters, Building 20, Block A, P.O Box No. 67, Baniyas Road, Dubai, United Arab Emirates.</p>
 
-      <h2>Competitor gap coverage</h2>
+      <p><strong>Working Hours: </strong>Monday to Thursday: <strong>from 7:30 a.m. to 3:30 p.m. </strong>Friday: <strong>from 7:30 a.m. to 12:00 p.m. </strong>Sunday: <strong>Closed</strong></p>
 
-      <p>Many standard pages explain Dubai Municipality in a general way. This blog adds practical value by covering:</p>
+      <h3><strong>2. Dubai Municipality Service Centers</strong></h3>
 
-      <ul>
-        <li>Fitout and renovation relevance</li>
-        <li>BPS Dubai and DM login context</li>
-        <li>Approval process steps</li>
-        <li>Document preparation</li>
-        <li>Common rejection reasons</li>
-        <li>Fee expectations without misleading fixed pricing</li>
-        <li>Local Dubai project examples</li>
-        <li>Property owner, facility manager, and contractor concerns</li>
-        <li>Snippet-friendly answers and FAQ schema opportunities</li>
-      </ul>
+      <p>Dubai Municipality Service Centers provide residents, businesses, and property owners with access to municipal services, applications, payments, document support, and general assistance related to Dubai Municipality procedures.</p>
+
+      <p><strong>Al Twar Service Centre</strong></p>
+
+      <p><strong>Location:</strong> <a target="_blank" rel="noopener noreferrer nofollow" href="https://maps.app.goo.gl/zs19wY9EkiEfHpWU8">Maps</a></p>
+
+      <p><strong>Address:</strong> Al Twar District, Al Nahda Road, facing Al Twar Centre, next to Al Qusais Metro Station</p>
+
+      <p><strong>Working Hours: </strong>Monday to Thursday: 07:30 AM – 06:00 PM Friday: 07:30 AM – 12:00 PM Saturday and Sunday: Closed</p>
+
+      <p><strong>Al Manara Service Centre</strong></p>
+
+      <p><strong>Location:</strong> <a target="_blank" rel="noopener noreferrer nofollow" href="https://maps.app.goo.gl/6rCUNYS8JJHHpuHA9">Maps</a></p>
+
+      <p><strong>Address:</strong> Al Manara Area, Al Safa 2 Area, facing the Metro Station (Noor Bank)</p>
+
+      <p><strong>Working Hours: </strong>Monday to Thursday: 07:30 AM – 06:00 PM Friday: 07:30 AM – 12:00 PM Saturday and Sunday: Closed</p>
+
+      <p><strong>Hatta Centre</strong></p>
+
+      <p><strong>Location:</strong> <a target="_blank" rel="noopener noreferrer nofollow" href="https://maps.app.goo.gl/9JJdZb3kRrqfBt5N8">Maps</a></p>
+
+      <p><strong>Address:</strong> Hatta District, Hatta Road, Dubai, facing Hatta Roundabout, next to Emirates NBD</p>
+
+      <p><strong>Working Hours: </strong>Monday to Thursday: 07:30 AM – 03:30 PM Friday: 7:30 AM – 12:00 PM Saturday and Sunday: Closed</p>
+
+      <h3><strong>3. Veterinary Clinics</strong></h3>
+
+      <p><strong>Al Khawaneej Veterinary Clinic</strong></p>
+
+      <p><strong>Location:</strong> <a target="_blank" rel="noopener noreferrer nofollow" href="https://maps.app.goo.gl/64ewFBUQMRPVQWeP9">Maps</a></p>
+
+      <p><strong>Address:</strong> Al Khawaneej Road, Wadi Al-Amardi, near the UAE Football Association</p>
+
+      <p><strong>Working Hours: </strong></p>
+
+      <p><strong>For farm animals</strong>: Sunday to Thursday: from 7:30 a.m. to 7:30 p.m, Friday: 8:00 a.m. to 11:30 a.m, Saturday: Closed</p>
+
+      <p><strong>For pet animals</strong>: Sunday to Thursday: from 7:30 a.m. to 2:30 p.m, Friday: 8:00 a.m. to 11:30 a.m, Saturday: Closed</p>
+
+      <p><strong>Al Lisaili Veterinary Clinic</strong></p>
+
+      <p><strong>Location:</strong> <a target="_blank" rel="noopener noreferrer nofollow" href="https://maps.app.goo.gl/AXpbTqw2HZPZFCZp8">Maps</a></p>
+
+      <p><strong>Address:</strong> Al Lisaili, next to Al Lisaili Health Centre</p>
+
+      <p><strong>Working Hours: For farm animals</strong>: Sunday to Thursday: from 7:30 a.m. to 7:30 p.m, Friday: 8:00 a.m. to 11:30 a.m, Saturday: Closed</p>
+
+      <h3>4. Abattoirs</h3>
+
+      <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://maps.app.goo.gl/YCKXUjHM1MArY8dc7"><strong>Al Qusais Abattoir </strong></a></p>
+
+      <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://maps.app.goo.gl/y5GdRrYikcmpnmKZ7"><strong>Al Qouz Abattoir</strong></a></p>
+
+      <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://maps.app.goo.gl/iRrvikmwnB8SyFaB9"><strong>Al Lisaili Abattoir</strong></a></p>
+
+      <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://maps.app.goo.gl/WYwcM7rgSkn4B6ox6"><strong>Hatta Abattoir</strong></a></p>
 
       <h2>Conclusion</h2>
 
-      <p>Dubai Municipality is a key authority for building, fitout, renovation, public health, food safety, land, and civic services in Dubai. For property owners, facility management companies, fitout contractors, and interior designers, understanding the DM approval process can save time, reduce errors, and help projects move smoothly from planning to completion.</p>
+      <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/">Dubai Municipality</a> is a key authority for building, fitout, renovation, public health, food safety, land, and civic services in Dubai. For property owners, facility management companies, fitout contractors, and interior designers, understanding the DM approval process can save time, reduce errors, and help projects move smoothly from planning to completion.</p>
 
       <p>Before starting any construction, renovation, or fitout work, confirm the correct authority, prepare accurate drawings, collect the required documents, and submit them through the proper <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/index.html#">Dubai Municipality</a> or <a target="_blank" rel="noopener noreferrer nofollow" href="https://buildindubai.gov.ae/">BPS Dubai</a> process.</p>
 
       <p>For complex projects, working with an experienced approval consultant can help avoid repeated comments, missing documents, and unnecessary delays.</p>
 
-      <h1>6. FAQs</h1>
+      <h2>FAQs</h2>
 
-      <h2>1. What is Dubai Municipality?</h2>
+      <h3>1. What is Dubai Municipality?</h3>
 
-      <p>Dubai Municipality is the government authority responsible for many civic, building, planning, public health, environmental, and regulatory services in Dubai. It manages services related to construction, land, food safety, waste control, public facilities, and urban development.</p>
+      <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/">Dubai Municipality</a> is the government authority responsible for many civic, building, planning, public health, environmental, and regulatory services in Dubai. It manages services related to construction, land, food safety, waste control, public facilities, and urban development.</p>
 
-      <h2>2. What is DM approval?</h2>
+      <h3>2. What is DM approval?</h3>
 
-      <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://buildindubai.gov.ae/">DM approval</a> is permission from the Dubai Municipality for certain activities, projects, or services. It may be required for construction, renovation, fitout, modification, food-related businesses, and other regulated activities in Dubai.</p>
+      <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://buildindubai.gov.ae/">DM approval</a> is permission from the <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/">Dubai Municipality</a> for certain activities, projects, or services. It may be required for construction, renovation, fitout, modification, food-related businesses, and other regulated activities in Dubai.</p>
 
-      <h2>3. Is Dubai Municipality approval required for fitout work?</h2>
+      <h3>3. Is Dubai Municipality approval required for fitout work?</h3>
 
-      <p>Yes, many fitout projects in Dubai require approval before work starts. This can include office fitout, shop fitout, restaurant fitout, warehouse modification, and other interior changes, depending on the location and project scope.</p>
+      <p>Yes, many fit-out projects in Dubai require approval before work starts. This can include office fitout, shop fitout, restaurant fitout, warehouse modification, and other interior changes, depending on the location and project scope.</p>
 
-      <h2>4. What is BPS Dubai?</h2>
+      <h3>4. What is BPS Dubai?</h3>
 
       <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://buildindubai.gov.ae/">BPS Dubai</a> generally refers to the building permit system used for building and construction-related approval workflows. It helps manage submissions, application tracking, documents, and approval processes for relevant projects.</p>
 
-      <h2>5. What documents are required for DM approval?</h2>
+      <h3>5. What documents are required for DM approval?</h3>
 
       <p>Common documents include property details, tenancy contract or Ejari, trade licence, landlord NOC, architectural drawings, MEP drawings, contractor documents, consultant documents, and authority-specific forms. Requirements vary by project type.</p>
 
-      <h2>6. How much are Dubai Municipality fees?</h2>
+      <h3>6. How much are Dubai Municipality fees?</h3>
 
-      <p>Dubai Municipality fees depend on the service, project type, size, scope, review requirement, and inspection needs. It is best to check the official service page or portal for the latest applicable fee before submission.</p>
+      <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/">Dubai Municipality</a> fees depend on the service, project type, size, scope, review requirement, and inspection needs. It is best to check the official service page or portal for the latest applicable fee before submission.</p>
 
-      <h2>7. Can I start fitout work before DM approval?</h2>
+      <h3>7. Can I start fitout work before DM approval?</h3>
 
       <p>No. Starting work before receiving the required approval can lead to penalties, stop-work instructions, rejection, or rework. Always confirm approval requirements before beginning site activity.</p>
 
-      <h2>8. Where can I check Dubai Municipality request status?</h2>
+      <h3>8. Where can I check the Dubai Municipality request status?</h3>
 
-      <p>Dubai Municipality’s official website provides Track Requests and Verify Documents options for users. These tools help applicants check request status and verify issued documents online.</p>
+      <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/">Dubai Municipality’s</a> official website provides Track Requests and Verify Documents options for users. These tools help applicants check request status and verify issued documents online.</p>
 
       <div className="cta-box">
         <h3>Ready to Start Your Project?</h3>
