@@ -40,7 +40,7 @@ export default function BlogContent() {
 
       <p><strong>Important:</strong> Operating a space without valid <a target="_blank" rel="noopener noreferrer" href="https://www.buildingapprovals.ae/services/civil-defense">DCD approval</a> can lead to fines, closure notices, or rejection from other authorities like <a target="_blank" rel="noopener noreferrer" href="https://www.buildingapprovals.ae/services/dubai-municipality">Dubai Municipality.</a></p>
 
-      <p>Why Hire a Consultant for <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dcd.gov.ae/portal/">Dubai Civil Defence</a> Approval in Dubai?</p>
+      <h2>Why Hire a Consultant for <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dcd.gov.ae/portal/">Dubai Civil Defence</a> Approval in Dubai?</h2>
 
       <p>This is where most projects succeed — or fail.</p>
 
@@ -58,7 +58,7 @@ export default function BlogContent() {
 
       <p>One incorrect symbol, a spacing error, or a missing calculation can result in rejection.</p>
 
-      <h2>Consultants ensure:</h2>
+      <p><strong>Consultants ensure:</strong></p>
 
       <ul>
         <li>Fully compliant fire drawings</li>
@@ -68,7 +68,7 @@ export default function BlogContent() {
 
       <h3>3. Faster Approval Timelines</h3>
 
-      <h2>Consultants know:</h2>
+      <p><strong>Consultants know:</strong></p>
 
       <ul>
         <li>What officers look for</li>
@@ -80,7 +80,7 @@ export default function BlogContent() {
 
       <h3>4. Coordination With Other Authorities</h3>
 
-      <h2>DCD approval often overlaps with:</h2>
+      <p><strong>DCD approval often overlaps with:</strong></p>
 
       <ul>
         <li>Dubai Municipality approvals</li>
@@ -137,7 +137,7 @@ export default function BlogContent() {
         <li>Clearance for execution or operation</li>
       </ul>
 
-      <p>Documents Required for DCD Approval in Dubai</p>
+      <h2>Documents Required for DCD Approval in Dubai</h2>
 
       <h3>A professional consultant ensures 100% accuracy in documentation, including:</h3>
 
@@ -153,7 +153,11 @@ export default function BlogContent() {
 
       <p>Missing even one document can delay approval.</p>
 
-      <p>Common Reasons for <a target="_blank" rel="noopener noreferrer" href="https://www.dcd.gov.ae/portal/#">DCD Approval</a> Rejections</p>
+      <blockquote>
+        <p><strong><span className="text-size-xl">Keep Learning: </span></strong><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/dcd-approval-dubai-complete-process"><span className="text-size-xl">Dubai Civil Defence Approval (DCD) – Complete Guide for 2026</span></a></p>
+      </blockquote>
+
+      <h2><strong>Common Reasons for </strong><a target="_blank" rel="noopener noreferrer" href="https://www.dcd.gov.ae/portal/#"><strong>DCD Approval</strong></a><strong> Rejections</strong></h2>
 
       <p>Understanding rejection reasons helps avoid them entirely.</p>
 
@@ -174,13 +178,13 @@ export default function BlogContent() {
 
       <ul>
         <li>Involve a consultant before final design finalization</li>
-        <li>Use only DCD-approved materials</li>
+        <li>Use only <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services/civil-defense">DCD</a>-approved materials</li>
         <li>Follow the latest UAE Fire &amp; Life Safety Code</li>
         <li>Ensure coordination with fit-out contractors</li>
-        <li>Respond quickly and professionally to DCD comments</li>
+        <li>Respond quickly and professionally to <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services/civil-defense">DCD</a> comments</li>
       </ul>
 
-      <h3>Who Should Hire a DCD Approval Consultant?</h3>
+      <h2>Who Should Hire a DCD Approval Consultant?</h2>
 
       <ul>
         <li>Business owners setting up offices or shops</li>
@@ -192,6 +196,10 @@ export default function BlogContent() {
 
       <p>If your project involves people, electricity, or enclosed spaces, you need expert guidance.</p>
 
+      <blockquote>
+        <p><strong><span className="text-size-xl">Keep Learning: </span></strong><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/how-to-secure-a-nakheel-noc-in-dubai-2026"><span className="text-size-xl">How to Secure a Nakheel NOC in Dubai 2026</span></a></p>
+      </blockquote>
+
       <h2>Frequently Asked Questions (FAQs)</h2>
 
       <h3>1. Is DCD approval mandatory for all fit-out projects in Dubai?</h3>
@@ -200,7 +208,7 @@ export default function BlogContent() {
 
       <h3>2. How long does Dubai Civil Defence approval take?</h3>
 
-      <p>With a consultant, approvals typically take 7–15 working days, depending on project complexity.</p>
+      <p>With a consultant, <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services">approvals</a> typically take 7–15 working days, depending on project complexity.</p>
 
       <h3>3. Can I apply for DCD approval myself?</h3>
 
@@ -212,9 +220,9 @@ export default function BlogContent() {
 
       <h3>5. Does DCD approval expire?</h3>
 
-      <p>Yes. Approvals are project-specific and may expire if construction timelines are exceeded.</p>
+      <p>Yes. <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services">Approvals</a> are project-specific and may expire if construction timelines are exceeded.</p>
 
-      <h3>Key Takeaways: Why a Consultant Is Essential</h3>
+      <h2>Key Takeaways: Why a Consultant Is Essential</h2>
 
       <ul>
         <li><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dcd.gov.ae/portal/">DCD approval</a> is legally mandatory in Dubai</li>
