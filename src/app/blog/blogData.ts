@@ -241,7 +241,7 @@ export const blogPosts: BlogPost[] = [
     category: "Fit-Out Approvals",
     author: "Building Approvals Dubai",
     date: '2026-01-09',
-    dateModified: '2026-05-06',
+    dateModified: '2026-05-08',
     excerpt: "Setting up a new office, restaurant, shop, or clinic in Dubai is exciting, but before you start the interior work, you need the right fit-out approvals.",
     image: "/images/blog/building-approvals-dubai-fit-out-approval-card.jpg",
     coverImage: "/images/blog/building-approvals-dubai-fit-out-cover.jpg",

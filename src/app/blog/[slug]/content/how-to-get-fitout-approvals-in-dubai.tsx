@@ -149,6 +149,10 @@ export default function BlogContent() {
         <li>Contractors are allowed to mobilize on-site</li>
       </ul>
 
+      <blockquote>
+        <p><strong><em><span className="text-size-xl">Keep Learning: </span></em></strong><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/villa-modification-approval-dubai"><em><span className="text-size-xl">Villa Modification Approval in Dubai: Complete 2026 Guide</span></em></a></p>
+      </blockquote>
+
       <h3>Step 6: Site Inspections &amp; Completion Approval</h3>
 
       <p><strong>After fit-out completion:</strong></p>
@@ -208,7 +212,7 @@ export default function BlogContent() {
       <ul>
         <li><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services/dubai-municipality">Fit-out approval</a> is mandatory for all interior works in Dubai</li>
         <li>Multiple authorities may be involved, depending on location and use</li>
-        <li>Proper planning and compliant drawings are the key to fast approval</li>
+        <li>Proper planning and compliant drawings are the key to fast <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services">approval</a></li>
         <li>Starting work without approval can lead to serious penalties</li>
         <li>Professional guidance makes the process smoother and faster</li>
       </ul>
@@ -217,7 +221,7 @@ export default function BlogContent() {
 
       <ul>
         <li>Official portal for DM approval: <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dm.gov.ae/">https://www.dm.gov.ae/</a></li>
-        <li>Get in touch with us: <a target="_blank" rel="noopener noreferrer nofollow" href="https://<a href=">+971 589575610</a> to get specialist guidance now - <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/contact">https://www.buildingapprovals.ae/contact</a></li>
+        <li>Get in touch with us: <a target="_blank" rel="noopener noreferrer nofollow" href="https://">+971 589575610 </a>to get specialist guidance now - <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/contact">https://www.buildingapprovals.ae/contact</a></li>
       </ul>
 
       <div className="cta-box">
