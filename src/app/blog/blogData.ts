@@ -1,8 +1,3 @@
-export interface FaqItem {
-  question: string;
-  answer: string;
-}
-
 export interface BlogPost {
   id: string;
   title: string;
@@ -30,6 +25,7 @@ export const blogPosts: BlogPost[] = [
     category: "Dubai Civil Defence",
     author: "Building Approvals Dubai",
     date: '2026-05-08',
+    dateModified: '2026-05-11',
     excerpt: "Learn DCD approval Dubai requirements for fit-out projects in 2026, including process, documents, inspections, timelines, common delays, and expert tips.",
     image: "https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/building-approvals-dubai-dubai-civil-defence-list-1778247712910.jpg",
     coverImage: "https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/building-approvals-dubai-dubai-civil-defence-cover-1778247712910.jpg",
@@ -37,18 +33,6 @@ export const blogPosts: BlogPost[] = [
     metaDescription: "Learn DCD approval Dubai requirements for fit-out projects in 2026, including process, documents, inspections, timelines, common delays, and expert tips.",
     keywords: ["DCD Approval", "dubai civil defence approval"],
     ogImage: "https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/building-approvals-dubai-dubai-civil-defence-cover-1778247712910.jpg",
-    faqs: [
-      { question: 'What is DCD approval in Dubai?', answer: 'DCD approval is the approval from Dubai Civil Defence confirming that a building or fit-out project meets fire and life safety requirements.' },
-      { question: 'Is DCD approval required for office fit-out in Dubai?', answer: 'Yes, office fit-outs often require DCD approval if partitions, ceilings, fire alarm devices, sprinklers, exits, or occupancy layouts are changed.' },
-      { question: 'Who can submit DCD approval drawings?', answer: 'DCD drawings are usually submitted by an approved consultant or authorized professional familiar with Dubai Civil Defence requirements.' },
-      { question: 'What documents are needed for DCD approval Dubai?', answer: 'Common documents include trade license, tenancy contract, NOC, architectural layout, MEP drawings, fire alarm layout, firefighting layout, material details, and contractor documents.' },
-      { question: 'How long does DCD approval take?', answer: 'The timeline depends on project complexity, drawing quality, authority comments, and inspection readiness. Small projects can move faster than restaurants, warehouses, or complex commercial spaces.' },
-      { question: 'Is DCD approval needed before Dubai Municipality approval?', answer: 'The sequence depends on the project and authority pathway. In many fit-out cases, Dubai Municipality or zone approval and DCD coordination are both part of the overall approval process.' },
-      { question: 'What does DCD check during inspection?', answer: 'DCD may check fire alarm systems, sprinklers, fire extinguishers, emergency lights, exit signs, evacuation routes, fire-rated doors, approved drawings, and testing documents.' },
-      { question: 'Can fit-out work start before DCD approval?', answer: 'Starting work before approval is risky. If the design changes are not accepted, the contractor may need to redo completed work.' },
-      { question: 'Do restaurants need DCD approval in Dubai?', answer: 'Yes, restaurants usually need detailed DCD coordination because kitchens, exhaust systems, LPG, suppression systems, occupancy, and emergency exits affect fire safety.' },
-      { question: 'What is the main reason DCD approval gets delayed?', answer: 'The most common reasons are incomplete documents, uncoordinated drawings, site work not matching approved plans, and poor inspection preparation.' },
-    ],
   },
 
   {

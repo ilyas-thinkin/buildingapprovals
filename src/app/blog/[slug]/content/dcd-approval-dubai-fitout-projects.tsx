@@ -108,7 +108,7 @@ export default function BlogContent() {
 
       <p><strong>Pro Tip:</strong><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services/civil-defense">DCD approval</a> is required for most Dubai fit-out projects where fire alarm, firefighting, emergency exit, smoke control, or occupancy safety systems are affected. It is especially important for restaurants, offices, retail units, warehouses, clinics, salons, gyms, and high-occupancy commercial spaces.</p>
 
-      <p><strong><em><span className="text-size-lg">Also Read:</span></em></strong><em><span className="text-size-lg"> </span></em><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/dcd-approval-dubai-complete-process"><em><span className="text-size-lg">Dubai Civil Defence Approval (DCD) – Complete Guide for 2026</span></em></a></p>
+      <p><strong><em><span>Also Read:</span></em></strong><em><span> </span></em><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/dcd-approval-dubai-complete-process"><em><span>Dubai Civil Defence Approval (DCD) – Complete Guide for 2026</span></em></a></p>
 
       <h2>Step-by-Step DCD Approval Process</h2>
 
@@ -150,7 +150,7 @@ export default function BlogContent() {
 
       <p>Once the site passes inspection and all requirements are satisfied, final <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services/civil-defense">DCD approval</a> or completion-related clearance can be issued based on the project type and authority process.</p>
 
-      <p><strong><em><span className="text-size-lg">Also Read:</span></em></strong><em><span className="text-size-lg"> </span></em><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/why-hire-a-consultant-for-dcd-approval"><em><span className="text-size-lg">Why hire a Consultant for Dubai Civil Defence DCD Approval?</span></em></a></p>
+      <p><strong><em><span>Also Read:</span></em></strong><em><span> </span></em><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/blog/why-hire-a-consultant-for-dcd-approval"><em><span>Why hire a Consultant for Dubai Civil Defence DCD Approval?</span></em></a></p>
 
       <h2>Required Documents Checklist</h2>
 
@@ -162,8 +162,8 @@ export default function BlogContent() {
         <table>
         <thead>
         <tr>
-          <th><span className="text-color-teal">Document</span></th>
-          <th><span className="text-color-teal">Why it matters</span></th>
+          <th>Document</th>
+          <th>Why it matters</th>
         </tr>
         </thead>
         <tbody>
