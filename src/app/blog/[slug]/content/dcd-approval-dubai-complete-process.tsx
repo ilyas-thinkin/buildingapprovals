@@ -95,10 +95,6 @@ export default function BlogContent() {
         <li>Construction or fit-out work can officially begin</li>
       </ul>
 
-      <figure className="blog-image-figure">
-        <img src="/images/blog/building-approvals-dubai-civil-defence-approval-content.jpg" alt="Building Approvals Dubai - Dubai Civil Defence Approval (DCD) Complete Guide for 2026" />
-      </figure>
-
       <h3><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.buildingapprovals.ae/services/civil-defense"><em>Dubai Civil Defence: https://www.buildingapprovals.ae/services/civil-defense</em></a></h3>
 
       <h3>Step 6: Installation of Approved Fire Systems</h3>
@@ -237,6 +233,10 @@ export default function BlogContent() {
         <li>Annual maintenance is mandatory</li>
       </ul>
 
+      <figure className="blog-image-figure">
+        <img src="/images/blog/building-approvals-dubai-civil-defence-approval-content.jpg" alt="Building Approvals Dubai - Dubai Civil Defence Approval (DCD) Complete Guide for 2026" />
+      </figure>
+
       <h3>5. Hotels, Hospitals &amp; Public Buildings</h3>
 
       <p><strong>Applicable for:</strong></p>
@@ -290,7 +290,7 @@ export default function BlogContent() {
       </ul>
 
       <figure className="blog-image-figure">
-        <img src="https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-civil-defence-content-1-1770375576779.png" alt="Building Approvals Dubai - Dubai Civil Defence Approval (DCD) \\\\\\\\\\\\\\\\u2013 Complete Guide for 2026" />
+        <img src="https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-civil-defence-content-1-1770375576779.png" alt="Building Approvals Dubai - Dubai Civil Defence Approval (DCD) \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\u2013 Complete Guide for 2026" />
       </figure>
 
       <h2>Common Reasons for DCD Approval Delays</h2>
