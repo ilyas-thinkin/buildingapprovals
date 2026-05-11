@@ -1,3 +1,7 @@
+import { FaqItem } from '@/lib/homepage-faqs';
+
+export type { FaqItem };
+
 export interface BlogPost {
   id: string;
   title: string;
