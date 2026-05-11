@@ -12,6 +12,11 @@ export interface WPPost {
   featuredImage: { node: { sourceUrl: string; altText: string } } | null;
   categories: { nodes: Array<{ name: string }> };
   tags: { nodes: Array<{ name: string }> };
+  seo?: {
+    title?: string;
+    metaDesc?: string;
+    opengraphImage?: { sourceUrl: string } | null;
+  };
 }
 
 const POSTS_QUERY = `
@@ -32,6 +37,7 @@ const POSTS_QUERY = `
         categories { nodes { name } }
         tags { nodes { name } }
         featuredImage { node { sourceUrl altText } }
+        seo { title metaDesc opengraphImage { sourceUrl } }
       }
     }
   }
@@ -51,6 +57,7 @@ const POST_QUERY = `
       categories { nodes { name } }
       tags { nodes { name } }
       featuredImage { node { sourceUrl altText } }
+      seo { title metaDesc opengraphImage { sourceUrl } }
     }
   }
 `;

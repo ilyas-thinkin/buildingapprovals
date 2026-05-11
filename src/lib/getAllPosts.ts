@@ -19,10 +19,10 @@ function wpPostToBlogPost(wp: WPPost): BlogPost {
     category,
     image,
     coverImage: image,
-    metaTitle: wp.title,
-    metaDescription: rawExcerpt,
+    metaTitle: wp.seo?.title || wp.title,
+    metaDescription: wp.seo?.metaDesc || rawExcerpt,
     keywords,
-    ogImage: image,
+    ogImage: wp.seo?.opengraphImage?.sourceUrl || image,
     source: 'wordpress',
   };
 }
