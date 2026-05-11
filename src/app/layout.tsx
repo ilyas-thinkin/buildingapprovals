@@ -117,7 +117,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en-AE">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -182,10 +182,9 @@ export default function RootLayout({
           }}
         />
         {/* LocalBusiness schema markup for Google Business Profile & rich results */}
-        <Script
+        <script
           id="ld-local-business"
           type="application/ld+json"
-          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
@@ -325,10 +324,9 @@ export default function RootLayout({
           }}
         />
         {/* WebSite schema for sitelinks search box */}
-        <Script
+        <script
           id="ld-website"
           type="application/ld+json"
-          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
@@ -348,6 +346,37 @@ export default function RootLayout({
                 "query-input": "required name=search_term_string",
               },
               inLanguage: "en-AE",
+            }),
+          }}
+        />
+        {/* Organization schema — shared @id referenced by blog + service pages */}
+        <script
+          id="ld-organization"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "@id": `${siteUrl.href}#organization`,
+              name: "Building Approvals Dubai",
+              url: siteUrl.href,
+              logo: {
+                "@type": "ImageObject",
+                url: `${siteUrl.origin}/images/BA OG Logo_imresizer (1).png?v=2`,
+                width: 1200,
+                height: 1200,
+              },
+              contactPoint: {
+                "@type": "ContactPoint",
+                telephone: "+971589575610",
+                contactType: "customer service",
+                areaServed: "AE",
+                availableLanguage: ["English", "Arabic"],
+              },
+              sameAs: [
+                "https://www.buildingapprovals.ae",
+                "https://maps.app.goo.gl/WuitF9PhjnDoV71E6",
+              ],
             }),
           }}
         />

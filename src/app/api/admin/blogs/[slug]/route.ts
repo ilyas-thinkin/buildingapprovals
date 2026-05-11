@@ -192,16 +192,37 @@ export async function GET(
 
     const blogDataContent = Buffer.from(blogDataFile.content, 'base64').toString('utf-8');
 
-    let blogMatch = null;
-    const blogObjectPattern = /\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}/g;
-    let match;
+    const arrayStartIndex = blogDataContent.indexOf('export const blogPosts: BlogPost[] = [') + 'export const blogPosts: BlogPost[] = ['.length;
+    const arrayEndIndex = blogDataContent.lastIndexOf('];');
+    const arrayContent = blogDataContent.substring(arrayStartIndex, arrayEndIndex);
 
-    while ((match = blogObjectPattern.exec(blogDataContent)) !== null) {
-      if (match[0].includes(`slug: '${slug}'`) || match[0].includes(`slug: "${slug}"`)) {
-        blogMatch = match[0];
-        break;
+    const blogObjects: string[] = [];
+    let depth = 0;
+    let currentObject = '';
+    let inObject = false;
+
+    for (let i = 0; i < arrayContent.length; i++) {
+      const char = arrayContent[i];
+      if (char === '{') {
+        if (depth === 0) { inObject = true; currentObject = '{'; }
+        else { currentObject += char; }
+        depth++;
+      } else if (char === '}') {
+        depth--;
+        currentObject += char;
+        if (depth === 0 && inObject) {
+          blogObjects.push(currentObject.trim());
+          currentObject = '';
+          inObject = false;
+        }
+      } else if (inObject) {
+        currentObject += char;
       }
     }
+
+    const blogMatch = blogObjects.find(obj =>
+      obj.includes(`slug: '${slug}'`) || obj.includes(`slug: "${slug}"`)
+    ) ?? null;
 
     if (!blogMatch) {
       return NextResponse.json({ error: 'Blog not found' }, { status: 404 });

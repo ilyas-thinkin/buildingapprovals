@@ -1,3 +1,8 @@
+export interface FaqItem {
+  question: string;
+  answer: string;
+}
+
 export interface BlogPost {
   id: string;
   title: string;
@@ -13,6 +18,8 @@ export interface BlogPost {
   metaDescription?: string;
   keywords?: string[];
   ogImage?: string;
+  faqs?: FaqItem[];
+  source?: 'local' | 'wordpress';
 }
 
 export const blogPosts: BlogPost[] = [
@@ -30,6 +37,18 @@ export const blogPosts: BlogPost[] = [
     metaDescription: "Learn DCD approval Dubai requirements for fit-out projects in 2026, including process, documents, inspections, timelines, common delays, and expert tips.",
     keywords: ["DCD Approval", "dubai civil defence approval"],
     ogImage: "https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/building-approvals-dubai-dubai-civil-defence-cover-1778247712910.jpg",
+    faqs: [
+      { question: 'What is DCD approval in Dubai?', answer: 'DCD approval is the approval from Dubai Civil Defence confirming that a building or fit-out project meets fire and life safety requirements.' },
+      { question: 'Is DCD approval required for office fit-out in Dubai?', answer: 'Yes, office fit-outs often require DCD approval if partitions, ceilings, fire alarm devices, sprinklers, exits, or occupancy layouts are changed.' },
+      { question: 'Who can submit DCD approval drawings?', answer: 'DCD drawings are usually submitted by an approved consultant or authorized professional familiar with Dubai Civil Defence requirements.' },
+      { question: 'What documents are needed for DCD approval Dubai?', answer: 'Common documents include trade license, tenancy contract, NOC, architectural layout, MEP drawings, fire alarm layout, firefighting layout, material details, and contractor documents.' },
+      { question: 'How long does DCD approval take?', answer: 'The timeline depends on project complexity, drawing quality, authority comments, and inspection readiness. Small projects can move faster than restaurants, warehouses, or complex commercial spaces.' },
+      { question: 'Is DCD approval needed before Dubai Municipality approval?', answer: 'The sequence depends on the project and authority pathway. In many fit-out cases, Dubai Municipality or zone approval and DCD coordination are both part of the overall approval process.' },
+      { question: 'What does DCD check during inspection?', answer: 'DCD may check fire alarm systems, sprinklers, fire extinguishers, emergency lights, exit signs, evacuation routes, fire-rated doors, approved drawings, and testing documents.' },
+      { question: 'Can fit-out work start before DCD approval?', answer: 'Starting work before approval is risky. If the design changes are not accepted, the contractor may need to redo completed work.' },
+      { question: 'Do restaurants need DCD approval in Dubai?', answer: 'Yes, restaurants usually need detailed DCD coordination because kitchens, exhaust systems, LPG, suppression systems, occupancy, and emergency exits affect fire safety.' },
+      { question: 'What is the main reason DCD approval gets delayed?', answer: 'The most common reasons are incomplete documents, uncoordinated drawings, site work not matching approved plans, and poor inspection preparation.' },
+    ],
   },
 
   {
@@ -46,6 +65,14 @@ export const blogPosts: BlogPost[] = [
     metaDescription: "Get a clear Dubai Municipality approval document checklist for 2026, including drawings, NOCs, IDs, Ejari, trade license, and practical tips to avoid delays.",
     keywords: ["Dubai Municipality", "dm approval"],
     ogImage: "https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/building-approvals-dubai-dubai-municipality-cover-1778239781036.jpg",
+    faqs: [
+      { question: 'What documents are required for Dubai Municipality approval?', answer: 'The main documents include Emirates ID or passport, trade license, title deed, Ejari, landlord NOC, existing layout, proposed drawings, and project-specific technical drawings including structural or MEP plans.' },
+      { question: 'Is Ejari required for DM approval?', answer: 'Yes, Ejari is commonly required for tenant-related commercial fit-out, office renovation, shop modification, and leased property approval applications.' },
+      { question: 'Do I need Dubai Civil Defence approval with DM approval?', answer: 'Yes, if your project affects fire alarm, fire fighting, emergency exits, kitchen exhaust, sprinklers, or life safety systems, DCD approval may be required alongside DM approval.' },
+      { question: 'Can I submit the Dubai Municipality approval myself?', answer: 'Some basic applications may be handled directly, but technical projects usually require a registered consultant or approved contractor.' },
+      { question: 'Why does DM approval get rejected?', answer: 'Common reasons include missing NOCs, unclear drawings, a mismatch between documents, unapproved contractors, structural changes without calculations, and incomplete MEP details.' },
+      { question: 'How can I avoid delays in municipality approval in Dubai?', answer: 'Prepare all documents before submission, use updated drawings, confirm authority requirements, appoint qualified professionals, and check that every document matches the project scope.' },
+    ],
   },
 
   {
@@ -63,6 +90,16 @@ export const blogPosts: BlogPost[] = [
     metaDescription: "Learn about Dubai Municipality services, DM approval process, rules, fees, BPS Dubai, branches, and fitout approval steps for property projects.",
     keywords: ["dm dubai", "bps dubai", "dm municipality"],
     ogImage: "https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/building-approvals-dubai-dubai-municipality-services-cover-1778068785631.jpg",
+    faqs: [
+      { question: 'What is Dubai Municipality?', answer: 'Dubai Municipality is the government authority responsible for many civic, building, planning, public health, environmental, and regulatory services in Dubai. It manages services related to construction, land, food safety, waste control, public facilities, and urban development.' },
+      { question: 'What is DM approval?', answer: 'DM approval is permission from the Dubai Municipality for certain activities, projects, or services. It may be required for construction, renovation, fitout, modification, food-related businesses, and other regulated activities in Dubai.' },
+      { question: 'Is Dubai Municipality approval required for fitout work?', answer: 'Yes, many fit-out projects in Dubai require approval before work starts. This can include office fitout, shop fitout, restaurant fitout, warehouse modification, and other interior changes, depending on the location and project scope.' },
+      { question: 'What is BPS Dubai?', answer: 'BPS Dubai generally refers to the building permit system used for building and construction-related approval workflows. It helps manage submissions, application tracking, documents, and approval processes for relevant projects.' },
+      { question: 'What documents are required for DM approval?', answer: 'Common documents include property details, tenancy contract or Ejari, trade licence, landlord NOC, architectural drawings, MEP drawings, contractor documents, consultant documents, and authority-specific forms. Requirements vary by project type.' },
+      { question: 'How much are Dubai Municipality fees?', answer: 'Dubai Municipality fees depend on the service, project type, size, scope, review requirement, and inspection needs. Check the official service page or portal for the latest applicable fee before submission.' },
+      { question: 'Can I start fitout work before DM approval?', answer: 'No. Starting work before receiving the required approval can lead to penalties, stop-work instructions, rejection, or rework. Always confirm approval requirements before beginning site activity.' },
+      { question: 'Where can I check the Dubai Municipality request status?', answer: "Dubai Municipality's official website provides Track Requests and Verify Documents options for users. These tools help applicants check request status and verify issued documents online." },
+    ],
   },
 
   {
@@ -79,6 +116,16 @@ export const blogPosts: BlogPost[] = [
     metaDescription: 'Learn how to get salon approval in Dubai through DM Municipality, BPS, fitout approval, documents, inspections, and practical compliance tips for 2026.',
     keywords: ['salon approval', 'dm dubai', 'dm approval', 'fitout approval', 'dm dubai', 'dm bps'],
     ogImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/building-approvals-dubai-interior-fitout-cover-1777732827331.jpg',
+    faqs: [
+      { question: 'What is DM Municipality approval for a salon in Dubai?', answer: "DM Municipality approval confirms that a salon space meets Dubai's requirements for layout, hygiene, fitout, ventilation, drainage, safety, and approved business use. It is usually required before opening, renovating, or modifying a salon." },
+      { question: 'Is DM approval required for salon fitout work?', answer: 'Yes, salon fitout work usually needs approval if you are changing the layout, partitions, ceiling, electrical points, plumbing, drainage, HVAC, or service areas. The exact process depends on the property location and project scope.' },
+      { question: 'What is DM BPS in Dubai?', answer: 'DM BPS usually refers to the Dubai Building Permit System. It is used for building and fitout-related submissions, drawing reviews, authority comments, and permit tracking for relevant projects.' },
+      { question: 'Can I start salon fitout work before approval?', answer: 'It is not recommended to start fitout work before approval. Unauthorized work can lead to delays, rejection, penalties, rectification costs, or issues during final inspection.' },
+      { question: 'What documents are required for salon approval in Dubai?', answer: 'Common documents include trade license or initial approval, tenancy contract, landlord or developer NOC, existing layout, proposed layout, MEP drawings, contractor documents, consultant details, and any previous approvals if the salon is being modified.' },
+      { question: 'How long does salon approval take in Dubai?', answer: 'The timeline depends on the project scope, document readiness, authority comments, building management NOC, and whether the drawings are submitted correctly. Delays usually happen when layouts, MEP details, or documents are incomplete.' },
+      { question: 'Why does salon approval get rejected?', answer: 'Common reasons include missing NOC, incorrect activity, poor layout planning, lack of drainage details, insufficient ventilation, incomplete drawings, overcrowded service areas, and mismatch between site condition and submitted drawings.' },
+      { question: 'Do existing salons need approval for renovation?', answer: 'Yes, if the renovation changes the layout, MEP services, partitions, ceiling, plumbing, drainage, or service areas, approval may be required before work starts.' },
+    ],
   },
 
   {
@@ -96,6 +143,16 @@ export const blogPosts: BlogPost[] = [
     metaDescription: 'Learn the villa modification approval process in Dubai for 2026. Understand Dubai Municipality permits, key documents, steps, timelines, and delays.',
     keywords: [],
     ogImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/building-approvals-dubai-modification-approval-cover-1776666807951.jpg',
+    faqs: [
+      { question: 'What is villa modification approval in Dubai?', answer: 'It is the official approval process required for major villa changes such as extensions, structural modifications, exterior changes, and major MEP or drainage work.' },
+      { question: 'Does every villa renovation need Dubai Municipality approval?', answer: 'Not every cosmetic change needs full approval, but regulated works usually do. Structural, layout, extension, and service modifications should always be checked first.' },
+      { question: 'What documents are usually needed for dm approval for villa modification?', answer: 'Typically, title deed, owner documents, NOC if required, approved drawings, proposed drawings, and technical details such as structural or MEP plans are needed.' },
+      { question: 'How long does villa modification approval take in Dubai?', answer: 'It depends on project size, authority comments, NOC requirements, and drawing quality. Straightforward cases move faster than structural or extension-based submissions.' },
+      { question: 'Can I start work before the permit is issued?', answer: 'That is not advisable. Work should begin only after the required approval or permit has been formally issued.' },
+      { question: 'Is fitout approval the same as villa modification approval?', answer: 'Not always. Some simple interior works may follow a lighter route, but villa modification approval is broader when the project affects structure, services, external appearance, or the approved area.' },
+      { question: 'Do I also need a developer or community NOC?', answer: 'In many Dubai communities, yes. The project may need both technical approval and a community-side NOC, depending on the location and ownership setup.' },
+      { question: 'Why is approved documentation important after the renovation is finished?', answer: 'Approved drawings and permit records can matter later for property amendments, legal clarity, leasing, transfer, and other record-based procedures.' },
+    ],
   },
 
   {
@@ -129,6 +186,13 @@ export const blogPosts: BlogPost[] = [
     metaDescription: "Avoid DM approval delays in Dubai. Discover the most common fit-out approval violations, why they happen, and how to fix drawings, MEP, and site issues fast.",
     keywords: ["Dm dubai", "dm approval", "municipality approval", "approvals dubai"],
     ogImage: "https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-cover-1770279885245.jpg",
+    faqs: [
+      { question: 'What is the most common reason for DM Approval rejection in Dubai fit-outs?', answer: "Usually, it's drawing inconsistencies (architectural vs MEP), missing documents/NOCs, or unclear ventilation/drainage details that reviewers need to validate compliance." },
+      { question: 'Can I start fit-out work before DM Approval is issued?', answer: "Starting work before required approvals can lead to stop-work issues and complications during inspections. It's safer to proceed only after the correct approval route is cleared for your scope." },
+      { question: 'Do office fit-outs always need Dubai Municipality approval?', answer: 'Many office interior changes do require approvals, especially when layouts, partitions, ceilings, or MEP systems change. Requirements vary by building, location, and authority route.' },
+      { question: 'How can I reduce DM fit-out approval delays?', answer: 'Use a submission checklist, properly coordinate drawings, verify the base plan, and ensure your documents/NOCs are complete before uploading.' },
+      { question: 'Does DM check green building requirements for fit-outs?', answer: 'Depending on the project scope and building requirements, green building regulations can affect the MEP approach and documentation.' },
+    ],
   },
 
   {
@@ -146,6 +210,13 @@ export const blogPosts: BlogPost[] = [
     metaDescription: "Learn how DSO approval works in Dubai, the DIEZ process for fit-out projects, and why hiring a consultant avoids delays and rejections.",
     keywords: ["Approval Dubai", "DIEZ Approval", "DM dubai", "approvals guide"],
     ogImage: "https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dso-diez-approval-cover-1770014417337.jpg",
+    faqs: [
+      { question: 'Is DSO approval mandatory for all fit-out works?', answer: 'Yes. Any internal modification within Dubai Silicon Oasis requires DIEZ approval.' },
+      { question: 'How long does DSO approval take?', answer: 'Typically 2–6 weeks, depending on project complexity and submission quality.' },
+      { question: 'Is Dubai Municipality approval required inside DSO?', answer: 'No, DSO operates under DIEZ, but other authorities, such as Civil Defence, may still apply.' },
+      { question: 'Can I apply for DSO approval without a consultant?', answer: 'Technically, yes, but most self-submissions face multiple rejections and delays.' },
+      { question: 'What happens if I start work without DSO approval?', answer: 'You risk fines, work stoppage, and refusal of completion certificates.' },
+    ],
   },
 
   {
@@ -163,6 +234,13 @@ export const blogPosts: BlogPost[] = [
     metaDescription: "Getting DCD Approval in Dubai is one of the most critical and often most confusing steps in any construction, fit-out, renovation, and modification project.",
     keywords: ["dda approval", "fire and safety approval dubai", "dubai civil defence approval"],
     ogImage: "https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-civil-defence-cover-1769065428206.jpg",
+    faqs: [
+      { question: 'Is DCD approval mandatory for all fit-out projects in Dubai?', answer: 'Yes. Any project involving interior works, electrical systems, or occupancy changes requires DCD approval in Dubai.' },
+      { question: 'How long does Dubai Civil Defence approval take?', answer: 'With a consultant, approvals typically take 7–15 working days, depending on project complexity.' },
+      { question: 'Can I apply for DCD approval myself?', answer: 'Technically, yes, but most self-submissions face rejection due to technical errors and a lack of authority knowledge.' },
+      { question: 'What happens if my DCD approval is rejected?', answer: 'You must revise the drawings, resubmit the documents, and repay certain fees, causing delays and additional costs.' },
+      { question: 'Does DCD approval expire?', answer: 'Yes. Approvals are project-specific and may expire if construction timelines are exceeded.' },
+    ],
   },
 
   {
@@ -180,6 +258,13 @@ export const blogPosts: BlogPost[] = [
     metaDescription: "This guide explains what DDA Approval is, who needs it, documents required, approval types, covered areas, and a step-by-step process so you can move forward confidently in Dubai, UAE.",
     keywords: ["Dubai", "Development", "Authority", "(DDA)", "Approval", "Dubai", "2026"],
     ogImage: "https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dda-approval-cover-1768987140126.jpeg",
+    faqs: [
+      { question: 'Is DDA Approval different from Dubai Municipality approval?', answer: 'Yes. DDA governs specific free zones, while the Dubai Municipality covers mainland areas.' },
+      { question: 'Can I start work before getting DDA Approval?', answer: 'No. Starting without approval can result in fines and stop-work notices.' },
+      { question: 'Do small office fit-outs need DDA Approval?', answer: 'Yes, even minor works within DDA zones require clearance.' },
+      { question: 'Is online submission mandatory?', answer: 'Most DDA applications are processed digitally for faster tracking.' },
+      { question: 'Can one consultant handle all approvals?', answer: 'Yes, experienced consultants can manage DDA plus Civil Defence and other linked approvals.' },
+    ],
   },
 
   {
@@ -197,6 +282,13 @@ export const blogPosts: BlogPost[] = [
     metaDescription: 'This guide on Dubai Municipality Services Categories breaks everything down—clearly and practically—so business owners, homeowners, and developers know exactly which approvals apply, how the local approval process works, and how to avoid costly delays in Dubai.',
     keywords: ['Dubai', 'Municipality', '(DM)', 'Services', 'Categories:', 'Complete', 'Guide', 'Approvals', 'Compliance', 'Dubai', '(2026)'],
     ogImage: 'https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-services-ca-cover-1768976989112.jpg',
+    faqs: [
+      { question: 'How many Dubai Municipality services categories are there?', answer: 'Dubai Municipality operates multiple service categories covering construction, planning, health, safety, and environment — each designed for specific approval needs.' },
+      { question: 'Do small renovations require Dubai Municipality approval?', answer: 'Yes. Even minor interior works may fall under fit-out approval services in Dubai.' },
+      { question: 'Are Dubai Municipality approvals mandatory for all projects?', answer: 'Most construction, renovation, and commercial activities in Dubai require some form of municipality approval.' },
+      { question: 'Can approvals be processed online?', answer: 'Yes. Dubai Municipality uses digital platforms for submissions, tracking, and approvals.' },
+      { question: 'What causes delays in approvals?', answer: 'Incorrect category selection, incomplete documents, and non-compliance with UAE regulations are the most common reasons.' },
+    ],
   },
 
   {
@@ -214,6 +306,13 @@ export const blogPosts: BlogPost[] = [
     metaDescription: "This guide explains the common mistakes that delay Fitout projects in Dubai and how to avoid them, based on real approval scenarios across dubai",
     keywords: ["Dubai fitout approvals", "dm dubai", "municipality approval"],
     ogImage: "https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-fit-out-approval-cover-1768552866539.png",
+    faqs: [
+      { question: 'How long does office fit-out approval take in Dubai?', answer: 'Approval timelines vary, but typically range from 2 to 6 weeks depending on authority requirements, building management processes, and submission quality.' },
+      { question: 'Is fit-out approval mandatory for small office renovations?', answer: 'Yes. Even minor changes, such as partition alterations or MEP modifications, usually require fit-out approval and building approvals in Dubai.' },
+      { question: 'Which authorities are involved in fit-out approval?', answer: 'Depending on location, approvals may involve building management, developers, Civil Defence, municipality departments, and free zone authorities.' },
+      { question: 'Can work start before fit-out approval is granted?', answer: 'No. Starting work without approval can lead to penalties, work stoppage, and reapplication requirements.' },
+      { question: 'What documents are usually required for fit-out approval?', answer: 'Typical requirements include architectural drawings, MEP layouts, fire safety plans, material specifications, and NOCs.' },
+    ],
   },
 
   {
@@ -231,6 +330,13 @@ export const blogPosts: BlogPost[] = [
     metaDescription: "DM municipality approval confirms that Dubai fitout approvals meet building codes, safety rules, environmental standards, and zoning requirements across Dubai.",
     keywords: ["Dubai", "Municipality", "Approval", "(DM)", "2026", "Complete", "Guide", "Construction", "Fit-Out", "Engineering", "Projects", "Dubai"],
     ogImage: "https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-dubai-municipality-cover-1769065838329.jpg",
+    faqs: [
+      { question: 'Is Dubai Municipality Approval mandatory for minor renovations?', answer: 'Yes. Even minor changes affecting layout, MEP, or safety systems usually require DM Approval.' },
+      { question: 'Can I apply for DM Approval without a consultant?', answer: 'No. Dubai Municipality accepts submissions only from registered consultants.' },
+      { question: 'How long is the Dubai Municipality Approval valid?', answer: 'Approval validity depends on project type but typically ranges from 6 months to 1 year.' },
+      { question: 'Is DM Approval required before landlord approval?', answer: 'In most cases, landlord approval is required first, followed by DM Approval.' },
+      { question: 'What happens if work starts without DM Approval?', answer: 'Authorities may issue stop-work notices, fines, and even project cancellation.' },
+    ],
   },
 
   {
@@ -248,6 +354,12 @@ export const blogPosts: BlogPost[] = [
     metaDescription: "This guide breaks down everything you need, from why the NOC matters, when it's required, how to apply, and smart tips to avoid delays.",
     keywords: ["Nakheel NOC", "Nakheel Dubai"],
     ogImage: "https://tey8h8kr4bvj5bie.public.blob.vercel-storage.com/blog/building-approvals-dubai-nakheel-cover-1769065723111.jpg",
+    faqs: [
+      { question: 'How long does Nakheel NOC take?', answer: 'Usually within 3–10 working days unless additional information or inspection is required.' },
+      { question: 'Can someone apply on my behalf?', answer: 'Yes — with a valid authorization letter or Power of Attorney.' },
+      { question: 'Is the NOC fee refundable?', answer: 'No, fees are generally non-refundable, even if you need to reapply.' },
+      { question: 'How long is the NOC valid?', answer: 'NOCs typically have a limited validity period (usually around 30 days). Check the certificate for exact dates.' },
+    ],
   },
 
   {

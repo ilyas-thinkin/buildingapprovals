@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import Script from 'next/script';
 import { notFound } from 'next/navigation';
 import ContactFormModal from '../../components/ContactFormModal';
 import './serviceDetail.css';
@@ -2578,18 +2577,32 @@ export default function ServiceDetailPage({ params }: { params: Promise<{ servic
     url: serviceUrl,
   };
 
+  const faqSchema = serviceData.faqs && serviceData.faqs.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: serviceData.faqs.map(faq => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+    })),
+  } : null;
+
   const toggleFaq = (index: number) => {
     setActiveFaq(activeFaq === index ? null : index);
   };
 
   return (
     <div className="service-detail-page">
-      <Script
-        id={`ld-service-${serviceId}`}
+      <script
         type="application/ld+json"
-        strategy="afterInteractive"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
       />
+      {faqSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+      )}
 
       {/* Hero Section */}
       <section className="service-detail-hero">

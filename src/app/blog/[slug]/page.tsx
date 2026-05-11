@@ -2,7 +2,10 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { blogPosts } from '../blogData';
+import { getAllPosts, getPostBySlug } from '@/lib/getAllPosts';
 import BlogContent from './BlogContent';
+import BlogTOC from './BlogTOC';
+import WordPressContent from './WordPressContent';
 import BlogBottomActions from '../BlogBottomActions';
 import { cleanBlogMetaTitle } from '@/lib/blog-seo';
 import './blog-post.css';
@@ -29,7 +32,7 @@ function resolveImageUrl(path: string): string {
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const post = blogPosts.find(p => p.slug === slug);
+  const post = await getPostBySlug(slug);
 
   if (!post) return { title: 'Post Not Found' };
 
@@ -88,14 +91,18 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 }
 
 export async function generateStaticParams() {
-  return blogPosts.map(post => ({ slug: post.slug }));
+  const posts = await getAllPosts();
+  return posts.map(post => ({ slug: post.slug }));
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
-  const post = blogPosts.find(p => p.slug === slug);
+  const post = await getPostBySlug(slug);
 
   if (!post) notFound();
+
+  const isWordPressPost = post.source === 'wordpress';
+  const wpContent = (post as { wpContent?: string }).wpContent;
 
   const imageUrl = resolveImageUrl(post.ogImage || post.coverImage || post.image);
   const postUrl = `${BASE_URL}/blog/${post.slug}`;
@@ -111,11 +118,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     dateModified: post.dateModified || post.date,
     author: {
       '@type': 'Organization',
+      '@id': `${BASE_URL}/#organization`,
       name: post.author,
       url: `${BASE_URL}/`,
     },
     publisher: {
       '@type': 'Organization',
+      '@id': `${BASE_URL}/#organization`,
       name: SITE_NAME,
       url: `${BASE_URL}/`,
       logo: {
@@ -131,6 +140,16 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     inLanguage: 'en-AE',
   };
 
+  const faqJsonLd = post.faqs && post.faqs.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: post.faqs.map(faq => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+    })),
+  } : null;
+
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -145,6 +164,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      {faqJsonLd && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+      )}
 
       <div className="blog-post-page">
         <article className="blog-post" itemScope itemType="https://schema.org/Article">
@@ -165,14 +187,30 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 <time dateTime={post.date} itemProp="datePublished">
                   {new Date(post.date).toLocaleDateString('en-AE', { year: 'numeric', month: 'long', day: 'numeric' })}
                 </time>
+                {post.dateModified && post.dateModified !== post.date && (
+                  <>
+                    <span className="blog-post-meta-dot" />
+                    <time dateTime={post.dateModified} itemProp="dateModified" className="blog-post-updated">
+                      Updated {new Date(post.dateModified).toLocaleDateString('en-AE', { year: 'numeric', month: 'long', day: 'numeric' })}
+                    </time>
+                  </>
+                )}
                 <span className="blog-post-meta-dot" />
                 <span itemProp="author">By {post.author}</span>
               </div>
             </div>
           </header>
 
+          <div className="blog-post-intro-summary" role="note" aria-label="Article summary">
+            <p>{post.excerpt}</p>
+          </div>
+
           <div className="blog-post-content" itemProp="articleBody">
-            <BlogContent slug={slug} />
+            <BlogTOC />
+            {isWordPressPost && wpContent
+              ? <WordPressContent html={wpContent} />
+              : <BlogContent slug={slug} />
+            }
           </div>
 
           <section className="blog-post-approval-cta" aria-label="Building approvals in Dubai">
@@ -202,7 +240,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <p className="related-articles-subtitle">Check out these helpful guides on building approvals in Dubai</p>
             <div className="related-articles-grid">
               {blogPosts
-                .filter(p => p.slug !== post.slug)
+                .filter(p => p.slug !== post!.slug)
                 .slice(0, 3)
                 .map(relatedPost => (
                   <Link key={relatedPost.id} href={`/blog/${relatedPost.slug}`} className="related-article-card">

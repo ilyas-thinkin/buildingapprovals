@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import { blogPosts } from './blogData';
+import { getAllPosts } from '@/lib/getAllPosts';
 import BlogBottomActions from './BlogBottomActions';
 import './blog.css';
 
@@ -40,7 +40,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function BlogPage() {
+export default async function BlogPage() {
+  const posts = await getAllPosts();
+
   return (
     <div className="blog-page">
       <section className="blog-hero">
@@ -70,7 +72,7 @@ export default function BlogPage() {
             <h2 className="blog-section-title">Fresh from the team</h2>
           </div>
           <div className="blog-grid">
-            {blogPosts.map((post) => (
+            {posts.map((post) => (
               <article key={post.id} className="blog-card">
                 <a href={`/blog/${post.slug}`} className="blog-card-link">
                   <div className="blog-card-image">

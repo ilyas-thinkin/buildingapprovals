@@ -450,6 +450,7 @@ export default function BlogEditor({ editingBlog, onCancelEdit }: BlogEditorProp
       })
       .catch((error) => {
         console.error('Error loading blog:', error);
+        setDraftStatus(`Load failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
       })
       .finally(() => setIsLoadingBlog(false));
   }, [editingBlog]);
