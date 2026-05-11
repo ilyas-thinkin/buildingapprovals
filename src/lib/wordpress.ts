@@ -37,7 +37,6 @@ const POSTS_QUERY = `
         categories { nodes { name } }
         tags { nodes { name } }
         featuredImage { node { sourceUrl altText } }
-        seo { title metaDesc opengraphImage { sourceUrl } }
       }
     }
   }
@@ -57,7 +56,6 @@ const POST_QUERY = `
       categories { nodes { name } }
       tags { nodes { name } }
       featuredImage { node { sourceUrl altText } }
-      seo { title metaDesc opengraphImage { sourceUrl } }
     }
   }
 `;
