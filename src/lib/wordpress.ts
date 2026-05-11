@@ -1,4 +1,5 @@
 const WP_GRAPHQL_URL = process.env.WORDPRESS_GRAPHQL_URL ?? '';
+console.log('[WordPress] WORDPRESS_GRAPHQL_URL:', WP_GRAPHQL_URL || '(not set)');
 
 export interface WPPost {
   id: string;
