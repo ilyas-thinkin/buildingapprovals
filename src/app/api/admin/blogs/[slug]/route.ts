@@ -230,7 +230,16 @@ export async function GET(
     try {
       const { data: contentFile } = await octokit.rest.repos.getContent({ owner, repo, path: contentPath, ref: branch });
       if ('content' in contentFile) {
-        blog.contentFile = Buffer.from(contentFile.content, 'base64').toString('utf-8');
+        if (contentFile.content) {
+          // File is under 1MB — content is base64-encoded inline
+          blog.contentFile = Buffer.from(contentFile.content, 'base64').toString('utf-8');
+        } else if ('download_url' in contentFile && contentFile.download_url) {
+          // File is over 1MB — fetch raw content via download_url
+          const rawRes = await fetch(contentFile.download_url);
+          if (rawRes.ok) {
+            blog.contentFile = await rawRes.text();
+          }
+        }
       }
     } catch {
       console.log('Blog content file not found:', contentPath);
