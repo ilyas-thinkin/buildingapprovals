@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
         hostname: 'tey8h8kr4bvj5bie.public.blob.vercel-storage.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'cms.buildingapprovals.ae',
+        pathname: '/**',
+      },
     ],
   },
 };
