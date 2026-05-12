@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { blogPosts } from './blog/blogData';
+import { getAllPosts } from '@/lib/getAllPosts';
 
 const siteUrl = "https://www.buildingapprovals.ae";
 
@@ -27,7 +27,7 @@ const serviceIds = [
   "trakhees",
 ];
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const lastModified = new Date();
 
   // Main pages with higher priority
@@ -72,8 +72,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  // Blog pages - dynamically generated from blogData
-  const blogPages: MetadataRoute.Sitemap = blogPosts.map((post) => ({
+  // Blog pages - all posts including WordPress
+  const allPosts = await getAllPosts();
+  const blogPages: MetadataRoute.Sitemap = allPosts.map((post) => ({
     url: `${siteUrl}/blog/${post.slug}`,
     lastModified: new Date(post.dateModified || post.date),
     changeFrequency: "monthly" as const,
